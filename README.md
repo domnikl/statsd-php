@@ -18,7 +18,10 @@ The best way to install it is to use Composer and add the following to your proj
 
 ```php
 <?php
-$statsd = new Statsd('localhost', 8125);
+$statsd = new Statsd('localhost', 8125, "test.namespace");
+
+// the global namespace gets prepended to every key
+$statsd->setNamespace("test");
 
 // simple counts
 $statsd->increment("foo.bar");
@@ -30,6 +33,11 @@ $statsd->timing("foo.bar", 320);
 $statsd->time("foo.bar.bla", function() {
     // code to be measured goes here ...
 });
+
+// more complex timings can be handled with startTiming() and endTiming()
+$statsd->startTiming("foo.bar");
+// more complex code here ...
+$statsd->endTiming("foo.bar");
 ```
 
 ## Author
