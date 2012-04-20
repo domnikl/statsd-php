@@ -21,6 +21,13 @@ class Statsd
     protected $_port;
 
     /**
+     * holds all the timings that have not yet been completed
+     *
+     * @var array
+     */
+    protected $_timings = array();
+
+    /**
      * inits the Statsd object, but does not yet create a socket
      *
      * @param string $host
@@ -86,24 +93,51 @@ class Statsd
     }
 
     /**
+     * starts the timing for a key
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function startTiming($key)
+    {
+        $this->_timings[$key] = gettimeofday(true);
+    }
+
+    /**
+     * ends the timing for a key and sends it to statsd
+     *
+     * @param string $key
+     * @param int $sampleRate (optional)
+     *
+     * @return void
+     */
+    public function endTiming($key, $sampleRate = 1)
+    {
+        $end = gettimeofday(true);
+
+        if (array_key_exists($key, $this->_timings)) {
+            $timing = ($end - $this->_timings[$key]) * 1000;
+            $this->timing($key, $timing, $sampleRate);
+            unset($this->_timings[$key]);
+        }
+    }
+
+    /**
      * executes a Closure and records it's execution time and sends it to statsd
      * returns the value the Closure returned
      *
      * @param string $key
      * @param Closure $_block
-     * @param int $samplingRate (optional) default = 1
+     * @param int $sampleRate (optional) default = 1
      *
      * @return mixed
      */
-    public function time($key, Closure $_block, $samplingRate = 1)
+    public function time($key, Closure $_block, $sampleRate = 1)
     {
-        $start = gettimeofday(true);
+        $this->startTiming($key);
         $return = $_block();
-        $finish = gettimeofday(true);
-
-        $ms = ($finish - $start) * 1000;
-
-        $this->_send($key, $ms, 'ms', $samplingRate);
+        $this->endTiming($key, $sampleRate);
 
         return $return;
     }
