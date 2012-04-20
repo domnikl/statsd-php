@@ -12,3 +12,7 @@ $statsd->timing("foo.bar.bla.4", 210, 10);
 $statsd->time("foo.bar.bla", function() {
     sleep(2.2);
 }, 10);
+
+$statsd->startTiming("foo.bar.bla.4");
+sleep(1);
+$statsd->endTiming("foo.bar.bla.4");
