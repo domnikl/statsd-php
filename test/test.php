@@ -2,7 +2,7 @@
 
 require dirname(__FILE__) . '/../lib/Statsd.php';
 
-$statsd = new Statsd('localhost', 8125);
+$statsd = new Statsd('localhost', 8125, "test");
 
 $statsd->count("foo.bar.bla.1", 10000, 10);
 $statsd->increment("foo.bar.bla.2", 10);

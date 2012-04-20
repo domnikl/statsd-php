@@ -28,15 +28,24 @@ class Statsd
     protected $_timings = array();
 
     /**
+     * key namespace
+     *
+     * @var string
+     */
+    protected $_namespace = '';
+
+    /**
      * inits the Statsd object, but does not yet create a socket
      *
      * @param string $host
      * @param int $port
+     * @param string $namespace global key namespace
      */
-    public function __construct($host = 'localhost', $port = 8125)
+    public function __construct($host = 'localhost', $port = 8125, $namespace = '')
     {
-        $this->_host = $host;
+        $this->_host = (string) $host;
         $this->_port = (int) $port;
+        $this->_namespace = (string) $namespace;
     }
 
     /**
@@ -154,11 +163,17 @@ class Statsd
      */
     protected function _send($key, $value, $type, $samplingRate)
     {
+        if (0 != strlen($this->_namespace)) {
+            $key = $this->_namespace . '.' . $key;
+        }
+
         $message = sprintf("%s:%d|%s", $key, $value, $type);
 
         if ($samplingRate != 1) {
             $message .= '|@' . (1 / $samplingRate);
         }
+
+        var_dump($message);
 
         $socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port);
 
@@ -166,5 +181,27 @@ class Statsd
             fwrite($socket, $message);
             fclose($socket);
         }
+    }
+
+    /**
+     * changes the global key namespace
+     *
+     * @param string $namespace
+     *
+     * @return void
+     */
+    public function setNamespace($namespace)
+    {
+        $this->_namespace = (string) $namespace;
+    }
+
+    /**
+     * gets the global key namespace
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->_namespace;
     }
 }
