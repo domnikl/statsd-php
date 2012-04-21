@@ -173,8 +173,6 @@ class Statsd
             $message .= '|@' . (1 / $samplingRate);
         }
 
-        var_dump($message);
-
         $socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port);
 
         if ($socket) {
