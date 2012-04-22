@@ -1,11 +1,15 @@
 <?php
 
-require __DIR__ . '/../lib/Statsd.php';
+namespace Domnikl\test;
 
-class StatsdTest extends PHPUnit_Framework_TestCase
+require __DIR__ . '/../../../lib/Domnikl/Statsd.php';
+
+use Domnikl\Statsd as Statsd;
+
+class StatsdTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var domnikl\Statsd
+     * @var Domnikl\Statsd
      */
     protected $_client;
 

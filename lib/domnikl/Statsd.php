@@ -1,5 +1,7 @@
 <?php
 
+namespace Domnikl;
+
 /**
  *
  * @author Dominik Liebler <liebler.dominik@googlemail.com>

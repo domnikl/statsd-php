@@ -14,7 +14,7 @@
 
     <testsuites>
         <testsuite name="statsd-php Test Suite">
-            <file>test/StatsdTest.php</file>
+            <file>test/lib/domnikl/StatsdTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
