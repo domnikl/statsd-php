@@ -54,11 +54,11 @@ class Statsd
      * @param string $key
      * @param int $sampleRate
      *
-     * @return void
+     * @return string the sent message
      */
     public function increment($key, $sampleRate = 1)
     {
-        $this->count($key, 1, $sampleRate);
+        return $this->count($key, 1, $sampleRate);
     }
 
     /**
@@ -67,11 +67,11 @@ class Statsd
      * @param string $key
      * @param int $sampleRate
      *
-     * @return void
+     * @return string the sent message
      */
     public function decrement($key, $sampleRate = 1)
     {
-        $this->count($key, -1, $sampleRate);
+        return $this->count($key, -1, $sampleRate);
     }
     /**
      * sends a count to statsd
@@ -80,11 +80,11 @@ class Statsd
      * @param int $value
      * @param int $sampleRate (optional) the default is 1
      *
-     * @return void
+     * @return string the sent message
      */
     public function count($key, $value, $sampleRate = 1)
     {
-        $this->_send($key, (int) $value, 'c', $sampleRate);
+        return $this->_send($key, (int) $value, 'c', $sampleRate);
     }
 
     /**
@@ -94,11 +94,11 @@ class Statsd
      * @param int $value the timing in ms
      * @param int $sampleRate the sample rate, if < 1, statsd will send an average timing
      *
-     * @return void
+     * @return string the sent message
      */
     public function timing($key, $value, $sampleRate = 1)
     {
-        $this->_send($key, (int) $value, 'ms', $sampleRate);
+        return $this->_send($key, (int) $value, 'ms', $sampleRate);
     }
 
     /**
@@ -119,17 +119,20 @@ class Statsd
      * @param string $key
      * @param int $sampleRate (optional)
      *
-     * @return void
+     * @return string the sent message
      */
     public function endTiming($key, $sampleRate = 1)
     {
         $end = gettimeofday(true);
+        $message = '';
 
         if (array_key_exists($key, $this->_timings)) {
             $timing = ($end - $this->_timings[$key]) * 1000;
-            $this->timing($key, $timing, $sampleRate);
+            $message = $this->timing($key, $timing, $sampleRate);
             unset($this->_timings[$key]);
         }
+
+        return $message;
     }
 
     /**
@@ -137,12 +140,12 @@ class Statsd
      * returns the value the Closure returned
      *
      * @param string $key
-     * @param Closure $_block
+     * @param \Closure $_block
      * @param int $sampleRate (optional) default = 1
      *
      * @return mixed
      */
-    public function time($key, Closure $_block, $sampleRate = 1)
+    public function time($key, \Closure $_block, $sampleRate = 1)
     {
         $this->startTiming($key);
         $return = $_block();
@@ -152,19 +155,19 @@ class Statsd
     }
 
     /**
-     * actually sends a message to to the daemon
+     * actually sends a message to to the daemon and returns the sent message
      *
      * @param string $key
      * @param int $value
      * @param string $type
      * @param int $samplingRate
      *
-     * @return void
+     * @return string
      */
     protected function _send($key, $value, $type, $samplingRate)
     {
         if (0 != strlen($this->_namespace)) {
-            $key = $this->_namespace . '.' . $key;
+            $key = sprintf('%s.%s', $this->_namespace, $key);
         }
 
         $message = sprintf("%s:%d|%s", $key, $value, $type);
@@ -179,6 +182,8 @@ class Statsd
             fwrite($socket, $message);
             fclose($socket);
         }
+
+        return $message;
     }
 
     /**
@@ -201,5 +206,25 @@ class Statsd
     public function getNamespace()
     {
         return $this->_namespace;
+    }
+
+    /**
+     * gets the configured host
+     *
+     * @return string
+     */
+    public function getHost()
+    {
+        return $this->_host;
+    }
+
+    /**
+     * gets the configured port
+     *
+     * @return int
+     */
+    public function getPort()
+    {
+        return $this->_port;
     }
 }

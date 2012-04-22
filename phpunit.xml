@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
+<phpunit
+    backupGlobals = "false"
+    backupStaticAttributes = "false"
+    colors = "true"
+    convertErrorsToExceptions = "true"
+    convertNoticesToExceptions = "true"
+    convertWarningsToExceptions = "true"
+    processIsolation = "false"
+    stopOnFailure = "false"
+    syntaxCheck = "true"
+    strict = "true">
+
+    <testsuites>
+        <testsuite name="statsd-php Test Suite">
+            <file>test/StatsdTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
