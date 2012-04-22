@@ -18,7 +18,8 @@ The best way to install it is to use Composer and add the following to your proj
 
 ```php
 <?php
-$statsd = new \Domnikl\Statsd('localhost', 8125, "test.namespace");
+$connection = new \Domnikl\Statsd\Connection('localhost', 8125);
+$statsd = new \Domnikl\Statsd\Client($connection, "test.namespace");
 
 // the global namespace gets prepended to every key
 $statsd->setNamespace("test");
