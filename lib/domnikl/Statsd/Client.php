@@ -1,26 +1,17 @@
 <?php
 
-namespace Domnikl;
+namespace Domnikl\Statsd;
 
 /**
  *
  * @author Dominik Liebler <liebler.dominik@googlemail.com>
  */
-class Statsd
+class Client
 {
     /**
-     * the host to connect to
-     *
-     * @var string
+     * @var Connection
      */
-    protected $_host;
-
-    /**
-     * the port to connect to
-     *
-     * @var int
-     */
-    protected $_port;
+    protected $_connection;
 
     /**
      * holds all the timings that have not yet been completed
@@ -39,14 +30,12 @@ class Statsd
     /**
      * inits the Statsd object, but does not yet create a socket
      *
-     * @param string $host
-     * @param int $port
+     * @param Connection $connection
      * @param string $namespace global key namespace
      */
-    public function __construct($host = 'localhost', $port = 8125, $namespace = '')
+    public function __construct(Connection $connection, $namespace = '')
     {
-        $this->_host = (string) $host;
-        $this->_port = (int) $port;
+        $this->_connection = $connection;
         $this->_namespace = (string) $namespace;
     }
 
@@ -56,11 +45,11 @@ class Statsd
      * @param string $key
      * @param int $sampleRate
      *
-     * @return string the sent message
+     * @return void
      */
     public function increment($key, $sampleRate = 1)
     {
-        return $this->count($key, 1, $sampleRate);
+        $this->count($key, 1, $sampleRate);
     }
 
     /**
@@ -69,11 +58,11 @@ class Statsd
      * @param string $key
      * @param int $sampleRate
      *
-     * @return string the sent message
+     * @return void
      */
     public function decrement($key, $sampleRate = 1)
     {
-        return $this->count($key, -1, $sampleRate);
+        $this->count($key, -1, $sampleRate);
     }
     /**
      * sends a count to statsd
@@ -82,11 +71,11 @@ class Statsd
      * @param int $value
      * @param int $sampleRate (optional) the default is 1
      *
-     * @return string the sent message
+     * @return void
      */
     public function count($key, $value, $sampleRate = 1)
     {
-        return $this->_send($key, (int) $value, 'c', $sampleRate);
+        $this->_send($key, (int) $value, 'c', $sampleRate);
     }
 
     /**
@@ -96,11 +85,11 @@ class Statsd
      * @param int $value the timing in ms
      * @param int $sampleRate the sample rate, if < 1, statsd will send an average timing
      *
-     * @return string the sent message
+     * @return void
      */
     public function timing($key, $value, $sampleRate = 1)
     {
-        return $this->_send($key, (int) $value, 'ms', $sampleRate);
+        $this->_send($key, (int) $value, 'ms', $sampleRate);
     }
 
     /**
@@ -121,20 +110,17 @@ class Statsd
      * @param string $key
      * @param int $sampleRate (optional)
      *
-     * @return string the sent message
+     * @return void
      */
     public function endTiming($key, $sampleRate = 1)
     {
         $end = gettimeofday(true);
-        $message = '';
 
         if (array_key_exists($key, $this->_timings)) {
             $timing = ($end - $this->_timings[$key]) * 1000;
-            $message = $this->timing($key, $timing, $sampleRate);
+            $this->timing($key, $timing, $sampleRate);
             unset($this->_timings[$key]);
         }
-
-        return $message;
     }
 
     /**
@@ -164,7 +150,7 @@ class Statsd
      * @param string $type
      * @param int $samplingRate
      *
-     * @return string
+     * @return void
      */
     protected function _send($key, $value, $type, $samplingRate)
     {
@@ -178,14 +164,7 @@ class Statsd
             $message .= '|@' . (1 / $samplingRate);
         }
 
-        $socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port);
-
-        if ($socket) {
-            fwrite($socket, $message);
-            fclose($socket);
-        }
-
-        return $message;
+        $this->_connection->send($message);
     }
 
     /**
@@ -208,25 +187,5 @@ class Statsd
     public function getNamespace()
     {
         return $this->_namespace;
-    }
-
-    /**
-     * gets the configured host
-     *
-     * @return string
-     */
-    public function getHost()
-    {
-        return $this->_host;
-    }
-
-    /**
-     * gets the configured port
-     *
-     * @return int
-     */
-    public function getPort()
-    {
-        return $this->_port;
     }
 }
