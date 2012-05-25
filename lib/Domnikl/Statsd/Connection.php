@@ -33,7 +33,7 @@ class Connection
     {
         $this->_host = (string) $host;
         $this->_port = (int) $port;
-        $this->_socket = fsockopen(sprintf("upd://%s", $this->_host), $this->_port);
+        $this->_socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port);
     }
 
     /**
@@ -45,7 +45,7 @@ class Connection
      */
     public function send($message)
     {
-        if (0 != strlen($message)) {
+        if (0 != strlen($message) && $this->_socket) {
             fwrite($this->_socket, $message);
         }
     }
