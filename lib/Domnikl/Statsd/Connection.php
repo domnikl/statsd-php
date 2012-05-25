@@ -18,6 +18,13 @@ class Connection
     protected $_port;
 
     /**
+     * the used socket
+     *
+     * @var resource
+     */
+    protected $_socket;
+
+    /**
      *
      * @param string $host
      * @param int $port
@@ -26,6 +33,7 @@ class Connection
     {
         $this->_host = (string) $host;
         $this->_port = (int) $port;
+        $this->_socket = fsockopen(sprintf("upd://%s", $this->_host), $this->_port);
     }
 
     /**
@@ -38,12 +46,7 @@ class Connection
     public function send($message)
     {
         if (0 != strlen($message)) {
-            $socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port);
-
-            if ($socket) {
-                fwrite($socket, $message);
-                fclose($socket);
-            }
+            fwrite($this->_socket, $message);
         }
     }
 
