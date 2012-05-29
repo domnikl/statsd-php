@@ -160,18 +160,30 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/test\.foo\.baz:100[0|1]{1}|ms|@0.1/', $this->_connection->getLastMessage());
     }
 
+    /**
+     * @group memory
+     */
     public function testMemory()
     {
         $this->_client->memory('foo.bar');
         $this->assertRegExp('/test\.foo\.bar:[0-9]{4,}|c/', $this->_connection->getLastMessage());
     }
 
+    /**
+     * @group memory
+     */
     public function testMemoryProfile()
     {
         $this->_client->startMemoryProfile('foo.bar');
-        $foobar = 5;
+        $memoryUsage = memory_get_usage();
+        $foobar = "fooooooooooooooooooooooooooooooooooooooooooooooooooooooobar";
         $this->_client->endMemoryProfile('foo.bar');
 
-        $this->assertRegExp('/test\.foo\.bar:[0-9]{4,}|c/', $this->_connection->getLastMessage());
+        $message = $this->_connection->getLastMessage();
+        $this->assertRegExp('/test\.foo\.bar:[0-9]{4,}|c/', $message);
+
+
+        preg_match('/test\.foo\.bar\:([0-9]*)|c/', $message, $matches);
+        $this->assertGreaterThan(0, $matches[1]);
     }
 }

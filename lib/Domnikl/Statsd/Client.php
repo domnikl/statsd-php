@@ -139,7 +139,7 @@ class Client
      */
     public function startMemoryProfile($key)
     {
-        $this->_memoryProfiles[$key] = memory_get_usage(true);
+        $this->_memoryProfiles[$key] = memory_get_usage();
     }
 
     /**
@@ -152,7 +152,7 @@ class Client
      */
     public function endMemoryProfile($key, $sampleRate = 1)
     {
-        $end = memory_get_usage(true);
+        $end = memory_get_usage();
 
         if (array_key_exists($key, $this->_memoryProfiles)) {
             $memory = ($end - $this->_memoryProfiles[$key]);
