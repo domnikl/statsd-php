@@ -174,7 +174,7 @@ class Client
     public function memory($key, $memory = null, $sampleRate = 1)
     {
         if (null === $memory) {
-            $memory = memory_get_peak_usage(true);
+            $memory = memory_get_peak_usage();
         }
 
         $this->count($key, (int) $memory, $sampleRate);
