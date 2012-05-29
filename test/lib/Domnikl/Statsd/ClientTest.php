@@ -159,4 +159,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foobar', $evald);
         $this->assertRegExp('/test\.foo\.baz:100[0|1]{1}|ms|@0.1/', $this->_connection->getLastMessage());
     }
+
+    public function testMemory()
+    {
+        $this->_client->memory('foo.bar');
+        $this->assertRegExp('/test\.foo\.bar:[0-9]{4,}|c/', $this->_connection->getLastMessage());
+    }
+
+    public function testMemoryProfile()
+    {
+        $this->_client->startMemoryProfile('foo.bar');
+        $foobar = 5;
+        $this->_client->endMemoryProfile('foo.bar');
+
+        $this->assertRegExp('/test\.foo\.bar:[0-9]{4,}|c/', $this->_connection->getLastMessage());
+    }
 }

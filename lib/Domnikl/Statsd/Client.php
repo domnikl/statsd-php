@@ -21,6 +21,13 @@ class Client
     protected $_timings = array();
 
     /**
+     * holds all memory profiles similar to the timings
+     *
+     * @var array
+     */
+    protected $_memoryProfiles = array();
+
+    /**
      * key namespace
      *
      * @var string
@@ -121,6 +128,56 @@ class Client
             $this->timing($key, $timing, $sampleRate);
             unset($this->_timings[$key]);
         }
+    }
+
+    /**
+     * start memory "profiling"
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function startMemoryProfile($key)
+    {
+        $this->_memoryProfiles[$key] = memory_get_usage(true);
+    }
+
+    /**
+     * ends the memory profiling and sends the value to the server
+     *
+     * @param string $key
+     * @param int $sampleRate
+     *
+     * @return void
+     */
+    public function endMemoryProfile($key, $sampleRate = 1)
+    {
+        $end = memory_get_usage(true);
+
+        if (array_key_exists($key, $this->_memoryProfiles)) {
+            $memory = ($end - $this->_memoryProfiles[$key]);
+            $this->memory($key, $memory, $sampleRate);
+
+            unset($this->_memoryProfiles[$key]);
+        }
+    }
+
+    /**
+     * report memory usage to statsd. if memory was not given report peak usage
+     *
+     * @param string $key
+     * @param int $memory
+     * @param int $sampleRate
+     *
+     * @return void
+     */
+    public function memory($key, $memory = null, $sampleRate = 1)
+    {
+        if (null === $memory) {
+            $memory = memory_get_peak_usage(true);
+        }
+
+        $this->count($key, (int) $memory, $sampleRate);
     }
 
     /**
