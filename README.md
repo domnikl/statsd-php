@@ -39,6 +39,14 @@ $statsd->time("foo.bar.bla", function() {
 $statsd->startTiming("foo.bar");
 // more complex code here ...
 $statsd->endTiming("foo.bar");
+
+// memory profiling
+$statsd->startMemoryProfile('memory.foo');
+// some complex code goes here ...
+$statsd->endMemoryProfile('memory.foo');
+
+// report peak usage
+$stats->memory('foo.memory_peak_usage');
 ```
 
 ## Author
