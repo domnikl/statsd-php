@@ -28,4 +28,12 @@ class ConnectionMock extends \Domnikl\Statsd\Connection
     {
         return $this->messages[count($this->messages) - 1];
     }
+
+    /**
+     * @return bool
+     */
+    public function forceSampling()
+    {
+        return true;
+    }
 }

@@ -55,7 +55,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountWithSamplingRate()
     {
-        $this->_client->count('foo.baz', 100, 10);
+        $this->_client->count('foo.baz', 100, 0.1);
         $this->assertEquals(
             'test.foo.baz:100|c|@0.1',
             $this->_connection->getLastMessage()
@@ -76,9 +76,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testIncrementWithSamplingRate()
     {
-        $this->_client->increment('foo.baz', 100);
+        $this->_client->increment('foo.baz', 0.1);
         $this->assertEquals(
-            'test.foo.baz:1|c|@0.01',
+            'test.foo.baz:1|c|@0.1',
             $this->_connection->getLastMessage()
         );
     }
@@ -97,7 +97,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecrementWithSamplingRate()
     {
-        $this->_client->decrement('foo.baz', 20);
+        $this->_client->decrement('foo.baz', 0.05);
         $this->assertEquals(
             'test.foo.baz:-1|c|@0.05',
             $this->_connection->getLastMessage()
@@ -119,7 +119,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testTimingWithSamplingRate()
     {
-        $this->_client->timing('foo.baz', 2000, 10);
+        $this->_client->timing('foo.baz', 2000, 0.1);
         $this->assertEquals(
             'test.foo.baz:2000|ms|@0.1',
             $this->_connection->getLastMessage()
@@ -144,7 +144,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->_client->startTiming('foo.baz');
         sleep(1);
-        $this->_client->endTiming('foo.baz', 10);
+        $this->_client->endTiming('foo.baz', 0.1);
 
         // ranges between 1000 and 1001ms
         $this->assertRegExp('/test\.foo\.baz:100[0|1]{1}|ms|@0.1/', $this->_connection->getLastMessage());

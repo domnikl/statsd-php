@@ -205,23 +205,30 @@ class Client
      * @param string $key
      * @param int $value
      * @param string $type
-     * @param int $samplingRate
+     * @param int $sampleRate
      *
      * @return void
      */
-    protected function _send($key, $value, $type, $samplingRate)
+    protected function _send($key, $value, $type, $sampleRate)
     {
         if (0 != strlen($this->_namespace)) {
             $key = sprintf('%s.%s', $this->_namespace, $key);
         }
 
         $message = sprintf("%s:%d|%s", $key, $value, $type);
+        $sampledData = '';
 
-        if ($samplingRate != 1) {
-            $message .= '|@' . (1 / $samplingRate);
+        if ($sampleRate < 1) {
+            $sample = mt_rand() / mt_getrandmax();
+
+            if ($sample <= $sampleRate || $this->_connection->forceSampling()) {
+                $sampledData = sprintf('%s|@%s', $message, $sampleRate);
+            }
+        } else {
+            $sampledData = $message;
         }
 
-        $this->_connection->send($message);
+        $this->_connection->send($sampledData);
     }
 
     /**

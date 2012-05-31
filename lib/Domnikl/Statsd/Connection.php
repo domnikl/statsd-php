@@ -25,6 +25,13 @@ class Connection
     protected $_socket;
 
     /**
+     * is sampling allowed?
+     *
+     * @var bool
+     */
+    protected $_forceSampling = false;
+
+    /**
      *
      * @param string $host
      * @param int $port
@@ -65,5 +72,13 @@ class Connection
     public function getPort()
     {
         return $this->_port;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function forceSampling()
+    {
+        return (bool) $this->_forceSampling;
     }
 }
