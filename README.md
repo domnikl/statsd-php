@@ -1,6 +1,6 @@
 # statsd-php
 
-A PHP client for [statsd](https://github.com/etsy/statsd).
+A PHP client library for [statsd](https://github.com/etsy/statsd).
 
 ## Installation
 
@@ -14,7 +14,7 @@ The best way to install it is to use Composer and add the following to your proj
 }
 ```
 
-## Examples
+## Basic usage
 
 ```php
 <?php
@@ -28,7 +28,11 @@ $statsd->setNamespace("test");
 $statsd->increment("foo.bar");
 $statsd->decrement("foo.bar");
 $statsd->count("foo.bar", 1000);
+```
 
+## Timings
+
+```php
 // timings
 $statsd->timing("foo.bar", 320);
 $statsd->time("foo.bar.bla", function() {
@@ -39,7 +43,11 @@ $statsd->time("foo.bar.bla", function() {
 $statsd->startTiming("foo.bar");
 // more complex code here ...
 $statsd->endTiming("foo.bar");
+```
 
+## Memory profiling
+
+```php
 // memory profiling
 $statsd->startMemoryProfile('memory.foo');
 // some complex code goes here ...
