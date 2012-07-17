@@ -1,2 +1,5 @@
 # general
 .idea
+
+# test coverage report
+test/coverage
