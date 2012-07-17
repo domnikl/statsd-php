@@ -3,22 +3,28 @@
 namespace Domnikl\Statsd;
 
 /**
+ * encapsulates the connection to the statsd service
  *
+ * @author Dominik Liebler <liebler.dominik@googlemail.com>
  */
 class Connection
 {
     /**
+     * host name
+     *
      * @var string
      */
     protected $_host;
 
     /**
+     * port number
+     *
      * @var int
      */
     protected $_port;
 
     /**
-     * the used socket
+     * the used socket resource
      *
      * @var resource
      */
@@ -32,6 +38,7 @@ class Connection
     protected $_forceSampling = false;
 
     /**
+     * instantiates the Connection object and a real connection to statsd
      *
      * @param string $host
      * @param int $port
@@ -75,6 +82,8 @@ class Connection
     }
 
     /**
+     * is sampling forced?
+     *
      * @return boolean
      */
     public function forceSampling()

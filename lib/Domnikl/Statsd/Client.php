@@ -3,12 +3,15 @@
 namespace Domnikl\Statsd;
 
 /**
+ * the statsd client
  *
  * @author Dominik Liebler <liebler.dominik@googlemail.com>
  */
 class Client
 {
     /**
+     * Connection object that messages get send to
+     *
      * @var Connection
      */
     protected $_connection;
@@ -21,21 +24,21 @@ class Client
     protected $_timings = array();
 
     /**
-     * holds all memory profiles similar to the timings
+     * holds all memory profiles like timings
      *
      * @var array
      */
     protected $_memoryProfiles = array();
 
     /**
-     * key namespace
+     * global key namespace
      *
      * @var string
      */
     protected $_namespace = '';
 
     /**
-     * inits the Statsd object, but does not yet create a socket
+     * inits the Client object
      *
      * @param Connection $connection
      * @param string $namespace global key namespace
