@@ -33,6 +33,7 @@ $statsd->count("foo.bar", 1000);
 ## Timings
 
 ```php
+<?php
 // timings
 $statsd->timing("foo.bar", 320);
 $statsd->time("foo.bar.bla", function() {
@@ -48,6 +49,7 @@ $statsd->endTiming("foo.bar");
 ## Memory profiling
 
 ```php
+<?php
 // memory profiling
 $statsd->startMemoryProfile('memory.foo');
 // some complex code goes here ...
