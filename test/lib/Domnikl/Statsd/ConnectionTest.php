@@ -18,5 +18,6 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
         $connection = new \Domnikl\Statsd\Connection();
         $this->assertEquals('localhost', $connection->getHost());
         $this->assertEquals(8125, $connection->getPort());
+        $this->assertFalse($connection->forceSampling());
     }
 }
