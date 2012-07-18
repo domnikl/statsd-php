@@ -56,7 +56,7 @@ $statsd->startMemoryProfile('memory.foo');
 $statsd->endMemoryProfile('memory.foo');
 
 // report peak usage
-$stats->memory('foo.memory_peak_usage');
+$statsd->memory('foo.memory_peak_usage');
 ```
 
 ## Author
