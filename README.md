@@ -4,7 +4,7 @@ A PHP client library for [statsd](https://github.com/etsy/statsd).
 
 ## Installation
 
-The best way to install it is to use Composer and add the following to your project's `composer.json` file:
+The best way to install statsd-php is to use Composer and add the following to your project's `composer.json` file:
 
 ```javascript
 {
@@ -21,7 +21,7 @@ The best way to install it is to use Composer and add the following to your proj
 $connection = new \Domnikl\Statsd\Connection('localhost', 8125);
 $statsd = new \Domnikl\Statsd\Client($connection, "test.namespace");
 
-// the global namespace gets prepended to every key
+// the global namespace is prepended to every key (optional)
 $statsd->setNamespace("test");
 
 // simple counts
