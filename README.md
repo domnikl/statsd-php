@@ -18,7 +18,7 @@ The best way to install statsd-php is to use Composer and add the following to y
 
 ```php
 <?php
-$connection = new \Domnikl\Statsd\Connection('localhost', 8125);
+$connection = new \Domnikl\Statsd\Connection\Socket('localhost', 8125);
 $statsd = new \Domnikl\Statsd\Client($connection, "test.namespace");
 
 // the global namespace is prepended to every key (optional)
