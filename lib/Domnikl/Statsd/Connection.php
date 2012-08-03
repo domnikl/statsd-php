@@ -3,91 +3,27 @@
 namespace Domnikl\Statsd;
 
 /**
- * encapsulates the connection to the statsd service
+ * An interface for a Statsd connection implementation
  *
- * @author Dominik Liebler <liebler.dominik@googlemail.com>
+ * @author Derek Gallo <dgallo@avectra.com>
  */
-class Connection
+interface Connection
 {
-    /**
-     * host name
-     *
-     * @var string
-     */
-    protected $_host;
 
     /**
-     * port number
-     *
-     * @var int
-     */
-    protected $_port;
-
-    /**
-     * the used socket resource
-     *
-     * @var resource
-     */
-    protected $_socket;
-
-    /**
-     * is sampling allowed?
-     *
-     * @var bool
-     */
-    protected $_forceSampling = false;
-
-    /**
-     * instantiates the Connection object and a real connection to statsd
-     *
-     * @param string $host
-     * @param int $port
-     */
-    public function __construct($host = 'localhost', $port = 8125)
-    {
-        $this->_host = (string) $host;
-        $this->_port = (int) $port;
-        $this->_socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port);
-    }
-
-    /**
-     * sends a message to the UDP socket
+     * sends a message to Statsd
      *
      * @param $message
      *
      * @return void
      */
-    public function send($message)
-    {
-        if (0 != strlen($message) && $this->_socket) {
-            fwrite($this->_socket, $message);
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getHost()
-    {
-        return $this->_host;
-    }
-
-
-    /**
-     * @return int
-     */
-    public function getPort()
-    {
-        return $this->_port;
-    }
-
+    public function send($message);
+    
     /**
      * is sampling forced?
      *
      * @return boolean
      */
-    public function forceSampling()
-    {
-        return (bool) $this->_forceSampling;
-    }
+    public function forceSampling();
 }
+	
