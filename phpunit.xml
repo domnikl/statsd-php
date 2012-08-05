@@ -15,6 +15,7 @@
     <testsuites>
         <testsuite name="statsd-php Test Suite">
             <file>test/lib/Domnikl/Statsd/ClientTest.php</file>
+			<file>test/lib/Domnikl/Statsd/ClientBatchTest.php</file>
             <file>test/lib/Domnikl/Statsd/Connection/SocketTest.php</file>
         </testsuite>
     </testsuites>

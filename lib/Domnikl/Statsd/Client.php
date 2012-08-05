@@ -37,6 +37,20 @@ class Client
      */
     protected $_namespace = '';
 
+	/**
+	 * stores the batch after batch processing was started
+	 *
+	 * @var array
+	 */
+	protected $_batch = array();
+
+	/**
+	 * batch mode?
+	 *
+	 * @var boolean
+	 */
+	protected $_isBatch = false;
+
     /**
      * inits the Client object
      *
@@ -244,7 +258,11 @@ class Client
             $sampledData = $message;
         }
 
-        $this->_connection->send($sampledData);
+		if (!$this->_isBatch) {
+        	$this->_connection->send($sampledData);
+		} else {
+			$this->_batch[] = $sampledData;
+		}
     }
 
     /**
@@ -268,4 +286,47 @@ class Client
     {
         return $this->_namespace;
     }
+
+	/**
+	 * is batch processing running?
+	 *
+	 * @return boolean
+	 */
+	public function isBatch()
+	{
+		return $this->_isBatch;
+	}
+	
+	/**
+	 * start batch-send-recording
+	 * 
+	 * @return void
+	 */
+	public function startBatch()
+	{
+		$this->_isBatch = true;
+	}
+	
+	/**
+	 * ends batch-send-recording and sends the recorded messages to the connection
+	 *
+	 * @return void
+	 */
+	public function endBatch()
+	{
+		$this->_isBatch = false;
+		$this->_connection->send(join("\n", $this->_batch));
+		$this->_batch = array();
+	}
+	
+	/**
+	 * stops batch-recording and resets the batch
+	 *
+	 * @return void
+	 */
+	public function cancelBatch()
+	{
+		$this->_isBatch = false;
+		$this->_batch = array();
+	}
 }
