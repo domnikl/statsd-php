@@ -202,6 +202,19 @@ class Client
         return $return;
     }
 
+	/**
+	 * sends a gauge, an arbitrary value to StatsD
+	 *
+	 * @param string $key
+	 * @param int $value
+	 * 
+	 * @return void
+	 */
+	public function gauge($key, $value)
+	{
+		$this->_send($key, (int) $value, 'g', 1);
+	}
+
     /**
      * actually sends a message to to the daemon and returns the sent message
      *

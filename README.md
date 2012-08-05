@@ -59,6 +59,15 @@ $statsd->endMemoryProfile('memory.foo');
 $statsd->memory('foo.memory_peak_usage');
 ```
 
+## Gauges
+
+statsd supports gauges, arbitrary values which can be recorded.
+
+```php
+<?php
+$statsd->gauge('foobar', 3);
+```
+
 ## Author
 
 Original author: Dominik Liebler <liebler.dominik@googlemail.com>
