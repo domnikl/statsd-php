@@ -9,7 +9,8 @@ require_once __DIR__ . '/../../../../lib/Domnikl/Statsd/Connection.php';
  * instance variable that can be checked by the test
  *
  */
-class ConnectionMock extends \Domnikl\Statsd\Connection
+class ConnectionMock 
+	implements \Domnikl\Statsd\Connection
 {
     public $messages = array();
 
