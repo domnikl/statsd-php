@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="statsd-php : a PHP client for statsd" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>statsd-php</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/domnikl/statsd-php">View on GitHub</a>
+
+          <h1 id="project_title">statsd-php</h1>
+          <h2 id="project_tagline">a PHP client for statsd</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/domnikl/statsd-php/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/domnikl/statsd-php/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>statsd-php</h1>
+
+<p>A PHP client for <a href="https://github.com/etsy/statsd">statsd</a>.</p>
+
+<h2>Installation</h2>
+
+<p>The best way to install it is to use Composer and add the following to your project's <code>composer.json</code> file:</p>
+
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="s2">"require"</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">"domnikl/statsd"</span><span class="o">:</span> <span class="s2">"*"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>Basic usage</h2>
+
+<div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$connection</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Domnikl\Statsd\Connection</span><span class="p">(</span><span class="s1">'localhost'</span><span class="p">,</span> <span class="mi">8125</span><span class="p">);</span>
+<span class="nv">$statsd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Domnikl\Statsd\Client</span><span class="p">(</span><span class="nv">$connection</span><span class="p">,</span> <span class="s2">"test.namespace"</span><span class="p">);</span>
+
+<span class="c1">// the global namespace gets prepended to every key</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">setNamespace</span><span class="p">(</span><span class="s2">"test"</span><span class="p">);</span>
+
+<span class="c1">// simple counts</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">increment</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">);</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">decrement</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">);</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">count</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
+</pre></div>
+
+<h2>Timings</h2>
+
+<div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// timings</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">timing</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">,</span> <span class="mi">320</span><span class="p">);</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">time</span><span class="p">(</span><span class="s2">"foo.bar.bla"</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// code to be measured goes here ...</span>
+<span class="p">});</span>
+
+<span class="c1">// more complex timings can be handled with startTiming() and endTiming()</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">startTiming</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">);</span>
+<span class="c1">// more complex code here ...</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">endTiming</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">);</span>
+</pre></div>
+
+<h2>Memory profiling</h2>
+
+<div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// memory profiling</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">startMemoryProfile</span><span class="p">(</span><span class="s1">'memory.foo'</span><span class="p">);</span>
+<span class="c1">// some complex code goes here ...</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">endMemoryProfile</span><span class="p">(</span><span class="s1">'memory.foo'</span><span class="p">);</span>
+
+<span class="c1">// report peak usage</span>
+<span class="nv">$stats</span><span class="o">-&gt;</span><span class="na">memory</span><span class="p">(</span><span class="s1">'foo.memory_peak_usage'</span><span class="p">);</span>
+</pre></div>
+
+<h2>Gauges</h2>
+
+<p>statsd supports gauges, arbitrary values which can be recorded.</p>
+
+<div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">gauge</span><span class="p">(</span><span class="s1">'foobar'</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</pre></div>
+
+<h2>Author</h2>
+
+<p>Original author: Dominik Liebler <a href="mailto:liebler.dominik@googlemail.com">liebler.dominik@googlemail.com</a></p>
+
+<h2>License</h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2012 Dominik Liebler</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">statsd-php maintained by <a href="https://github.com/domnikl">domnikl</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-9816149-14");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
