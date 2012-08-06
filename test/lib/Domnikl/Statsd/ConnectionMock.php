@@ -27,7 +27,13 @@ class ConnectionMock
      */
     public function getLastMessage()
     {
-        return $this->messages[count($this->messages) - 1];
+		$i = count($this->messages) - 1;
+	
+		if (array_key_exists($i, $this->messages)) {
+			return $this->messages[$i];
+		} else {
+			return null;
+		}
     }
 
     /**
