@@ -2,6 +2,9 @@
 
 A PHP client library for [statsd](https://github.com/etsy/statsd).
 
+[![Build Status](https://secure.travis-ci.org/domnikl/statsd-php.png?branch=develop)](http://travis-ci.org/domnikl/statsd-php)
+
+
 ## Installation
 
 The best way to install statsd-php is to use Composer and add the following to your project's `composer.json` file:
