@@ -11,7 +11,6 @@
     stopOnFailure="false"
     syntaxCheck="true"
     strict="false">
-
     <testsuites>
         <testsuite name="statsd-php Test Suite">
             <file>test/lib/Domnikl/Statsd/ClientTest.php</file>
