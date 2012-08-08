@@ -63,7 +63,7 @@ class Socket
     public function send($message)
     {
         if (0 != strlen($message) && $this->_socket) {
-            var_dump(fwrite($this->_socket, $message));
+            fwrite($this->_socket, $message);
         }
     }
 
