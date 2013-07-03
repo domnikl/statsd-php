@@ -31,11 +31,13 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>statsd-php</h1>
+        <h1>
+<a name="statsd-php" class="anchor" href="#statsd-php"><span class="octicon octicon-link"></span></a>statsd-php</h1>
 
 <p>A PHP client for <a href="https://github.com/etsy/statsd">statsd</a>.</p>
 
-<h2>Installation</h2>
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>The best way to install it is to use Composer and add the following to your project's <code>composer.json</code> file:</p>
 
@@ -46,10 +48,11 @@
 <span class="p">}</span>
 </pre></div>
 
-<h2>Basic usage</h2>
+<h2>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h2>
 
 <div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
-<span class="nv">$connection</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Domnikl\Statsd\Connection</span><span class="p">(</span><span class="s1">'localhost'</span><span class="p">,</span> <span class="mi">8125</span><span class="p">);</span>
+<span class="nv">$connection</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Domnikl\Statsd\Connection\Socket</span><span class="p">(</span><span class="s1">'localhost'</span><span class="p">,</span> <span class="mi">8125</span><span class="p">);</span>
 <span class="nv">$statsd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Domnikl\Statsd\Client</span><span class="p">(</span><span class="nv">$connection</span><span class="p">,</span> <span class="s2">"test.namespace"</span><span class="p">);</span>
 
 <span class="c1">// the global namespace gets prepended to every key</span>
@@ -61,7 +64,8 @@
 <span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">count</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
 </pre></div>
 
-<h2>Timings</h2>
+<h2>
+<a name="timings" class="anchor" href="#timings"><span class="octicon octicon-link"></span></a>Timings</h2>
 
 <div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="c1">// timings</span>
@@ -76,7 +80,8 @@
 <span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">endTiming</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">);</span>
 </pre></div>
 
-<h2>Memory profiling</h2>
+<h2>
+<a name="memory-profiling" class="anchor" href="#memory-profiling"><span class="octicon octicon-link"></span></a>Memory profiling</h2>
 
 <div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="c1">// memory profiling</span>
@@ -88,7 +93,8 @@
 <span class="nv">$stats</span><span class="o">-&gt;</span><span class="na">memory</span><span class="p">(</span><span class="s1">'foo.memory_peak_usage'</span><span class="p">);</span>
 </pre></div>
 
-<h2>Gauges</h2>
+<h2>
+<a name="gauges" class="anchor" href="#gauges"><span class="octicon octicon-link"></span></a>Gauges</h2>
 
 <p>statsd supports gauges, arbitrary values which can be recorded.</p>
 
@@ -96,11 +102,13 @@
 <span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">gauge</span><span class="p">(</span><span class="s1">'foobar'</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
 </pre></div>
 
-<h2>Author</h2>
+<h2>
+<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
 
 <p>Original author: Dominik Liebler <a href="mailto:liebler.dominik@googlemail.com">liebler.dominik@googlemail.com</a></p>
 
-<h2>License</h2>
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>(The MIT License)</p>
 
