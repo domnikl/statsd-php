@@ -63,7 +63,11 @@ class Socket
     public function send($message)
     {
         if (0 != strlen($message) && $this->_socket) {
-            fwrite($this->_socket, $message);
+            try {
+                fwrite($this->_socket, $message);
+            } catch (\Exception $e) {
+                // ignore it: stats logging failure shouldn't stop the whole app
+            }
         }
     }
 
