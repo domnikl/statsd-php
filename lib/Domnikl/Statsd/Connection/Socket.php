@@ -77,9 +77,9 @@ class Socket implements Connection
         $errno = null;
         $errstr = null;
         if ($this->_persistent) {
-            $this->_socket = pfsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $timeout);
+            $this->_socket = pfsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
         } else {
-            $this->_socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $timeout);
+            $this->_socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
         }
     }
 
