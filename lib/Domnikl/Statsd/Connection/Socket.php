@@ -64,7 +64,8 @@ class Socket
     {
         if (0 != strlen($message) && $this->_socket) {
             try {
-                fwrite($this->_socket, $message);
+                // total suppression of errors
+                @fwrite($this->_socket, $message);
             } catch (\Exception $e) {
                 // ignore it: stats logging failure shouldn't stop the whole app
             }
