@@ -132,17 +132,22 @@ class Client
      * ends the timing for a key and sends it to statsd
      *
      * @param string $key
+     * @param string $alternativeKey (optional)
      * @param int $sampleRate (optional)
      *
      * @return void
      */
-    public function endTiming($key, $sampleRate = 1)
+    public function endTiming($key, $alternativeKey = null, $sampleRate = 1)
     {
         $end = gettimeofday(true);
 
         if (array_key_exists($key, $this->_timings)) {
             $timing = ($end - $this->_timings[$key]) * 1000;
-            $this->timing($key, $timing, $sampleRate);
+            if ($alternativeKey) {
+              $this->timing($alternativeKey, $timing, $sampleRate);
+            } else {
+              $this->timing($key, $timing, $sampleRate);
+            }
             unset($this->_timings[$key]);
         }
     }
