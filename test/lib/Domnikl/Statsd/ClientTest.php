@@ -194,4 +194,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 		$message = $this->_connection->getLastMessage();
 		$this->assertEquals('test.foobar:333|g', $message);
 	}
+
+    public function testSet()
+    {
+        $this->_client->set("barfoo", 666);
+
+        $message = $this->_connection->getLastMessage();
+        $this->assertEquals('test.barfoo:666|s', $message);
+    }
+
 }

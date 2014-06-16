@@ -230,6 +230,19 @@ class Client
     }
 
     /**
+     * sends a set member
+     *
+     * @param string $key
+     * @param int $value
+     * 
+     * @return void
+     */
+    public function set($key, $value)
+    {
+        $this->_send($key, $value, 's', 1);
+    }
+
+    /**
      * actually sends a message to to the daemon and returns the sent message
      *
      * @param string $key
