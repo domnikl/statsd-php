@@ -71,6 +71,16 @@ statsd supports gauges, arbitrary values which can be recorded.
 $statsd->gauge('foobar', 3);
 ```
 
+## Sets
+
+statsd supports sets, so you can view the uniqueness of a given value.
+
+```php
+<?php
+$statsd->set('userId', 1234);
+```
+
+
 ## disabling sending of metrics
 
 To disable sending any metrics, you can use the `Domnikl\Statsd\Connection\Blackhole` connection class instead of the default socket abstraction. This may be incredibly useful for feature flags.
