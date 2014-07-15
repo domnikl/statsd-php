@@ -138,7 +138,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->_client->endTiming($key);
         
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/^test\.foo\.bar:1[01]|ms$/', $this->_connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.bar:1[01]\|ms$/', $this->_connection->getLastMessage());
     }
 
     /**
@@ -148,11 +148,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->_connection->setForceSampling(true);
         $this->_client->startTiming('foo.baz');
-        usleep(1);
+        usleep(10000);
         $this->_client->endTiming('foo.baz', 1);
 
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/^test\.foo\.baz:1[01]|ms|@1/', $this->_connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.baz:1[01]\|ms\|@1$/', $this->_connection->getLastMessage());
     }
 
     public function testTimeClosure()
