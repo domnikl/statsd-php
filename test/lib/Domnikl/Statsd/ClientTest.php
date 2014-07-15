@@ -55,9 +55,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountWithSamplingRate()
     {
-        $this->_client->count('foo.baz', 100, 0.1);
+        $this->_connection->setForceSampling(true);
+        $this->_client->count('foo.baz', 100, 1);
         $this->assertEquals(
-            'test.foo.baz:100|c|@0.1',
+            'test.foo.baz:100|c|@1',
             $this->_connection->getLastMessage()
         );
     }
@@ -76,9 +77,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testIncrementWithSamplingRate()
     {
-        $this->_client->increment('foo.baz', 0.1);
+        $this->_connection->setForceSampling(true);
+        $this->_client->increment('foo.baz', 1);
         $this->assertEquals(
-            'test.foo.baz:1|c|@0.1',
+            'test.foo.baz:1|c|@1',
             $this->_connection->getLastMessage()
         );
     }
@@ -97,9 +99,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecrementWithSamplingRate()
     {
-        $this->_client->decrement('foo.baz', 0.05);
+        $this->_connection->setForceSampling(true);
+        $this->_client->decrement('foo.baz', 1);
         $this->assertEquals(
-            'test.foo.baz:-1|c|@0.05',
+            'test.foo.baz:-1|c|@1',
             $this->_connection->getLastMessage()
         );
     }
@@ -119,9 +122,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testTimingWithSamplingRate()
     {
-        $this->_client->timing('foo.baz', 2000, 0.1);
+        $this->_connection->setForceSampling(true);
+        $this->_client->timing('foo.baz', 2000, 1);
         $this->assertEquals(
-            'test.foo.baz:2000|ms|@0.1',
+            'test.foo.baz:2000|ms|@1',
             $this->_connection->getLastMessage()
         );
     }
@@ -130,11 +134,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $key = 'foo.bar';
         $this->_client->startTiming($key);
-        sleep(1);
+        usleep(10000);
         $this->_client->endTiming($key);
-
+        
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/test\.foo\.bar:100[0|1]{1}|ms/', $this->_connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.bar:1[01]|ms$/', $this->_connection->getLastMessage());
     }
 
     /**
@@ -142,12 +146,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testStartEndTimingWithSamplingRate()
     {
+        $this->_connection->setForceSampling(true);
         $this->_client->startTiming('foo.baz');
-        sleep(1);
-        $this->_client->endTiming('foo.baz', 0.1);
+        usleep(1);
+        $this->_client->endTiming('foo.baz', 1);
 
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/test\.foo\.baz:100[0|1]{1}|ms|@0.1/', $this->_connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.baz:1[01]|ms|@1/', $this->_connection->getLastMessage());
     }
 
     public function testTimeClosure()
