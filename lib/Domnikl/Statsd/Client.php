@@ -248,11 +248,11 @@ class Client
         $message = sprintf("%s:%d|%s", $key, $value, $type);
         $sampledData = '';
 
-            $sample = mt_rand() / mt_getrandmax();
+        $sample = mt_rand() / mt_getrandmax();
 
-            if ($sample > $sampleRate) {
-                return;
-            }
+        if ($sample > $sampleRate) {
+            return;
+        }
 
         if ($sampleRate < 1 || $this->_connection->forceSampling()) {
             $sampledData = sprintf('%s|@%s', $message, $sampleRate);
