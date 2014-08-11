@@ -13,6 +13,7 @@ class ConnectionMock
 	implements \Domnikl\Statsd\Connection
 {
     public $messages = array();
+    private $forceSampling = false;
 
     /**
      * @param string $message
@@ -37,10 +38,18 @@ class ConnectionMock
     }
 
     /**
+     * @param bool $bool True if sampling should be forced.
+     */
+    public function setForceSampling($bool)
+    {
+        $this->forceSampling = (bool) $bool;
+    }
+
+    /**
      * @return bool
      */
     public function forceSampling()
     {
-        return true;
+        return $this->forceSampling;
     }
 }
