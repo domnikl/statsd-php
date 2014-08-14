@@ -37,19 +37,19 @@ class Client
      */
     protected $_namespace = '';
 
-	/**
-	 * stores the batch after batch processing was started
-	 *
-	 * @var array
-	 */
-	protected $_batch = array();
+    /**
+     * stores the batch after batch processing was started
+     *
+     * @var array
+     */
+    protected $_batch = array();
 
-	/**
-	 * batch mode?
-	 *
-	 * @var boolean
-	 */
-	protected $_isBatch = false;
+    /**
+     * batch mode?
+     *
+     * @var boolean
+     */
+    protected $_isBatch = false;
 
     /**
      * inits the Client object
@@ -216,18 +216,31 @@ class Client
         return $return;
     }
 
-	/**
-	 * sends a gauge, an arbitrary value to StatsD
-	 *
-	 * @param string $key
-	 * @param int $value
-	 * 
-	 * @return void
-	 */
-	public function gauge($key, $value)
-	{
-		$this->_send($key, (int) $value, 'g', 1);
-	}
+    /**
+     * sends a gauge, an arbitrary value to StatsD
+     *
+     * @param string $key
+     * @param int $value
+     * 
+     * @return void
+     */
+    public function gauge($key, $value)
+    {
+        $this->_send($key, (int) $value, 'g', 1);
+    }
+
+    /**
+     * sends a set member
+     *
+     * @param string $key
+     * @param int $value
+     * 
+     * @return void
+     */
+    public function set($key, $value)
+    {
+        $this->_send($key, $value, 's', 1);
+    }
 
     /**
      * actually sends a message to to the daemon and returns the sent message
@@ -260,11 +273,11 @@ class Client
             $sampledData = $message;
         }
 
-		if (!$this->_isBatch) {
-        	$this->_connection->send($sampledData);
-		} else {
-			$this->_batch[] = $sampledData;
-		}
+        if (!$this->_isBatch) {
+            $this->_connection->send($sampledData);
+        } else {
+            $this->_batch[] = $sampledData;
+        }
     }
 
     /**
@@ -289,46 +302,46 @@ class Client
         return $this->_namespace;
     }
 
-	/**
-	 * is batch processing running?
-	 *
-	 * @return boolean
-	 */
-	public function isBatch()
-	{
-		return $this->_isBatch;
-	}
-	
-	/**
-	 * start batch-send-recording
-	 * 
-	 * @return void
-	 */
-	public function startBatch()
-	{
-		$this->_isBatch = true;
-	}
-	
-	/**
-	 * ends batch-send-recording and sends the recorded messages to the connection
-	 *
-	 * @return void
-	 */
-	public function endBatch()
-	{
-		$this->_isBatch = false;
-		$this->_connection->send(join("\n", $this->_batch));
-		$this->_batch = array();
-	}
-	
-	/**
-	 * stops batch-recording and resets the batch
-	 *
-	 * @return void
-	 */
-	public function cancelBatch()
-	{
-		$this->_isBatch = false;
-		$this->_batch = array();
-	}
+    /**
+     * is batch processing running?
+     *
+     * @return boolean
+     */
+    public function isBatch()
+    {
+        return $this->_isBatch;
+    }
+    
+    /**
+     * start batch-send-recording
+     * 
+     * @return void
+     */
+    public function startBatch()
+    {
+        $this->_isBatch = true;
+    }
+    
+    /**
+     * ends batch-send-recording and sends the recorded messages to the connection
+     *
+     * @return void
+     */
+    public function endBatch()
+    {
+        $this->_isBatch = false;
+        $this->_connection->send(join("\n", $this->_batch));
+        $this->_batch = array();
+    }
+    
+    /**
+     * stops batch-recording and resets the batch
+     *
+     * @return void
+     */
+    public function cancelBatch()
+    {
+        $this->_isBatch = false;
+        $this->_batch = array();
+    }
 }

@@ -192,11 +192,20 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(0, $matches[1]);
     }
 
-	public function testGauge()
-	{
-		$this->_client->gauge("foobar", 333);
-		
-		$message = $this->_connection->getLastMessage();
-		$this->assertEquals('test.foobar:333|g', $message);
-	}
+    public function testGauge()
+    {
+        $this->_client->gauge("foobar", 333);
+        
+        $message = $this->_connection->getLastMessage();
+        $this->assertEquals('test.foobar:333|g', $message);
+    }
+
+    public function testSet()
+    {
+        $this->_client->set("barfoo", 666);
+
+        $message = $this->_connection->getLastMessage();
+        $this->assertEquals('test.barfoo:666|s', $message);
+    }
+
 }
