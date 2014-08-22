@@ -3,3 +3,8 @@
 
 # test coverage report
 test/coverage
+
+# composer 
+/vendor
+/composer.lock
+

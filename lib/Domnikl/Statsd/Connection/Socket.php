@@ -9,8 +9,7 @@ use Domnikl\Statsd\Connection as Connection;
  *
  * @author Dominik Liebler <liebler.dominik@googlemail.com>
  */
-class Socket
-	implements Connection
+class Socket implements Connection
 {
     /**
      * host name
@@ -25,6 +24,20 @@ class Socket
      * @var int
      */
     protected $_port;
+
+    /**
+     * Socket timeout
+     *
+     * @var int
+     */
+    protected $_timeout;
+
+    /**
+     * Persistent connection
+     *
+     * @var bool
+     */
+    protected $_persistent = false;
 
     /**
      * the used socket resource
@@ -43,14 +56,31 @@ class Socket
     /**
      * instantiates the Connection object and a real connection to statsd
      *
-     * @param string $host
-     * @param int $port
+     * @param string $host Statsd hostname
+     * @param int $port Statsd port
+     * @param int $timeout Connection timeout
+     * @param bool $persistent (default FALSE) Use persistent connection or not
      */
-    public function __construct($host = 'localhost', $port = 8125)
+    public function __construct($host = 'localhost', $port = 8125, $timeout = null, $persistent = false)
     {
-        $this->_host = (string) $host;
-        $this->_port = (int) $port;
-        $this->_socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port);
+        $this->_host = (string)$host;
+        $this->_port = (int)$port;
+        $this->_timeout = $timeout;
+        $this->_persistent = $persistent;
+    }
+
+    /**
+     * connect to statsd service
+     */
+    protected function connect()
+    {
+        $errno = null;
+        $errstr = null;
+        if ($this->_persistent) {
+            $this->_socket = pfsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
+        } else {
+            $this->_socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
+        }
     }
 
     /**
@@ -62,6 +92,9 @@ class Socket
      */
     public function send($message)
     {
+        if (!$this->_socket) {
+            $this->connect();
+        }
         if (0 != strlen($message) && $this->_socket) {
             try {
                 // total suppression of errors
@@ -90,12 +123,28 @@ class Socket
     }
 
     /**
+     * @return int
+     */
+    public function getTimeout()
+    {
+        return $this->_timeout;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPersistent()
+    {
+        return $this->_persistent;
+    }
+
+    /**
      * is sampling forced?
      *
      * @return boolean
      */
     public function forceSampling()
     {
-        return (bool) $this->_forceSampling;
+        return (bool)$this->_forceSampling;
     }
 }
