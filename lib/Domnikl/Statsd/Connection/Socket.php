@@ -40,6 +40,13 @@ class Socket implements Connection
     protected $_persistent = false;
 
     /**
+     * Protocol udp or tcp
+     *
+     * @var string
+     */
+    protected $_protocol = 'udp';
+
+    /**
      * the used socket resource
      *
      * @var resource
@@ -61,12 +68,13 @@ class Socket implements Connection
      * @param int $timeout Connection timeout
      * @param bool $persistent (default FALSE) Use persistent connection or not
      */
-    public function __construct($host = 'localhost', $port = 8125, $timeout = null, $persistent = false)
+    public function __construct($host = 'localhost', $port = 8125, $timeout = null, $persistent = false, $protocol = 'udp')
     {
         $this->_host = (string)$host;
         $this->_port = (int)$port;
         $this->_timeout = $timeout;
         $this->_persistent = $persistent;
+        $this->_protocol = $protocol;
     }
 
     /**
@@ -77,9 +85,9 @@ class Socket implements Connection
         $errno = null;
         $errstr = null;
         if ($this->_persistent) {
-            $this->_socket = pfsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
+            $this->_socket = pfsockopen(sprintf("%s://%s", $this->_protocol, $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
         } else {
-            $this->_socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
+            $this->_socket = fsockopen(sprintf("%s://%s", $this->_protocol, $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
         }
     }
 
@@ -97,8 +105,14 @@ class Socket implements Connection
         }
         if (0 != strlen($message) && $this->_socket) {
             try {
+		if ($this->_protocol == 'tcp') {
+			$message .= "\r\n";
+		}
                 // total suppression of errors
-                @fwrite($this->_socket, $message);
+                if (@fwrite($this->_socket, $message) === false && $this->_protocol == 'tcp') {
+                    fclose($this->_socket);
+                    $this->_socket == null;
+                }
             } catch (\Exception $e) {
                 // ignore it: stats logging failure shouldn't stop the whole app
             }
