@@ -109,7 +109,7 @@ class Socket implements Connection
 			$message .= "\r\n";
 		}
                 // total suppression of errors
-                if (@fwrite($this->_socket, $message) === false) {
+                if (@fwrite($this->_socket, $message) === false && $this->_protocol == 'tcp') {
                     fclose($this->_socket);
                     $this->_socket == null;
                 }
