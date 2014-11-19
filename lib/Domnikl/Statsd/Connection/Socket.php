@@ -109,7 +109,10 @@ class Socket implements Connection
 			$message .= "\r\n";
 		}
                 // total suppression of errors
-                @fwrite($this->_socket, $message);
+                if (@fwrite($this->_socket, $message) === false) {
+                    fclose($this->_socket);
+                    $this->_socket == null;
+                }
             } catch (\Exception $e) {
                 // ignore it: stats logging failure shouldn't stop the whole app
             }
