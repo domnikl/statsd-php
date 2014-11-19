@@ -74,6 +74,7 @@ class Socket implements Connection
         $this->_port = (int)$port;
         $this->_timeout = $timeout;
         $this->_persistent = $persistent;
+        $this->_protocol = $protocol;
     }
 
     /**
