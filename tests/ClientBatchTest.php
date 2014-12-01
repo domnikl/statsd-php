@@ -15,13 +15,13 @@ class ClientBatchTest extends \PHPUnit_Framework_TestCase
     private $client;
 
     /**
-     * @var \Domnikl\Test\Statsd\ConnectionMock
+     * @var ConnectionMock
      */
     private $connection;
 
     public function setUp()
     {
-        $this->connection = new \Domnikl\Test\Statsd\ConnectionMock();
+        $this->connection = new ConnectionMock();
         $this->client = new Client($this->connection);
     }
 
