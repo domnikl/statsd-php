@@ -69,10 +69,12 @@ class Socket implements Connection
 
     /**
      * connect to statsd service
+     *
+     * @codeCoverageIgnore
+     * this is ignored because it requires to open a real UDP socket
      */
-    protected function connect()
+    private function connect()
     {
-        // TODO: Why these??
         $errorNumber = null;
         $errorMessage = null;
 
@@ -87,6 +89,9 @@ class Socket implements Connection
      * sends a message to the UDP socket
      *
      * @param string $message
+     *
+     * @codeCoverageIgnore
+     * this is ignored because it writes to an actual socket and is not testable
      */
     public function send($message)
     {
