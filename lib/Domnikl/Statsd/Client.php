@@ -134,7 +134,7 @@ class Client
      * @param string $key
      * @param int $sampleRate (optional)
      *
-     * @return mixed
+     * @return float|null
      */
     public function endTiming($key, $sampleRate = 1)
     {
