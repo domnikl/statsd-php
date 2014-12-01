@@ -2,7 +2,7 @@
 
 namespace Domnikl\Test\Statsd;
 
-require_once __DIR__ . '/../../../../lib/Domnikl/Statsd/Client.php';
+require_once __DIR__ . '/../lib/Client.php';
 require_once __DIR__ . '/ConnectionMock.php';
 
 use Domnikl\Statsd\Client as Client;

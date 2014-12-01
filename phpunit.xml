@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
 <phpunit
     backupGlobals="false"
     backupStaticAttributes="false"
@@ -13,9 +12,9 @@
     strict="false">
     <testsuites>
         <testsuite name="statsd-php Test Suite">
-            <file>test/lib/Domnikl/Statsd/ClientTest.php</file>
-			<file>test/lib/Domnikl/Statsd/ClientBatchTest.php</file>
-            <file>test/lib/Domnikl/Statsd/Connection/SocketTest.php</file>
+            <file>tests/ClientTest.php</file>
+            <file>tests/ClientBatchTest.php</file>
+            <file>tests/Connection/SocketTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

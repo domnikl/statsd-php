@@ -2,7 +2,7 @@
 
 namespace Domnikl\Test\Statsd\Connection;
 
-require_once __DIR__ . '/../../../../../lib/Domnikl/Statsd/Connection/Socket.php';
+require_once __DIR__ . '/../../lib/Connection/Socket.php';
 
 class SocketTest extends \PHPUnit_Framework_TestCase
 {

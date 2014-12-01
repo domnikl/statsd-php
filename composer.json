@@ -15,6 +15,8 @@
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {
-        "psr-0": { "Domnikl": "lib/" }
+        "psr-4": {
+            "Domnikl\\Statsd\\": "lib/"
+        }
     }
 }
