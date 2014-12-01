@@ -12,13 +12,12 @@ class ClientBatchTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \Domnikl\Statsd\Client
      */
-    protected $client;
+    private $client;
 
     /**
      * @var \Domnikl\Test\Statsd\ConnectionMock
      */
-    protected $connection;
-
+    private $connection;
 
     public function setUp()
     {
