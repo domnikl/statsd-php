@@ -26,7 +26,7 @@ class Socket implements Connection
     /**
      * Socket timeout
      *
-     * @var int
+     * @var int|null
      */
     private $timeout;
 
@@ -40,7 +40,7 @@ class Socket implements Connection
     /**
      * the used socket resource
      *
-     * @var resource
+     * @var resource|null|false
      */
     private $socket;
 
@@ -63,12 +63,20 @@ class Socket implements Connection
     {
         $this->host = (string) $host;
         $this->port = (int) $port;
-        $this->timeout = $timeout;
-        $this->persistent = $persistent;
+
+        $this->persistent = (bool) $persistent;
+
+        if ($timeout !== null) {
+            $this->timeout = (int) $timeout;
+        } else {
+            $this->timeout = null;
+        }
     }
 
     /**
      * connect to statsd service
+     *
+     * @return resource|null
      *
      * @codeCoverageIgnore
      * this is ignored because it requires to open a real UDP socket
@@ -95,11 +103,19 @@ class Socket implements Connection
      */
     public function send($message)
     {
-        if (!$this->socket) {
+        // prevent from sending empty or non-sense metrics
+        if (!is_string($message) || $message == '') {
+            return;
+        }
+
+        // only try once to connect to the socket, if this fails, socket will be false
+        // and connect will not be run again, this saves some time waiting for the connect to
+        // take place
+        if ($this->socket === null) {
             $this->connect();
         }
 
-        if (0 != strlen($message) && $this->socket) {
+        if (is_resource($this->socket)) {
             try {
                 // total suppression of errors
                 @fwrite($this->socket, $message);
