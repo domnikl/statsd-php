@@ -10,17 +10,15 @@ use Domnikl\Statsd\Connection as Connection;
  * @author Andrei Serdeliuc <andrei@serdeliuc.ro>
  */
 class Blackhole implements Connection
-{ 
+{
     /**
      * Drops any incoming messages
      *
-     * @param $message
-     *
-     * @return void
+     * @param string $message
      */
     public function send($message)
     {
-        return false;
+        // do nothing
     }
 
     /**

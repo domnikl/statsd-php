@@ -14,42 +14,42 @@ class Client
      *
      * @var Connection
      */
-    protected $_connection;
+    private $_connection;
 
     /**
      * holds all the timings that have not yet been completed
      *
      * @var array
      */
-    protected $_timings = array();
+    private $_timings = array();
 
     /**
      * holds all memory profiles like timings
      *
      * @var array
      */
-    protected $_memoryProfiles = array();
+    private $_memoryProfiles = array();
 
     /**
      * global key namespace
      *
      * @var string
      */
-    protected $_namespace = '';
+    private $_namespace = '';
 
     /**
      * stores the batch after batch processing was started
      *
      * @var array
      */
-    protected $_batch = array();
+    private $_batch = array();
 
     /**
      * batch mode?
      *
      * @var boolean
      */
-    protected $_isBatch = false;
+    private $_isBatch = false;
 
     /**
      * inits the Client object
@@ -99,7 +99,7 @@ class Client
      */
     public function count($key, $value, $sampleRate = 1)
     {
-        $this->_send($key, (int) $value, 'c', $sampleRate);
+        $this->send($key, (int) $value, 'c', $sampleRate);
     }
 
     /**
@@ -113,7 +113,7 @@ class Client
      */
     public function timing($key, $value, $sampleRate = 1)
     {
-        $this->_send($key, (int) $value, 'ms', $sampleRate);
+        $this->send($key, (int) $value, 'ms', $sampleRate);
     }
 
     /**
@@ -221,12 +221,12 @@ class Client
      *
      * @param string $key
      * @param int $value
-     * 
+     *
      * @return void
      */
     public function gauge($key, $value)
     {
-        $this->_send($key, (int) $value, 'g', 1);
+        $this->send($key, (int) $value, 'g', 1);
     }
 
     /**
@@ -234,12 +234,12 @@ class Client
      *
      * @param string $key
      * @param int $value
-     * 
+     *
      * @return void
      */
     public function set($key, $value)
     {
-        $this->_send($key, $value, 's', 1);
+        $this->send($key, $value, 's', 1);
     }
 
     /**
@@ -252,15 +252,13 @@ class Client
      *
      * @return void
      */
-    protected function _send($key, $value, $type, $sampleRate)
+    private function send($key, $value, $type, $sampleRate)
     {
         if (0 != strlen($this->_namespace)) {
             $key = sprintf('%s.%s', $this->_namespace, $key);
         }
 
         $message = sprintf("%s:%d|%s", $key, $value, $type);
-        $sampledData = '';
-
         $sample = mt_rand() / mt_getrandmax();
 
         if ($sample > $sampleRate) {
@@ -311,17 +309,17 @@ class Client
     {
         return $this->_isBatch;
     }
-    
+
     /**
      * start batch-send-recording
-     * 
+     *
      * @return void
      */
     public function startBatch()
     {
         $this->_isBatch = true;
     }
-    
+
     /**
      * ends batch-send-recording and sends the recorded messages to the connection
      *
@@ -333,7 +331,7 @@ class Client
         $this->_connection->send(join("\n", $this->_batch));
         $this->_batch = array();
     }
-    
+
     /**
      * stops batch-recording and resets the batch
      *

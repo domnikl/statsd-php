@@ -12,68 +12,68 @@ class ClientBatchTest extends \PHPUnit_Framework_TestCase
     /**
      * @var \Domnikl\Statsd\Client
      */
-    protected $_client;
+    protected $client;
 
     /**
      * @var \Domnikl\Test\Statsd\ConnectionMock
      */
-    protected $_connection;
+    protected $connection;
 
 
     public function setUp()
     {
-        $this->_connection = new \Domnikl\Test\Statsd\ConnectionMock();
-        $this->_client = new Client($this->_connection);
+        $this->connection = new \Domnikl\Test\Statsd\ConnectionMock();
+        $this->client = new Client($this->connection);
     }
 
 	public function testInit()
 	{
-		$this->assertFalse($this->_client->isBatch());
+		$this->assertFalse($this->client->isBatch());
 	}
-	
+
 	public function testStartBatch()
 	{
-		$this->_client->startBatch();
-		$this->assertTrue($this->_client->isBatch());
+		$this->client->startBatch();
+		$this->assertTrue($this->client->isBatch());
 	}
-	
+
 	public function testSendIsRecordingInBatch()
 	{
-		$this->_client->startBatch();
-		$this->_client->increment("foobar", 1);
-		
-		$message = $this->_connection->getLastMessage();
+		$this->client->startBatch();
+		$this->client->increment("foobar", 1);
+
+		$message = $this->connection->getLastMessage();
 		$this->assertNull($message);
 	}
-	
+
 	public function testEndBatch()
 	{
-		$this->_client->startBatch();
-		$this->_client->count("foobar", 1);
-		$this->_client->count("foobar", 2);
-		$this->_client->endBatch();
-		
-		$this->assertFalse($this->_client->isBatch());
-		$this->assertSame("foobar:1|c\nfoobar:2|c", $this->_connection->getLastMessage());
-		
+		$this->client->startBatch();
+		$this->client->count("foobar", 1);
+		$this->client->count("foobar", 2);
+		$this->client->endBatch();
+
+		$this->assertFalse($this->client->isBatch());
+		$this->assertSame("foobar:1|c\nfoobar:2|c", $this->connection->getLastMessage());
+
 		// run a new batch => don't send old values!
-		
-		$this->_client->startBatch();
-		$this->_client->count("baz", 100);
-		$this->_client->count("baz", 300);
-		$this->_client->endBatch();
-		
-		$this->assertFalse($this->_client->isBatch());
-		$this->assertSame("baz:100|c\nbaz:300|c", $this->_connection->getLastMessage());
+
+		$this->client->startBatch();
+		$this->client->count("baz", 100);
+		$this->client->count("baz", 300);
+		$this->client->endBatch();
+
+		$this->assertFalse($this->client->isBatch());
+		$this->assertSame("baz:100|c\nbaz:300|c", $this->connection->getLastMessage());
 	}
-	
+
 	public function testCancelBatch()
 	{
-		$this->_client->startBatch();
-		$this->_client->count("foobar", 4);
-		$this->_client->cancelBatch();
-		
-		$this->assertFalse($this->_client->isBatch());
-		$this->assertNull($this->_connection->getLastMessage());
+		$this->client->startBatch();
+		$this->client->count("foobar", 4);
+		$this->client->cancelBatch();
+
+		$this->assertFalse($this->client->isBatch());
+		$this->assertNull($this->connection->getLastMessage());
 	}
 }

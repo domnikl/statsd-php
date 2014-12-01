@@ -16,42 +16,42 @@ class Socket implements Connection
      *
      * @var string
      */
-    protected $_host;
+    private $host;
 
     /**
      * port number
      *
      * @var int
      */
-    protected $_port;
+    private $port;
 
     /**
      * Socket timeout
      *
      * @var int
      */
-    protected $_timeout;
+    private $timeout;
 
     /**
      * Persistent connection
      *
      * @var bool
      */
-    protected $_persistent = false;
+    private $persistent = false;
 
     /**
      * the used socket resource
      *
      * @var resource
      */
-    protected $_socket;
+    private $socket;
 
     /**
      * is sampling allowed?
      *
      * @var bool
      */
-    protected $_forceSampling = false;
+    private $forceSampling = false;
 
     /**
      * instantiates the Connection object and a real connection to statsd
@@ -63,10 +63,10 @@ class Socket implements Connection
      */
     public function __construct($host = 'localhost', $port = 8125, $timeout = null, $persistent = false)
     {
-        $this->_host = (string)$host;
-        $this->_port = (int)$port;
-        $this->_timeout = $timeout;
-        $this->_persistent = $persistent;
+        $this->host = (string) $host;
+        $this->port = (int) $port;
+        $this->timeout = $timeout;
+        $this->persistent = $persistent;
     }
 
     /**
@@ -74,31 +74,32 @@ class Socket implements Connection
      */
     protected function connect()
     {
-        $errno = null;
-        $errstr = null;
-        if ($this->_persistent) {
-            $this->_socket = pfsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
+        // TODO: Why these??
+        $errorNumber = null;
+        $errorMessage = null;
+
+        if ($this->persistent) {
+            $this->socket = pfsockopen(sprintf("udp://%s", $this->host), $this->port, $errorNumber, $errorMessage, $this->timeout);
         } else {
-            $this->_socket = fsockopen(sprintf("udp://%s", $this->_host), $this->_port, $errno, $errstr, $this->_timeout);
+            $this->socket = fsockopen(sprintf("udp://%s", $this->host), $this->port, $errorNumber, $errorMessage, $this->timeout);
         }
     }
 
     /**
      * sends a message to the UDP socket
      *
-     * @param $message
-     *
-     * @return void
+     * @param string $message
      */
     public function send($message)
     {
-        if (!$this->_socket) {
+        if (!$this->socket) {
             $this->connect();
         }
-        if (0 != strlen($message) && $this->_socket) {
+
+        if (0 != strlen($message) && $this->socket) {
             try {
                 // total suppression of errors
-                @fwrite($this->_socket, $message);
+                @fwrite($this->socket, $message);
             } catch (\Exception $e) {
                 // ignore it: stats logging failure shouldn't stop the whole app
             }
@@ -110,7 +111,7 @@ class Socket implements Connection
      */
     public function getHost()
     {
-        return $this->_host;
+        return $this->host;
     }
 
 
@@ -119,7 +120,7 @@ class Socket implements Connection
      */
     public function getPort()
     {
-        return $this->_port;
+        return $this->port;
     }
 
     /**
@@ -127,7 +128,7 @@ class Socket implements Connection
      */
     public function getTimeout()
     {
-        return $this->_timeout;
+        return $this->timeout;
     }
 
     /**
@@ -135,7 +136,7 @@ class Socket implements Connection
      */
     public function isPersistent()
     {
-        return $this->_persistent;
+        return $this->persistent;
     }
 
     /**
@@ -145,6 +146,6 @@ class Socket implements Connection
      */
     public function forceSampling()
     {
-        return (bool)$this->_forceSampling;
+        return (bool) $this->forceSampling;
     }
 }
