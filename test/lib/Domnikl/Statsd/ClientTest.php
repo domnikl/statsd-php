@@ -136,9 +136,21 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->_client->startTiming($key);
         usleep(10000);
         $this->_client->endTiming($key);
-        
+
         // ranges between 1000 and 1001ms
         $this->assertRegExp('/^test\.foo\.bar:1[01]\|ms$/', $this->_connection->getLastMessage());
+    }
+
+    public function testEndTimingReturnValue()
+    {
+        $key = 'foo.bar';
+        $this->assertNull($this->_client->endTiming($key));
+
+        $sleep = 10000;
+        $this->_client->startTiming($key);
+        usleep($sleep);
+
+        $this->assertGreaterThanOrEqual($sleep / 1000, $this->_client->endTiming($key));
     }
 
     /**
