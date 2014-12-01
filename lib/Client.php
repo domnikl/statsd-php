@@ -121,6 +121,8 @@ class Client
      *
      * @param string $key
      * @param int $sampleRate (optional)
+     *
+     * @return float|null
      */
     public function endTiming($key, $sampleRate = 1)
     {
@@ -130,7 +132,11 @@ class Client
             $timing = ($end - $this->timings[$key]) * 1000;
             $this->timing($key, $timing, $sampleRate);
             unset($this->timings[$key]);
+
+            return $timing;
         }
+
+        return null;
     }
 
     /**

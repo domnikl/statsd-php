@@ -106,7 +106,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testTiming()
+    public function testCanMeasureTimingWithClosure()
     {
         $this->client->timing('foo.baz', 2000);
         $this->assertEquals(
@@ -129,17 +129,29 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testStartEndTiming()
+    public function testCanMeasureTimingByStartingAndEndingTiming()
     {
         $key = 'foo.bar';
         $this->client->startTiming($key);
         usleep(10000);
         $this->client->endTiming($key);
-
+        
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/^test\.foo\.bar:1[012]\|ms$/', $this->connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.bar:1[0-9]\|ms$/', $this->connection->getLastMessage());
     }
 
+    public function testEndTimingReturnsTiming()
+    {
+        $key = 'foo.bar';
+        $this->assertNull($this->client->endTiming($key));
+
+        $sleep = 10000;
+        $this->client->startTiming($key);
+        usleep($sleep);
+
+        $this->assertGreaterThanOrEqual($sleep / 1000, $this->client->endTiming($key));
+    }
+    
     /**
      * @group sampling
      */
@@ -151,7 +163,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->endTiming('foo.baz', 1);
 
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/^test\.foo\.baz:1[012]\|ms\|@1$/', $this->connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.baz:1[0-9]\|ms\|@1$/', $this->connection->getLastMessage());
     }
 
     public function testTimeClosure()
