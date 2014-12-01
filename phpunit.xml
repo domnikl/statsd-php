@@ -14,7 +14,7 @@
         <testsuite name="statsd-php Test Suite">
             <file>tests/ClientTest.php</file>
             <file>tests/ClientBatchTest.php</file>
-            <file>tests/Connection/SocketTest.php</file>
+            <file>tests/Connection/UdpSocketTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

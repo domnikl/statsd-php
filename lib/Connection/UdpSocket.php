@@ -7,7 +7,7 @@ use Domnikl\Statsd\Connection as Connection;
 /**
  * encapsulates the connection to the statsd service
  */
-class Socket implements Connection
+class UdpSocket implements Connection
 {
     /**
      * host name
