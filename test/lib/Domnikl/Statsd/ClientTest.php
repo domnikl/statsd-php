@@ -10,30 +10,30 @@ use Domnikl\Statsd\Client as Client;
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Domnikl\Statsd\Client
+     * @var Client
      */
     private $client;
 
     /**
-     * @var \Domnikl\Test\Statsd\ConnectionMock
+     * @var ConnectionMock
      */
     private $connection;
 
     protected function setUp()
     {
-        $this->connection = new \Domnikl\Test\Statsd\ConnectionMock();
+        $this->connection = new ConnectionMock();
         $this->client = new Client($this->connection, 'test');
     }
 
     public function testInit()
     {
-        $client = new Client(new \Domnikl\Test\Statsd\ConnectionMock());
+        $client = new Client(new ConnectionMock());
         $this->assertEquals('', $client->getNamespace());
     }
 
     public function testNamespace()
     {
-        $client = new Client(new \Domnikl\Test\Statsd\ConnectionMock(), 'test.foo');
+        $client = new Client(new ConnectionMock(), 'test.foo');
         $this->assertEquals('test.foo', $client->getNamespace());
 
         $client->setNamespace('bar.baz');
@@ -207,5 +207,4 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $message = $this->connection->getLastMessage();
         $this->assertEquals('test.barfoo:666|s', $message);
     }
-
 }

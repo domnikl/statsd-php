@@ -9,7 +9,6 @@ namespace Domnikl\Statsd;
  */
 interface Connection
 {
-
     /**
      * sends a message to Statsd
      *
