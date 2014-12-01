@@ -6,8 +6,6 @@ use Domnikl\Statsd\Connection as Connection;
 
 /**
  * encapsulates the connection to the statsd service
- *
- * @author Dominik Liebler <liebler.dominik@googlemail.com>
  */
 class Socket implements Connection
 {

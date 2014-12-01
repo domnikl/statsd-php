@@ -4,8 +4,6 @@ namespace Domnikl\Statsd;
 
 /**
  * An interface for a Statsd connection implementation
- *
- * @author Derek Gallo <dgallo@avectra.com>
  */
 interface Connection
 {

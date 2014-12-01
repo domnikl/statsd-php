@@ -4,8 +4,6 @@ namespace Domnikl\Statsd;
 
 /**
  * the statsd client
- *
- * @author Dominik Liebler <liebler.dominik@googlemail.com>
  */
 class Client
 {

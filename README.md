@@ -87,13 +87,13 @@ To disable sending any metrics, you can use the `Domnikl\Statsd\Connection\Black
 
 ## Author
 
-Original author: Dominik Liebler <liebler.dominik@googlemail.com>
+Original author: Dominik Liebler <liebler.dominik@gmail.com>
 
 ## License
 
 (The MIT License)
 
-Copyright (c) 2013 Dominik Liebler
+Copyright (c) 2014 Dominik Liebler
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

@@ -3,10 +3,10 @@
     "type": "library",
     "description": "a PHP client for statsd",
     "keywords": ["monitoring", "statsd"],
-    "homepage": "http://domnikl.github.com/statsd-php",
+    "homepage": "https://domnikl.github.com/statsd-php",
     "license": "MIT",
     "authors": [
-        {"name": "Dominik Liebler", "email": "liebler.dominik@googlemail.com"}
+        {"name": "Dominik Liebler", "email": "liebler.dominik@gmail.com"}
     ],
     "require": {
         "php": ">= 5.3.0"
