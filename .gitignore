@@ -2,9 +2,9 @@
 .idea
 
 # test coverage report
-test/coverage
+tests/coverage
 
-# composer 
+# composer
 /vendor
 /composer.lock
 
