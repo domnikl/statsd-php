@@ -4,8 +4,6 @@ namespace Domnikl\Test\Statsd;
 
 use Domnikl\Statsd\Connection;
 
-require_once __DIR__ . '/../lib/Connection.php';
-
 /**
  * Mock object that just sets the last message in an
  * instance variable that can be checked by the test

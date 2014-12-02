@@ -2,9 +2,6 @@
 
 namespace Domnikl\Test\Statsd;
 
-require_once __DIR__ . '/../lib/Client.php';
-require_once __DIR__ . '/ConnectionMock.php';
-
 use Domnikl\Statsd\Client as Client;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
@@ -135,7 +132,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->startTiming($key);
         usleep(10000);
         $this->client->endTiming($key);
-        
+
         // ranges between 1000 and 1001ms
         $this->assertRegExp('/^test\.foo\.bar:1[0-9]\|ms$/', $this->connection->getLastMessage());
     }
@@ -151,7 +148,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertGreaterThanOrEqual($sleep / 1000, $this->client->endTiming($key));
     }
-    
+
     /**
      * @group sampling
      */

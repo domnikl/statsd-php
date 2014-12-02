@@ -1,5 +1,10 @@
 # Changelog domnikl/statsd-php
 
+## 1.2.0
+
+* renamed Socket classes: Socket is now a UdpSocket + there is a new TcpSocket class
+* for development there is a new (simple) process for running tests and such using make
+
 ## 1.1.0
 
 * added support for [sets](https://github.com/etsy/statsd/blob/master/docs/metric_types.md#sets)
