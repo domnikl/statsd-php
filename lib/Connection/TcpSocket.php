@@ -5,18 +5,18 @@ namespace Domnikl\Statsd\Connection;
 use Domnikl\Statsd\Connection as Connection;
 
 /**
- * encapsulates the connection to the statsd service in UDP mode (standard)
+ * encapsulates the connection to the statsd service in TCP mode
  *
  * @codeCoverageIgnore
  */
-class UdpSocket extends InetSocket implements Connection
+class TcpSocket extends InetSocket implements Connection
 {
     /**
      * @return string
      */
     protected function getProtocol()
     {
-        return 'udp';
+        return 'tcp';
     }
 
     /**
