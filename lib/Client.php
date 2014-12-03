@@ -50,6 +50,13 @@ class Client
     private $isBatch = false;
 
     /**
+     * batch mode chunk size
+     *
+     * @var int
+     */
+    private $mtu = 1500;
+
+    /**
      * inits the client object
      *
      * @param Connection $connection
@@ -304,7 +311,24 @@ class Client
     public function endBatch()
     {
         $this->isBatch = false;
-        $this->connection->send(join("\n", $this->batch));
+        $joinedMessages = array();
+        $joinedMessagesLength = 0;
+
+        foreach ($this->batch as $message) {
+            $currentMessageLength = strlen($message);
+
+            if ($joinedMessagesLength + $currentMessageLength > $this->mtu) {
+                $this->connection->send(join("\n", $joinedMessages));
+
+                $joinedMessages = array();
+                $joinedMessagesLength = 0;
+            }
+
+            $joinedMessages[] = $message;
+            $joinedMessagesLength += $currentMessageLength;
+        }
+
+        $this->connection->send(join("\n", $joinedMessages));
         $this->batch = array();
     }
 
