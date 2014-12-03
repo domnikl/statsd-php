@@ -121,14 +121,31 @@ abstract class InetSocket
      */
     private function connect()
     {
+        if ($this->isConnected()) {
+            return;
+        }
+
         $errorNumber = null;
         $errorMessage = null;
 
+        $url = sprintf("%s://%s", $this->getProtocol(), $this->host);
+
         if ($this->persistent) {
-            $this->socket = pfsockopen(sprintf("udp://%s", $this->host), $this->port, $errorNumber, $errorMessage, $this->timeout);
+            $this->socket = @pfsockopen($url, $this->port, $errorNumber, $errorMessage, $this->timeout);
         } else {
-            $this->socket = fsockopen(sprintf("udp://%s", $this->host), $this->port, $errorNumber, $errorMessage, $this->timeout);
+            $this->socket = @fsockopen($url, $this->port, $errorNumber, $errorMessage, $this->timeout);
         }
+    }
+
+    /**
+     * @return bool
+     *
+     * @codeCoverageIgnore
+     * this is ignored because it requires to open a real UDP socket
+     */
+    private function isConnected()
+    {
+        return is_resource($this->socket);
     }
 
     /**
@@ -146,19 +163,11 @@ abstract class InetSocket
             return;
         }
 
-        // only try once to connect to the socket, if this fails, socket will be false
-        // and connect will not be run again, this saves some time waiting for the connect to
-        // take place
-        if ($this->socket === null) {
-            $this->connect();
-        }
+        $this->connect();
 
         if (is_resource($this->socket)) {
             try {
                 $this->writeToSocket($message);
-
-                // total suppression of errors
-                @fwrite($this->socket, $message);
             } catch (\Exception $e) {
                 // ignore it: stats logging failure shouldn't stop the whole app
             }
