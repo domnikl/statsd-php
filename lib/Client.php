@@ -50,7 +50,7 @@ class Client
     private $isBatch = false;
 
     /**
-     * inits the client object
+     * initializes the client object
      *
      * @param Connection $connection
      * @param string $namespace global key namespace

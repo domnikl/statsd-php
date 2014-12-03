@@ -10,7 +10,14 @@ use Domnikl\Statsd\Connection;
  */
 class ConnectionMock implements Connection
 {
+    /**
+     * @var array
+     */
     public $messages = array();
+
+    /**
+     * @var bool
+     */
     private $forceSampling = false;
 
     /**

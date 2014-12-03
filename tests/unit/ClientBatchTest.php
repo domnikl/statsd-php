@@ -54,7 +54,7 @@ class ClientBatchTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($this->client->isBatch());
 		$this->assertSame("foobar:1|c\nfoobar:2|c", $this->connection->getLastMessage());
 
-		// run a new batch => don't send old values!
+		// run a new batch => don't send the old values!
 
 		$this->client->startBatch();
 		$this->client->count("baz", 100);

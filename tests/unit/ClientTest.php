@@ -16,6 +16,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     private $connection;
 
+
     protected function setUp()
     {
         $this->connection = new ConnectionMock();
