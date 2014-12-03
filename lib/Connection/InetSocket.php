@@ -9,28 +9,28 @@ abstract class InetSocket
      *
      * @var string
      */
-    private $host;
+    protected $host;
 
     /**
      * port number
      *
      * @var int
      */
-    private $port;
+    protected $port;
 
     /**
      * Socket timeout
      *
      * @var int|null
      */
-    private $timeout;
+    protected $timeout;
 
     /**
      * Persistent connection
      *
      * @var bool
      */
-    private $persistent = false;
+    protected $persistent = false;
 
     /**
      * is sampling allowed?
@@ -38,13 +38,6 @@ abstract class InetSocket
      * @var bool
      */
     private $forceSampling = false;
-
-    /**
-     * the used socket resource
-     *
-     * @var resource|null|false
-     */
-    protected $socket;
 
     /**
      * instantiates the Connection object and a real connection to statsd
@@ -75,7 +68,6 @@ abstract class InetSocket
     {
         return $this->host;
     }
-
 
     /**
      * @return int
@@ -112,43 +104,6 @@ abstract class InetSocket
     }
 
     /**
-     * connect to statsd service
-     *
-     * @return resource|null
-     *
-     * @codeCoverageIgnore
-     * this is ignored because it requires to open a real UDP socket
-     */
-    private function connect()
-    {
-        if ($this->isConnected()) {
-            return;
-        }
-
-        $errorNumber = null;
-        $errorMessage = null;
-
-        $url = sprintf("%s://%s", $this->getProtocol(), $this->host);
-
-        if ($this->persistent) {
-            $this->socket = @pfsockopen($url, $this->port, $errorNumber, $errorMessage, $this->timeout);
-        } else {
-            $this->socket = @fsockopen($url, $this->port, $errorNumber, $errorMessage, $this->timeout);
-        }
-    }
-
-    /**
-     * @return bool
-     *
-     * @codeCoverageIgnore
-     * this is ignored because it requires to open a real UDP socket
-     */
-    private function isConnected()
-    {
-        return is_resource($this->socket);
-    }
-
-    /**
      * sends a message to the UDP socket
      *
      * @param string $message
@@ -163,23 +118,34 @@ abstract class InetSocket
             return;
         }
 
-        $this->connect();
-
-        if (is_resource($this->socket)) {
-            try {
-                $this->writeToSocket($message);
-            } catch (\Exception $e) {
-                // ignore it: stats logging failure shouldn't stop the whole app
+        try {
+            if (!$this->isConnected()) {
+                $this->connect();
             }
+
+            $this->writeToSocket($message);
+        } catch (\Exception $e) {
+            // ignore it: stats logging failure shouldn't stop the whole app
         }
     }
 
     /**
-     * @return string
+     * connect to the socket
+     *
+     * @return mixed
      */
-    abstract protected function getProtocol();
+    abstract protected function connect();
 
     /**
+     * checks whether the socket connection is alive
+     *
+     * @return bool
+     */
+    abstract protected function isConnected();
+
+    /**
+     * writes a message to the socket
+     *
      * @param string $message
      */
     abstract protected function writeToSocket($message);
