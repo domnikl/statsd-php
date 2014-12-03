@@ -14,3 +14,15 @@ test: install cleanup
 
 install:
 	$(PHP_BIN) $(COMPOSER_BIN) install
+
+tcp-testserver:
+	nc -tl localhost 8126
+
+udp-testserver:
+	nc -ul localhost 8125
+
+tcp-integration:
+	$(PHP_BIN) tests/integration/tcp-test.php
+
+udp-integration:
+	$(PHP_BIN) tests/integration/udp-test.php
