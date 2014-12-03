@@ -328,7 +328,7 @@ class Client
             $joinedMessagesLength += $currentMessageLength;
         }
 
-        $this->connection->send($joinedMessages);
+        $this->connection->send(join("\n", $joinedMessages));
         $this->batch = array();
     }
 
