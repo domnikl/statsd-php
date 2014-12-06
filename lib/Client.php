@@ -241,7 +241,7 @@ class Client
      */
     private function send($key, $value, $type, $sampleRate)
     {
-        if (0 != strlen($this->namespace)) {
+        if (strlen($this->namespace) != 0) {
             $key = sprintf('%s.%s', $this->namespace, $key);
         }
 
