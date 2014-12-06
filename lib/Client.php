@@ -247,7 +247,7 @@ class Client
             // @codeCoverageIgnoreEnd
         }
 
-        if ($sampleRate < 1 || $this->connection->forceSampling()) {
+        if ($sampleRate < 1 || $this->connection->isSamplingForced()) {
             $sampledData = sprintf('%s|@%s', $message, $sampleRate);
         } else {
             $sampledData = $message;

@@ -53,7 +53,7 @@ class ConnectionMock implements Connection
     /**
      * @return bool
      */
-    public function forceSampling()
+    public function isSamplingForced()
     {
         return $this->forceSampling;
     }

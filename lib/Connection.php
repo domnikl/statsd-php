@@ -26,5 +26,5 @@ interface Connection
      *
      * @return boolean
      */
-    public function forceSampling();
+    public function isSamplingForced();
 }

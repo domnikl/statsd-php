@@ -35,11 +35,11 @@ abstract class InetSocket implements Connection
     protected $persistent = false;
 
     /**
-     * is sampling allowed?
+     * is sampling forced?
      *
      * @var bool
      */
-    private $forceSampling = false;
+    private $isSamplingForced = false;
 
     /**
      * Maximum Transmission Unit
@@ -111,9 +111,9 @@ abstract class InetSocket implements Connection
      *
      * @return boolean
      */
-    public function forceSampling()
+    public function isSamplingForced()
     {
-        return (bool) $this->forceSampling;
+        return (bool) $this->isSamplingForced;
     }
 
     /**
