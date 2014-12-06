@@ -57,4 +57,14 @@ class ConnectionMock implements Connection
     {
         return $this->forceSampling;
     }
+
+    /**
+     * sends multiple messages to statsd
+     *
+     * @param array $messages
+     */
+    public function sendMessages(array $messages)
+    {
+        $this->messages[] = join("\n", $messages);
+    }
 }

@@ -21,6 +21,16 @@ class Blackhole implements Connection
     }
 
     /**
+     * sends multiple messages to statsd
+     *
+     * @param array $messages
+     */
+    public function sendMessages(array $messages)
+    {
+        // do nothing
+    }
+
+    /**
      * is sampling forced?
      *
      * @return boolean

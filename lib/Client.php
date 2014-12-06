@@ -304,7 +304,7 @@ class Client
     public function endBatch()
     {
         $this->isBatch = false;
-        $this->connection->send(join("\n", $this->batch));
+        $this->connection->sendMessages($this->batch);
         $this->batch = array();
     }
 

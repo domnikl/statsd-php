@@ -40,17 +40,28 @@ abstract class InetSocket
     private $forceSampling = false;
 
     /**
+     * Maximum Transmission Unit
+     *
+     * http://en.wikipedia.org/wiki/Maximum_transmission_unit
+     *
+     * @var int
+     */
+    private $mtu;
+
+    /**
      * instantiates the Connection object and a real connection to statsd
      *
      * @param string $host Statsd hostname
      * @param int $port Statsd port
      * @param int $timeout Connection timeout
      * @param bool $persistent (default FALSE) Use persistent connection or not
+     * @param int $mtu Maximum Transmission Unit (default: 1500)
      */
-    public function __construct($host = 'localhost', $port = 8125, $timeout = null, $persistent = false)
+    public function __construct($host = 'localhost', $port = 8125, $timeout = null, $persistent = false, $mtu = 1500)
     {
         $this->host = (string) $host;
         $this->port = (int) $port;
+        $this->mtu = (int) $mtu;
 
         $this->persistent = (bool) $persistent;
 
@@ -127,6 +138,16 @@ abstract class InetSocket
         } catch (\Exception $e) {
             // ignore it: stats logging failure shouldn't stop the whole app
         }
+    }
+
+    /**
+     * sends multiple messages to statsd
+     *
+     * @param array $messages
+     */
+    public function sendMessages(array $messages)
+    {
+        $this->send(join("\n", $messages));
     }
 
     /**
