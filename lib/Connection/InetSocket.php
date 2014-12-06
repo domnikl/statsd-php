@@ -2,7 +2,9 @@
 
 namespace Domnikl\Statsd\Connection;
 
-abstract class InetSocket
+use Domnikl\Statsd\Connection;
+
+abstract class InetSocket implements Connection
 {
     /**
      * host name
@@ -147,7 +149,43 @@ abstract class InetSocket
      */
     public function sendMessages(array $messages)
     {
-        $this->send(join("\n", $messages));
+        $message = join("\n", $messages);
+
+        if (strlen($message) > $this->mtu) {
+            $messageBatches = $this->cutIntoMtuSizedMessages($messages);
+
+            foreach ($messageBatches as $messageBatch) {
+                $this->send(join("\n", $messageBatch));
+            }
+        } else {
+            $this->send($message);
+        }
+    }
+
+    /**
+     * @param array $messages
+     *
+     * @return array
+     */
+    private function cutIntoMtuSizedMessages(array $messages)
+    {
+        $index = 0;
+        $sizedMessages = array();
+        $packageLength = 0;
+
+        foreach ($messages as $message) {
+            $messageLength = strlen($message);
+
+            if ($messageLength + $packageLength > $this->mtu) {
+                $index++;
+                $packageLength = 0;
+            }
+
+            $sizedMessages[$index][] = $message;
+            $packageLength += $messageLength;
+        }
+
+        return $sizedMessages;
     }
 
     /**
