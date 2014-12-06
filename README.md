@@ -11,7 +11,7 @@ The best way to install statsd-php is to use Composer and add the following to y
 ```javascript
 {
     "require": {
-        "domnikl/statsd": "~1.1"
+        "domnikl/statsd": "~2.0"
     }
 }
 ```

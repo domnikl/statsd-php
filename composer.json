@@ -2,7 +2,7 @@
     "name": "domnikl/statsd",
     "type": "library",
     "description": "a PHP client for statsd",
-    "keywords": ["monitoring", "statsd"],
+    "keywords": ["monitoring", "statsd", "statistics", "metrics", "udp"],
     "homepage": "https://domnikl.github.com/statsd-php",
     "license": "MIT",
     "authors": [
