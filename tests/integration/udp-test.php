@@ -3,7 +3,7 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 $connection = new \Domnikl\Statsd\Connection\UdpSocket('127.0.0.1', 8125);
-$statsd = new \Domnikl\Statsd\Client($connection, "udp.test.namespace");
+$statsd = new \Domnikl\Statsd\Client($connection, "udp.test.namespace", 0.1);
 
 while (true) {
     $statsd->startTiming('timing.while');
