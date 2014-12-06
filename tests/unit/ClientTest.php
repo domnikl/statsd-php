@@ -52,10 +52,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountWithSamplingRate()
     {
-        $client = new Client($this->connection, 'test', true);
+        $client = new Client($this->connection, 'test', 1 / 5);
         $client->count('foo.baz', 100, 1);
         $this->assertEquals(
-            'test.foo.baz:100|c|@1',
+            'test.foo.baz:100|c|@0.2',
             $this->connection->getLastMessage()
         );
     }
@@ -74,10 +74,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testIncrementWithSamplingRate()
     {
-        $client = new Client($this->connection, 'test', true);
+        $client = new Client($this->connection, 'test', 0.3);
         $client->increment('foo.baz', 1);
         $this->assertEquals(
-            'test.foo.baz:1|c|@1',
+            'test.foo.baz:1|c|@0.3',
             $this->connection->getLastMessage()
         );
     }
@@ -96,10 +96,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecrementWithSamplingRate()
     {
-        $client = new Client($this->connection, 'test', true);
+        $client = new Client($this->connection, 'test', 0.2);
         $client->decrement('foo.baz', 1);
         $this->assertEquals(
-            'test.foo.baz:-1|c|@1',
+            'test.foo.baz:-1|c|@0.2',
             $this->connection->getLastMessage()
         );
     }
@@ -119,10 +119,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testTimingWithSamplingRate()
     {
-        $client = new Client($this->connection, 'test', true);
+        $client = new Client($this->connection, 'test', 0.1);
         $client->timing('foo.baz', 2000, 1);
         $this->assertEquals(
-            'test.foo.baz:2000|ms|@1',
+            'test.foo.baz:2000|ms|@0.1',
             $this->connection->getLastMessage()
         );
     }
@@ -155,13 +155,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testStartEndTimingWithSamplingRate()
     {
-        $client = new Client($this->connection, 'test', true);
+        $client = new Client($this->connection, 'test', 0.3);
         $client->startTiming('foo.baz');
         usleep(10000);
-        $client->endTiming('foo.baz', 1);
+        $client->endTiming('foo.baz');
 
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/^test\.foo\.baz:1[0-9]\|ms\|@1$/', $this->connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.baz:1[0-9]\|ms\|@0.3$/', $this->connection->getLastMessage());
     }
 
     public function testTimeClosure()

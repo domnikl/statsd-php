@@ -52,20 +52,20 @@ class Client
     /**
      * @var bool
      */
-    private $sampleAllMetrics = false;
+    private $sampleRateAllMetrics = 1;
 
     /**
      * initializes the client object
      *
      * @param Connection $connection
      * @param string $namespace global key namespace
-     * @param bool $sampleAllMetrics if set to true, all metrics will be sampled instead of sent 1:1 to statsd
+     * @param bool $sampleRateAllMetrics if set to a value <1, all metrics will be sampled using this rate
      */
-    public function __construct(Connection $connection, $namespace = '', $sampleAllMetrics = false)
+    public function __construct(Connection $connection, $namespace = '', $sampleRateAllMetrics = 1)
     {
         $this->connection = $connection;
         $this->namespace = (string) $namespace;
-        $this->sampleAllMetrics = (bool) $sampleAllMetrics;
+        $this->sampleRateAllMetrics = (float) $sampleRateAllMetrics;
     }
 
     /**
@@ -252,7 +252,12 @@ class Client
             return;
         }
 
-        if ($sampleRate < 1 || $this->sampleAllMetrics) {
+        // overwrite sampleRate if all metrics should be sampled
+        if ($this->sampleRateAllMetrics < 1) {
+            $sampleRate = $this->sampleRateAllMetrics;
+        }
+
+        if ($sampleRate < 1) {
             $sampledData = sprintf('%s|@%s', $message, $sampleRate);
         } else {
             $sampledData = $message;
