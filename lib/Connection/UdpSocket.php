@@ -32,17 +32,23 @@ class UdpSocket extends InetSocket implements Connection
         @fwrite($this->socket, $message);
     }
 
-    protected function connect()
+    /**
+     * @param string $host
+     * @param int $port
+     * @param int|null $timeout
+     * @param bool $persistent
+     */
+    protected function connect($host, $port, $timeout, $persistent)
     {
         $errorNumber = null;
         $errorMessage = null;
 
-        $url = sprintf("udp://%s", $this->host);
+        $url = sprintf("udp://%s", $host);
 
-        if ($this->persistent) {
-            $this->socket = @pfsockopen($url, $this->port, $errorNumber, $errorMessage, $this->timeout);
+        if ($persistent) {
+            $this->socket = @pfsockopen($url, $port, $errorNumber, $errorMessage, $timeout);
         } else {
-            $this->socket = @fsockopen($url, $this->port, $errorNumber, $errorMessage, $this->timeout);
+            $this->socket = @fsockopen($url, $port, $errorNumber, $errorMessage, $timeout);
         }
 
         $this->isConnected = true;

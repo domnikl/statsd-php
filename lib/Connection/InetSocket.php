@@ -11,28 +11,28 @@ abstract class InetSocket implements Connection
      *
      * @var string
      */
-    protected $host;
+    private $host;
 
     /**
      * port number
      *
      * @var int
      */
-    protected $port;
+    private $port;
 
     /**
      * Socket timeout
      *
      * @var int|null
      */
-    protected $timeout;
+    private $timeout;
 
     /**
      * Persistent connection
      *
      * @var bool
      */
-    protected $persistent = false;
+    private $persistent = false;
 
     /**
      * is sampling forced?
@@ -133,7 +133,7 @@ abstract class InetSocket implements Connection
 
         try {
             if (!$this->isConnected()) {
-                $this->connect();
+                $this->connect($this->host, $this->port, $this->timeout, $this->persistent);
             }
 
             $this->writeToSocket($message);
@@ -191,9 +191,12 @@ abstract class InetSocket implements Connection
     /**
      * connect to the socket
      *
-     * @return mixed
+     * @param string $host
+     * @param int $port
+     * @param int|null $timeout
+     * @param bool $persistent
      */
-    abstract protected function connect();
+    abstract protected function connect($host, $port, $timeout, $persistent);
 
     /**
      * checks whether the socket connection is alive
