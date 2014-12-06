@@ -66,12 +66,7 @@ abstract class InetSocket implements Connection
         $this->mtu = (int) $mtu;
 
         $this->persistent = (bool) $persistent;
-
-        if ($timeout !== null) {
-            $this->timeout = (int) $timeout;
-        } else {
-            $this->timeout = null;
-        }
+        $this->timeout = ($timeout === null) ? null : (int) $timeout;
     }
 
     /**
