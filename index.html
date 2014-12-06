@@ -1,118 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="statsd-php : a PHP client for statsd" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>statsd-php by domnikl</title>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>statsd-php</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
-
   <body>
+    <div class="wrapper">
+      <header>
+        <h1>statsd-php</h1>
+        <p>a PHP client for statsd</p>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/domnikl/statsd-php">View on GitHub</a>
+        <p class="view"><a href="https://github.com/domnikl/statsd-php">View the Project on GitHub <small>domnikl/statsd-php</small></a></p>
 
-          <h1 id="project_title">statsd-php</h1>
-          <h2 id="project_tagline">a PHP client for statsd</h2>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/domnikl/statsd-php/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/domnikl/statsd-php/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+        <ul>
+          <li><a href="https://github.com/domnikl/statsd-php/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/domnikl/statsd-php/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/domnikl/statsd-php">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
         <h1>
-<a name="statsd-php" class="anchor" href="#statsd-php"><span class="octicon octicon-link"></span></a>statsd-php</h1>
+<a id="statsd-php" class="anchor" href="#statsd-php" aria-hidden="true"><span class="octicon octicon-link"></span></a>statsd-php</h1>
 
-<p>A PHP client for <a href="https://github.com/etsy/statsd">statsd</a>.</p>
+<p>A PHP client library for the statistics daemon (<a href="https://github.com/etsy/statsd">statsd</a>) intended to send metrics from PHP applications.</p>
 
-<h2>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
-
-<p>The best way to install it is to use Composer and add the following to your project's <code>composer.json</code> file:</p>
-
-<div class="highlight"><pre><span class="p">{</span>
-    <span class="s2">"require"</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">"domnikl/statsd"</span><span class="o">:</span> <span class="s2">"*"</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
+<p><a href="http://travis-ci.org/domnikl/statsd-php"><img src="https://secure.travis-ci.org/domnikl/statsd-php.png?branch=master" alt="Build Status"></a></p>
 
 <h2>
-<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
-<span class="nv">$connection</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Domnikl\Statsd\Connection\Socket</span><span class="p">(</span><span class="s1">'localhost'</span><span class="p">,</span> <span class="mi">8125</span><span class="p">);</span>
-<span class="nv">$statsd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Domnikl\Statsd\Client</span><span class="p">(</span><span class="nv">$connection</span><span class="p">,</span> <span class="s2">"test.namespace"</span><span class="p">);</span>
+<p>The best way to install statsd-php is to use Composer and add the following to your project's <code>composer.json</code> file:</p>
 
-<span class="c1">// the global namespace gets prepended to every key</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">setNamespace</span><span class="p">(</span><span class="s2">"test"</span><span class="p">);</span>
-
-<span class="c1">// simple counts</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">increment</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">);</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">decrement</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">);</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">count</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
-</pre></div>
+<div class="highlight highlight-javascript"><pre>{
+    <span class="pl-s1"><span class="pl-pds">"</span>require<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-s1"><span class="pl-pds">"</span>domnikl/statsd<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s1"><span class="pl-pds">"</span>~2.0<span class="pl-pds">"</span></span>
+    }
+}</pre></div>
 
 <h2>
-<a name="timings" class="anchor" href="#timings"><span class="octicon octicon-link"></span></a>Timings</h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
-<span class="c1">// timings</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">timing</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">,</span> <span class="mi">320</span><span class="p">);</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">time</span><span class="p">(</span><span class="s2">"foo.bar.bla"</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// code to be measured goes here ...</span>
-<span class="p">});</span>
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s2"></span>
+<span class="pl-s2"><span class="pl-vo">$connection</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\Domnikl\Statsd\Connection\</span><span class="pl-s3">UdpSocket</span>(<span class="pl-s1"><span class="pl-pds">'</span>localhost<span class="pl-pds">'</span></span>, <span class="pl-c1">8125</span>);</span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-s3">\Domnikl\Statsd\</span><span class="pl-s3">Client</span>(<span class="pl-vo">$connection</span>, <span class="pl-s1"><span class="pl-pds">"</span>test.namespace<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s2"></span>
+<span class="pl-s2"><span class="pl-c">// the global namespace is prepended to every key (optional)</span></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>setNamespace(<span class="pl-s1"><span class="pl-pds">"</span>test<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s2"></span>
+<span class="pl-s2"><span class="pl-c">// simple counts</span></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>increment(<span class="pl-s1"><span class="pl-pds">"</span>foo.bar<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>decrement(<span class="pl-s1"><span class="pl-pds">"</span>foo.bar<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>count(<span class="pl-s1"><span class="pl-pds">"</span>foo.bar<span class="pl-pds">"</span></span>, <span class="pl-c1">1000</span>);</span></pre></div>
 
-<span class="c1">// more complex timings can be handled with startTiming() and endTiming()</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">startTiming</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">);</span>
-<span class="c1">// more complex code here ...</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">endTiming</span><span class="p">(</span><span class="s2">"foo.bar"</span><span class="p">);</span>
-</pre></div>
+<p>When establishing the connection to statsd and sending metrics, errors will be suppressed to prevent your application from crashing.</p>
 
-<h2>
-<a name="memory-profiling" class="anchor" href="#memory-profiling"><span class="octicon octicon-link"></span></a>Memory profiling</h2>
+<p>If you run statsd in TCP mode, there is also a <code>\Domnikl\Statsd\Connection\TcpSocket</code> adapter that works like the <code>UdpSocket</code>.
+Please consider that unlike UDP, TCP is used for reliable networks and therefor errors will not be suppressed in TCP mode.</p>
 
-<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
-<span class="c1">// memory profiling</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">startMemoryProfile</span><span class="p">(</span><span class="s1">'memory.foo'</span><span class="p">);</span>
-<span class="c1">// some complex code goes here ...</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">endMemoryProfile</span><span class="p">(</span><span class="s1">'memory.foo'</span><span class="p">);</span>
+<h3>
+<a id="timings" class="anchor" href="#timings" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/etsy/statsd/blob/master/docs/metric_types.md#timing">Timings</a>
+</h3>
 
-<span class="c1">// report peak usage</span>
-<span class="nv">$stats</span><span class="o">-&gt;</span><span class="na">memory</span><span class="p">(</span><span class="s1">'foo.memory_peak_usage'</span><span class="p">);</span>
-</pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s2"></span>
+<span class="pl-s2"><span class="pl-c">// timings</span></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>timing(<span class="pl-s1"><span class="pl-pds">"</span>foo.bar<span class="pl-pds">"</span></span>, <span class="pl-c1">320</span>);</span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>time(<span class="pl-s1"><span class="pl-pds">"</span>foo.bar.bla<span class="pl-pds">"</span></span>, <span class="pl-st">function</span>() {</span>
+<span class="pl-s2">    <span class="pl-c">// code to be measured goes here ...</span></span>
+<span class="pl-s2">});</span>
+<span class="pl-s2"></span>
+<span class="pl-s2"><span class="pl-c">// more complex timings can be handled with startTiming() and endTiming()</span></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>startTiming(<span class="pl-s1"><span class="pl-pds">"</span>foo.bar<span class="pl-pds">"</span></span>);</span>
+<span class="pl-s2"><span class="pl-c">// more complex code here ...</span></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>endTiming(<span class="pl-s1"><span class="pl-pds">"</span>foo.bar<span class="pl-pds">"</span></span>);</span></pre></div>
 
-<h2>
-<a name="gauges" class="anchor" href="#gauges"><span class="octicon octicon-link"></span></a>Gauges</h2>
+<h3>
+<a id="memory-profiling" class="anchor" href="#memory-profiling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Memory profiling</h3>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s2"></span>
+<span class="pl-s2"><span class="pl-c">// memory profiling</span></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>startMemoryProfile(<span class="pl-s1"><span class="pl-pds">'</span>memory.foo<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s2"><span class="pl-c">// some complex code goes here ...</span></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>endMemoryProfile(<span class="pl-s1"><span class="pl-pds">'</span>memory.foo<span class="pl-pds">'</span></span>);</span>
+<span class="pl-s2"></span>
+<span class="pl-s2"><span class="pl-c">// report peak usage</span></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>memory(<span class="pl-s1"><span class="pl-pds">'</span>foo.memory_peak_usage<span class="pl-pds">'</span></span>);</span></pre></div>
+
+<h3>
+<a id="gauges" class="anchor" href="#gauges" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/etsy/statsd/blob/master/docs/metric_types.md#gauges">Gauges</a>
+</h3>
 
 <p>statsd supports gauges, arbitrary values which can be recorded.</p>
 
-<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
-<span class="nv">$statsd</span><span class="o">-&gt;</span><span class="na">gauge</span><span class="p">(</span><span class="s1">'foobar'</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
-</pre></div>
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s2"></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>gauge(<span class="pl-s1"><span class="pl-pds">'</span>foobar<span class="pl-pds">'</span></span>, <span class="pl-c1">3</span>);</span></pre></div>
+
+<h3>
+<a id="sets" class="anchor" href="#sets" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/etsy/statsd/blob/master/docs/metric_types.md#sets">Sets</a>
+</h3>
+
+<p>statsd supports sets, so you can view the uniqueness of a given value.</p>
+
+<div class="highlight highlight-php"><pre><span class="pl-pse">&lt;?php</span><span class="pl-s2"></span>
+<span class="pl-s2"><span class="pl-vo">$statsd</span><span class="pl-k">-&gt;</span>set(<span class="pl-s1"><span class="pl-pds">'</span>userId<span class="pl-pds">'</span></span>, <span class="pl-c1">1234</span>);</span></pre></div>
+
+<h3>
+<a id="disabling-sending-of-metrics" class="anchor" href="#disabling-sending-of-metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>disabling sending of metrics</h3>
+
+<p>To disable sending any metrics to the statsd server, you can use the <code>Domnikl\Statsd\Connection\Blackhole</code> connection class instead of the default socket abstraction.
+This may be incredibly useful for feature flags.</p>
 
 <h2>
-<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors</h2>
 
-<p>Original author: Dominik Liebler <a href="mailto:liebler.dominik@googlemail.com">liebler.dominik@googlemail.com</a></p>
+<p>Original author: Dominik Liebler <a href="mailto:liebler.dominik@gmail.com">liebler.dominik@gmail.com</a>
+Several other <a href="https://github.com/domnikl/statsd-php/graphs/contributors">contributors</a> - Thank you!</p>
 
 <h2>
-<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>(The MIT License)</p>
 
-<p>Copyright (c) 2013 Dominik Liebler</p>
+<p>Copyright (c) 2014 Dominik Liebler</p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -133,16 +150,12 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
       </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">statsd-php maintained by <a href="https://github.com/domnikl">domnikl</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/domnikl">domnikl</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
-
+    <script src="javascripts/scale.fix.js"></script>
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -153,7 +166,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
-
 
   </body>
 </html>
