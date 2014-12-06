@@ -1,6 +1,7 @@
 PHP_BIN=php
 COMPOSER_BIN=composer.phar
 PHPUNIT_BIN=vendor/bin/phpunit
+NETCAT=nc
 
 COVERAGE_DIR=tests/coverage
 
@@ -16,10 +17,10 @@ install:
 	$(PHP_BIN) $(COMPOSER_BIN) install
 
 tcp-testserver:
-	nc -tl localhost 8126
+	$(NETCAT) -tlnp 8126
 
 udp-testserver:
-	nc -ul localhost 8125
+	$(NETCAT) -ulnp  8125
 
 tcp-integration:
 	$(PHP_BIN) tests/integration/tcp-test.php
