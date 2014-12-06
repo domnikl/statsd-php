@@ -1,9 +1,12 @@
 # Changelog domnikl/statsd-php
 
-## 1.2.0
+## 2.0.0
 
 * renamed Socket classes: Socket is now a UdpSocket + there is a new TcpSocket class
-* for development there is a new (simple) process for running tests and such using make
+* batch messages are split to fit into the configured MTU
+* sampling all metrics must now be configured on the client - no longer in the connection
+* endTiming() returns the time measured
+* for development there is a new (simple) process for running integration tests and such using make
 
 ## 1.1.0
 
