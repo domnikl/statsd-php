@@ -50,15 +50,22 @@ class Client
     private $isBatch = false;
 
     /**
+     * @var bool
+     */
+    private $sampleAllMetrics = false;
+
+    /**
      * initializes the client object
      *
      * @param Connection $connection
      * @param string $namespace global key namespace
+     * @param bool $sampleAllMetrics if set to true, all metrics will be sampled instead of sent 1:1 to statsd
      */
-    public function __construct(Connection $connection, $namespace = '')
+    public function __construct(Connection $connection, $namespace = '', $sampleAllMetrics = false)
     {
         $this->connection = $connection;
         $this->namespace = (string) $namespace;
+        $this->sampleAllMetrics = (bool) $sampleAllMetrics;
     }
 
     /**
@@ -242,12 +249,10 @@ class Client
         $sample = mt_rand() / mt_getrandmax();
 
         if ($sample > $sampleRate) {
-            // @codeCoverageIgnoreStart
             return;
-            // @codeCoverageIgnoreEnd
         }
 
-        if ($sampleRate < 1 || $this->connection->isSamplingForced()) {
+        if ($sampleRate < 1 || $this->sampleAllMetrics) {
             $sampledData = sprintf('%s|@%s', $message, $sampleRate);
         } else {
             $sampledData = $message;

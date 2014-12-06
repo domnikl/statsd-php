@@ -20,11 +20,4 @@ interface Connection
      * @param array $messages
      */
     public function sendMessages(array $messages);
-
-    /**
-     * is sampling forced?
-     *
-     * @return boolean
-     */
-    public function isSamplingForced();
 }

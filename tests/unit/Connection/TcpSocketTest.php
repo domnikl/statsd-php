@@ -24,6 +24,5 @@ class TcpSocketTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(8125, $connection->getPort());
         $this->assertNull($connection->getTimeout());
         $this->assertFalse($connection->isPersistent());
-        $this->assertFalse($connection->isSamplingForced());
     }
 }

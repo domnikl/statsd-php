@@ -35,13 +35,6 @@ abstract class InetSocket implements Connection
     private $persistent = false;
 
     /**
-     * is sampling forced?
-     *
-     * @var bool
-     */
-    private $isSamplingForced = false;
-
-    /**
      * Maximum Transmission Unit
      *
      * http://en.wikipedia.org/wiki/Maximum_transmission_unit
@@ -99,16 +92,6 @@ abstract class InetSocket implements Connection
     public function isPersistent()
     {
         return $this->persistent;
-    }
-
-    /**
-     * is sampling forced?
-     *
-     * @return boolean
-     */
-    public function isSamplingForced()
-    {
-        return (bool) $this->isSamplingForced;
     }
 
     /**

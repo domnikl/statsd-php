@@ -52,8 +52,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountWithSamplingRate()
     {
-        $this->connection->setForceSampling(true);
-        $this->client->count('foo.baz', 100, 1);
+        $client = new Client($this->connection, 'test', true);
+        $client->count('foo.baz', 100, 1);
         $this->assertEquals(
             'test.foo.baz:100|c|@1',
             $this->connection->getLastMessage()
@@ -74,8 +74,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testIncrementWithSamplingRate()
     {
-        $this->connection->setForceSampling(true);
-        $this->client->increment('foo.baz', 1);
+        $client = new Client($this->connection, 'test', true);
+        $client->increment('foo.baz', 1);
         $this->assertEquals(
             'test.foo.baz:1|c|@1',
             $this->connection->getLastMessage()
@@ -96,8 +96,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecrementWithSamplingRate()
     {
-        $this->connection->setForceSampling(true);
-        $this->client->decrement('foo.baz', 1);
+        $client = new Client($this->connection, 'test', true);
+        $client->decrement('foo.baz', 1);
         $this->assertEquals(
             'test.foo.baz:-1|c|@1',
             $this->connection->getLastMessage()
@@ -119,8 +119,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testTimingWithSamplingRate()
     {
-        $this->connection->setForceSampling(true);
-        $this->client->timing('foo.baz', 2000, 1);
+        $client = new Client($this->connection, 'test', true);
+        $client->timing('foo.baz', 2000, 1);
         $this->assertEquals(
             'test.foo.baz:2000|ms|@1',
             $this->connection->getLastMessage()
@@ -155,10 +155,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testStartEndTimingWithSamplingRate()
     {
-        $this->connection->setForceSampling(true);
-        $this->client->startTiming('foo.baz');
+        $client = new Client($this->connection, 'test', true);
+        $client->startTiming('foo.baz');
         usleep(10000);
-        $this->client->endTiming('foo.baz', 1);
+        $client->endTiming('foo.baz', 1);
 
         // ranges between 1000 and 1001ms
         $this->assertRegExp('/^test\.foo\.baz:1[0-9]\|ms\|@1$/', $this->connection->getLastMessage());

@@ -29,14 +29,4 @@ class Blackhole implements Connection
     {
         // do nothing
     }
-
-    /**
-     * is sampling forced?
-     *
-     * @return boolean
-     */
-    public function isSamplingForced()
-    {
-        return false;
-    }
 }

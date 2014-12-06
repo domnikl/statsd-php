@@ -18,7 +18,15 @@ class ConnectionMock implements Connection
     /**
      * @var bool
      */
-    private $forceSampling = false;
+    private $sampleAllMetrics = false;
+
+    /**
+     * @param bool $sampleAllMetrics
+     */
+    public function __construct($sampleAllMetrics = false)
+    {
+        $this->sampleAllMetrics = (bool) $sampleAllMetrics;
+    }
 
     /**
      * @param string $message
@@ -40,22 +48,6 @@ class ConnectionMock implements Connection
 		} else {
 			return null;
 		}
-    }
-
-    /**
-     * @param bool $bool True if sampling should be forced.
-     */
-    public function setForceSampling($bool)
-    {
-        $this->forceSampling = (bool) $bool;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSamplingForced()
-    {
-        return $this->forceSampling;
     }
 
     /**
