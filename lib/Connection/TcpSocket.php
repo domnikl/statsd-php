@@ -23,7 +23,7 @@ class TcpSocket extends InetSocket implements Connection
      */
     protected function writeToSocket($message)
     {
-        fwrite($this->socket, $message);
+        fwrite($this->socket, $message . "\r\n");
     }
 
     /**
