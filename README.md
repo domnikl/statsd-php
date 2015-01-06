@@ -86,8 +86,9 @@ $statsd->set('userId', 1234);
 
 ### disabling sending of metrics
 
-To disable sending any metrics to the statsd server, you can use the `Domnikl\Statsd\Connection\Blackhole` connection class instead of the default socket abstraction.
-This may be incredibly useful for feature flags.
+To disable sending any metrics to the statsd server, you can use the `Domnikl\Statsd\Connection\Blackhole` connection
+ class instead of the default socket abstraction. This may be incredibly useful for feature flags. Another options is
+to use `Domnikl\Statsd\Connection\InMemory` connection class, that will collect your messages but won't actually send them.
 
 ## Authors
 
