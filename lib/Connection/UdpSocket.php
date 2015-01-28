@@ -38,7 +38,7 @@ class UdpSocket extends InetSocket implements Connection
      * @param int|null $timeout
      * @param bool $persistent
      */
-    protected function connect($host, $port, $timeout, $persistent)
+    protected function connect($host, $port, $timeout, $persistent = False)
     {
         $errorNumber = null;
         $errorMessage = null;
