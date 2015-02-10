@@ -135,7 +135,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->startTiming($key);
         usleep(10000);
         $this->client->endTiming($key);
-        
+
         // ranges between 1000 and 1001ms
         $this->assertRegExp('/^test\.foo\.bar:1[0-9]\|ms$/', $this->connection->getLastMessage());
     }
@@ -151,7 +151,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertGreaterThanOrEqual($sleep / 1000, $this->client->endTiming($key));
     }
-    
+
     /**
      * @group sampling
      */
@@ -210,6 +210,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $message = $this->connection->getLastMessage();
         $this->assertEquals('test.foobar:333|g', $message);
+    }
+
+    public function testGaugeCanReceiveFormattedNumber()
+    {
+        $this->client->gauge('foobar', '+11');
+
+        $message = $this->connection->getLastMessage();
+        $this->assertEquals('test.foobar:+11|g', $message);
     }
 
     public function testSet()
