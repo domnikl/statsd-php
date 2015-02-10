@@ -210,6 +210,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test.foobar:333|g', $message);
     }
 
+    public function testGaugeCanReceiveFormattedNumber()
+    {
+        $this->client->gauge('foobar', '+11');
+
+        $message = $this->connection->getLastMessage();
+        $this->assertEquals('test.foobar:+11|g', $message);
+    }
+
     public function testSet()
     {
         $this->client->set("barfoo", 666);

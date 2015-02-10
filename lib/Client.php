@@ -213,11 +213,11 @@ class Client
      * sends a gauge, an arbitrary value to StatsD
      *
      * @param string $key
-     * @param int $value
+     * @param string|int $value
      */
     public function gauge($key, $value)
     {
-        $this->send($key, (int) $value, 'g', 1);
+        $this->send($key, $value, 'g', 1);
     }
 
     /**
