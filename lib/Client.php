@@ -245,7 +245,7 @@ class Client
             $key = sprintf('%s.%s', $this->namespace, $key);
         }
 
-        $message = sprintf("%s:%d|%s", $key, $value, $type);
+        $message = sprintf("%s:%s|%s", $key, $value, $type);
         $sample = mt_rand() / mt_getrandmax();
 
         if ($sample > $sampleRate) {
