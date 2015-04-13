@@ -68,11 +68,17 @@ $statsd->memory('foo.memory_peak_usage');
 
 ### [Gauges](https://github.com/etsy/statsd/blob/master/docs/metric_types.md#gauges)
 
-statsd supports gauges, arbitrary values which can be recorded.
+statsd supports gauges, arbitrary values which can be recorded. This method accepts both absolute (3) and delta (+11) values. 
+
+*NOTE:* Negative values are treated as delta values, not absolute.
 
 ```php
 <?php
+// Absolute value
 $statsd->gauge('foobar', 3);
+
+// Pass delta values as a string. Accepts both positive (+11) and negative (-4) delta values.
+$statsd->gauge('foobar', '+11'); 
 ```
 
 ### [Sets](https://github.com/etsy/statsd/blob/master/docs/metric_types.md#sets)
