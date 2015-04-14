@@ -6,7 +6,7 @@ use Domnikl\Statsd\Connection as Connection;
 
 /**
  * This connection collects all messages but is not sending them. This eases 
- * feature testing when you want to assert that a specific set of messages where created. 
+ * feature testing when you want to assert that a specific set of messages were created. 
  */
 class InMemory implements Connection
 {
