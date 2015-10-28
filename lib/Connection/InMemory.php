@@ -10,7 +10,7 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class InMemory implements Connection
 {
-    private $messages = [];
+    private $messages = array();
 
     /**
      * {@inheritdoc}
@@ -33,7 +33,7 @@ class InMemory implements Connection
      */
     public function clear()
     {
-        $this->messages = [];
+        $this->messages = array();
     }
 
     /**

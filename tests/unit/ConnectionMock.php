@@ -13,7 +13,7 @@ class ConnectionMock implements Connection
     /**
      * @var array
      */
-    public $messages = [];
+    public $messages = array();
 
     /**
      * @var bool
