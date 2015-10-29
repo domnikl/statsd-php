@@ -148,7 +148,7 @@ abstract class InetSocket implements Connection
     private function cutIntoMtuSizedMessages(array $messages)
     {
         $index = 0;
-        $sizedMessages = [];
+        $sizedMessages = array();
         $packageLength = 0;
 
         foreach ($messages as $message) {

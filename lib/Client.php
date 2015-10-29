@@ -19,14 +19,14 @@ class Client
      *
      * @var array
      */
-    private $timings = [];
+    private $timings = array();
 
     /**
      * holds all memory profiles like timings
      *
      * @var array
      */
-    private $memoryProfiles = [];
+    private $memoryProfiles = array();
 
     /**
      * global key namespace
@@ -40,7 +40,7 @@ class Client
      *
      * @var array
      */
-    private $batch = [];
+    private $batch = array();
 
     /**
      * batch mode?
@@ -315,7 +315,7 @@ class Client
     {
         $this->isBatch = false;
         $this->connection->sendMessages($this->batch);
-        $this->batch = [];
+        $this->batch = array();
     }
 
     /**
@@ -324,6 +324,6 @@ class Client
     public function cancelBatch()
     {
         $this->isBatch = false;
-        $this->batch = [];
+        $this->batch = array();
     }
 }
