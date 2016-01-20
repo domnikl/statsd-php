@@ -19,6 +19,25 @@ class TcpSocket extends InetSocket implements Connection
     private $socket;
 
     /**
+     * sends a message to the socket
+     *
+     * @param string $message
+     *
+     * @codeCoverageIgnore
+     * this is ignored because it writes to an actual socket and is not testable
+     */
+    public function send($message)
+    {
+        try {
+            parent::send($message);
+        } catch (TcpSocketException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            // ignore it: stats logging failure shouldn't stop the whole app
+        }
+    }
+
+    /**
      * @param string $message
      */
     protected function writeToSocket($message)
@@ -40,10 +59,16 @@ class TcpSocket extends InetSocket implements Connection
         $url = sprintf("tcp://%s", $host);
 
         if ($persistent) {
-            $this->socket = pfsockopen($url, $port, $errorNumber, $errorMessage, $timeout);
+            $socket = @pfsockopen($url, $port, $errorNumber, $errorMessage, $timeout);
         } else {
-            $this->socket = fsockopen($url, $port, $errorNumber, $errorMessage, $timeout);
+            $socket = @fsockopen($url, $port, $errorNumber, $errorMessage, $timeout);
         }
+
+        if ($socket === false) {
+            throw new TcpSocketException($host, $port);
+        }
+
+        $this->socket = $socket;
     }
 
     /**

@@ -109,15 +109,11 @@ abstract class InetSocket implements Connection
             return;
         }
 
-        try {
-            if (!$this->isConnected()) {
-                $this->connect($this->host, $this->port, $this->timeout, $this->persistent);
-            }
-
-            $this->writeToSocket($message);
-        } catch (\Exception $e) {
-            // ignore it: stats logging failure shouldn't stop the whole app
+        if (!$this->isConnected()) {
+            $this->connect($this->host, $this->port, $this->timeout, $this->persistent);
         }
+
+        $this->writeToSocket($message);
     }
 
     /**

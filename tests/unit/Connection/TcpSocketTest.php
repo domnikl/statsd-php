@@ -25,4 +25,13 @@ class TcpSocketTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($connection->getTimeout());
         $this->assertFalse($connection->isPersistent());
     }
+
+    /**
+     * @expectedException \Domnikl\Statsd\Connection\TcpSocketException
+     */
+    public function testThrowsExceptionWhenTryingToConnectToNotExistingServer()
+    {
+        $connection = new TcpSocket('localhost', 66000, 1);
+        $connection->send('foobar');
+    }
 }
