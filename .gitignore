@@ -7,4 +7,5 @@ tests/coverage
 # composer
 /vendor
 /composer.lock
+/composer.phar
 
