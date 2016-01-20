@@ -28,7 +28,9 @@ class InMemory implements Connection
      */
     public function sendMessages(array $messages)
     {
-        $this->messages = array_merge($this->messages = $messages);
+        foreach ($messages as $message) {
+            $this->send($message);
+        }
     }
 
     /** 
