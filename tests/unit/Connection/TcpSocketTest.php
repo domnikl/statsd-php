@@ -28,6 +28,7 @@ class TcpSocketTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Domnikl\Statsd\Connection\TcpSocketException
+     * @expectedExceptionMessage Couldn't connect to host "localhost:66000": Connection refused
      */
     public function testThrowsExceptionWhenTryingToConnectToNotExistingServer()
     {

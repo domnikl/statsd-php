@@ -65,7 +65,7 @@ class TcpSocket extends InetSocket implements Connection
         }
 
         if ($socket === false) {
-            throw new TcpSocketException($host, $port);
+            throw new TcpSocketException($host, $port, $errorMessage);
         }
 
         $this->socket = $socket;

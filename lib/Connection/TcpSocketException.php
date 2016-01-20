@@ -7,9 +7,14 @@ class TcpSocketException extends \RuntimeException
     /**
      * @param string $host
      * @param int $port
+     * @param string $message
      */
-    public function __construct($host, $port, \Exception $previous = null)
+    public function __construct($host, $port, $message, \Exception $previous = null)
     {
-        parent::__construct(sprintf('Couldn\'t connect to host %s:%d', $host, $port), 0, $previous);
+        parent::__construct(
+            sprintf('Couldn\'t connect to host "%s:%d": %s', $host, $port, $message), 
+            0, 
+            $previous
+        );
     }
 }
