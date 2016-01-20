@@ -34,8 +34,8 @@ $statsd->count("foo.bar", 1000);
 
 When establishing the connection to statsd and sending metrics, errors will be suppressed to prevent your application from crashing.
 
-If you run statsd in TCP mode, there is also a `\Domnikl\Statsd\Connection\TcpSocket` adapter that works like the `UdpSocket`.
-Please consider that unlike UDP, TCP is used for reliable networks and therefor errors will not be suppressed in TCP mode.
+If you run statsd in TCP mode, there is also a `\Domnikl\Statsd\Connection\TcpSocket` adapter that works like the `UdpSocket` except that it throws a `\Domnikl\Statsd\Connection\TcpSocketException` if no connection could be established.
+Please consider that unlike UDP, TCP is used for reliable networks and therefor exceptions (and errors) will not be suppressed in TCP mode.
 
 ### [Timings](https://github.com/etsy/statsd/blob/master/docs/metric_types.md#timing)
 

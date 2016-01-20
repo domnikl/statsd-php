@@ -1,5 +1,9 @@
 # Changelog domnikl/statsd-php
 
+## 2.2.0
+
+* TcpSocket now throws a TCPSocketException if no connection could be established
+
 ## 2.0.0
 
 * renamed Socket classes: Socket is now a UdpSocket + there is a new TcpSocket class
