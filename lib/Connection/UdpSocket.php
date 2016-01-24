@@ -24,6 +24,23 @@ class UdpSocket extends InetSocket implements Connection
     private $isConnected;
 
     /**
+     * sends a message to the socket
+     *
+     * @param string $message
+     *
+     * @codeCoverageIgnore
+     * this is ignored because it writes to an actual socket and is not testable
+     */
+    public function send($message)
+    {
+        try {
+            parent::send($message);
+        } catch (\Exception $e) {
+            // ignore it: stats logging failure shouldn't stop the whole app
+        }
+    }
+
+    /**
      * @param string $message
      */
     protected function writeToSocket($message)

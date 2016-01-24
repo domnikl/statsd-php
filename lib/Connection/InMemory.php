@@ -10,6 +10,9 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class InMemory implements Connection
 {
+    /**
+     * @var array
+     */
     private $messages = array();
 
     /**
@@ -25,11 +28,13 @@ class InMemory implements Connection
      */
     public function sendMessages(array $messages)
     {
-        $this->messages = array_merge($this->messages = $messages);
+        foreach ($messages as $message) {
+            $this->send($message);
+        }
     }
 
     /** 
-     * Drops all messages that where collected.
+     * Drops all messages that were collected.
      */
     public function clear()
     {
@@ -37,7 +42,7 @@ class InMemory implements Connection
     }
 
     /**
-     * Returns messages that where collected until now.
+     * Returns messages that were collected until now.
      *
      * @return array
      */

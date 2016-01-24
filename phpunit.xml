@@ -12,10 +12,7 @@
     strict="false">
     <testsuites>
         <testsuite name="statsd-php Test Suite">
-            <file>tests/unit/ClientTest.php</file>
-            <file>tests/unit/ClientBatchTest.php</file>
-            <file>tests/unit/Connection/UdpSocketTest.php</file>
-            <file>tests/unit/Connection/TcpSocketTest.php</file>
+            <directory>tests/unit</directory>
         </testsuite>
     </testsuites>
 </phpunit>
