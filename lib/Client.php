@@ -110,7 +110,7 @@ class Client
      */
     public function timing($key, $value, $sampleRate = 1)
     {
-        $this->send($key, (int) $value, 'ms', $sampleRate);
+        $this->send($key, $value, 'ms', $sampleRate);
     }
 
     /**
