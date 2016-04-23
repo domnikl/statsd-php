@@ -248,13 +248,13 @@ class Client
         $message = sprintf("%s:%s|%s", $key, $value, $type);
         $sample = mt_rand() / mt_getrandmax();
 
-        if ($sample > $sampleRate) {
-            return;
-        }
-
         // overwrite sampleRate if all metrics should be sampled
         if ($this->sampleRateAllMetrics < 1) {
             $sampleRate = $this->sampleRateAllMetrics;
+        }
+
+        if ($sample > $sampleRate) {
+            return;
         }
 
         if ($sampleRate < 1) {
