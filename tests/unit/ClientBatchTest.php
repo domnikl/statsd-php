@@ -42,6 +42,16 @@ class ClientBatchTest extends \PHPUnit_Framework_TestCase
 
 		$message = $this->connection->getLastMessage();
 		$this->assertNull($message);
+
+        $this->client->setMaxBatchSize(100);
+        $this->client->increment("foobar", 1);
+
+        $message = $this->connection->getLastMessage();
+        $this->assertNull($message);
+
+        $this->client->increment(str_pad("foobar", 100, "_"), 1);
+        $message = $this->connection->getLastMessage();
+        $this->assertNotNull($message);
 	}
 
 	public function testEndBatch()
@@ -74,4 +84,28 @@ class ClientBatchTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($this->client->isBatch());
 		$this->assertNull($this->connection->getLastMessage());
 	}
+
+    public function testSendBatch()
+    {
+        $this->client->startBatch();
+        $this->client->count("foobar", 5);
+        $this->client->count("foobar", 6);
+        $this->client->sendBatch();
+        $this->assertTrue($this->client->isBatch());
+        $this->assertSame("foobar:5|c\nfoobar:6|c", $this->connection->getLastMessage());
+    }
+
+    public function testGetMaxBatchSize()
+    {
+        $this->client->startBatch();
+
+        $this->client->setMaxBatchSize(1024);
+        $this->assertEquals($this->client->getMaxBatchSize(), 1024);
+
+        $this->client->setMaxBatchSize(null);
+        $this->assertEquals($this->client->getMaxBatchSize(), Client::DEFAULT_MAX_BATCH_SIZE);
+
+        $this->client->setMaxBatchSize(0);
+        $this->assertEquals($this->client->getMaxBatchSize(), 0);
+    }
 }
