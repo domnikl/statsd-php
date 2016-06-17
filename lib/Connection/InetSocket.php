@@ -6,6 +6,8 @@ use Domnikl\Statsd\Connection;
 
 abstract class InetSocket implements Connection
 {
+    const EOL = "\n";
+
     /**
      * host name
      *
@@ -105,7 +107,7 @@ abstract class InetSocket implements Connection
     public function send($message)
     {
         // prevent from sending empty or non-sense metrics
-        if (!is_string($message) || $message == '') {
+        if ($message === '' || !is_string($message)) {
             return;
         }
 
@@ -123,13 +125,13 @@ abstract class InetSocket implements Connection
      */
     public function sendMessages(array $messages)
     {
-        $message = join("\n", $messages);
+        $message = join(self::EOL, $messages);
 
         if (strlen($message) > $this->mtu) {
             $messageBatches = $this->cutIntoMtuSizedMessages($messages);
 
             foreach ($messageBatches as $messageBatch) {
-                $this->send(join("\n", $messageBatch));
+                $this->send(join(self::EOL, $messageBatch));
             }
         } else {
             $this->send($message);
@@ -151,7 +153,7 @@ abstract class InetSocket implements Connection
             $messageLength = strlen($message);
 
             if ($messageLength + $packageLength > $this->mtu) {
-                $index++;
+                ++$index;
                 $packageLength = 0;
             }
 

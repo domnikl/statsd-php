@@ -60,7 +60,7 @@ class UdpSocket extends InetSocket implements Connection
         $errorNumber = null;
         $errorMessage = null;
 
-        $url = sprintf("udp://%s", $host);
+        $url = 'udp://' . $host;
 
         if ($persistent) {
             $this->socket = @pfsockopen($url, $port, $errorNumber, $errorMessage, $timeout);

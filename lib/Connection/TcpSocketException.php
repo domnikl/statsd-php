@@ -8,6 +8,7 @@ class TcpSocketException extends \RuntimeException
      * @param string $host
      * @param int $port
      * @param string $message
+     * @param \Exception|null $previous
      */
     public function __construct($host, $port, $message, \Exception $previous = null)
     {

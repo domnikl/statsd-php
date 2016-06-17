@@ -11,6 +11,8 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class TcpSocket extends InetSocket implements Connection
 {
+    const EOL = "\r\n";
+
     /**
      * the used TCP socket resource
      *
@@ -42,7 +44,7 @@ class TcpSocket extends InetSocket implements Connection
      */
     protected function writeToSocket($message)
     {
-        fwrite($this->socket, $message . "\r\n");
+        fwrite($this->socket, $message . self::EOL);
     }
 
     /**
@@ -56,7 +58,7 @@ class TcpSocket extends InetSocket implements Connection
         $errorNumber = null;
         $errorMessage = null;
 
-        $url = sprintf("tcp://%s", $host);
+        $url = 'tcp://' . $host;
 
         if ($persistent) {
             $socket = @pfsockopen($url, $port, $errorNumber, $errorMessage, $timeout);
