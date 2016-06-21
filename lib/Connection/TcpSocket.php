@@ -11,8 +11,6 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class TcpSocket extends InetSocket implements Connection
 {
-    const EOL = "\r\n";
-
     /**
      * the used TCP socket resource
      *
@@ -44,7 +42,7 @@ class TcpSocket extends InetSocket implements Connection
      */
     protected function writeToSocket($message)
     {
-        fwrite($this->socket, $message . self::EOL);
+        fwrite($this->socket, $message . "\r\n");
     }
 
     /**

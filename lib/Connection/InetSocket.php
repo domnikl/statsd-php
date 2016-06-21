@@ -6,8 +6,6 @@ use Domnikl\Statsd\Connection;
 
 abstract class InetSocket implements Connection
 {
-    const EOL = "\n";
-
     /**
      * host name
      *
@@ -125,13 +123,13 @@ abstract class InetSocket implements Connection
      */
     public function sendMessages(array $messages)
     {
-        $message = join(self::EOL, $messages);
+        $message = join("\n", $messages);
 
         if (strlen($message) > $this->mtu) {
             $messageBatches = $this->cutIntoMtuSizedMessages($messages);
 
             foreach ($messageBatches as $messageBatch) {
-                $this->send(join(self::EOL, $messageBatch));
+                $this->send(join("\n", $messageBatch));
             }
         } else {
             $this->send($message);
