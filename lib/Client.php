@@ -59,9 +59,9 @@ class Client
      *
      * @param Connection $connection
      * @param string $namespace global key namespace
-     * @param bool $sampleRateAllMetrics if set to a value <1, all metrics will be sampled using this rate
+     * @param float $sampleRateAllMetrics if set to a value <1, all metrics will be sampled using this rate
      */
-    public function __construct(Connection $connection, $namespace = '', $sampleRateAllMetrics = 1)
+    public function __construct(Connection $connection, $namespace = '', $sampleRateAllMetrics = 1.0)
     {
         $this->connection = $connection;
         $this->namespace = (string) $namespace;
@@ -187,7 +187,7 @@ class Client
             $memory = memory_get_peak_usage();
         }
 
-        $this->count($key, (int) $memory, $sampleRate);
+        $this->count($key, $memory, $sampleRate);
     }
 
     /**
@@ -241,16 +241,15 @@ class Client
      */
     private function send($key, $value, $type, $sampleRate)
     {
-        if (strlen($this->namespace) != 0) {
-            $key = sprintf('%s.%s', $this->namespace, $key);
-        }
-
-        $message = sprintf("%s:%s|%s", $key, $value, $type);
-        $sample = mt_rand() / mt_getrandmax();
-
-        if ($sample > $sampleRate) {
+        if (mt_rand() / mt_getrandmax() > $sampleRate) {
             return;
         }
+
+        if (strlen($this->namespace) !== 0) {
+            $key = $this->namespace . '.' . $key;
+        }
+
+        $message = $key . ':' . $value . '|' . $type;
 
         // overwrite sampleRate if all metrics should be sampled
         if ($this->sampleRateAllMetrics < 1) {
@@ -258,7 +257,7 @@ class Client
         }
 
         if ($sampleRate < 1) {
-            $sampledData = sprintf('%s|@%s', $message, $sampleRate);
+            $sampledData = $message . '|@' . $sampleRate;
         } else {
             $sampledData = $message;
         }

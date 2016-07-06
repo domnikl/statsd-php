@@ -56,7 +56,7 @@ class TcpSocket extends InetSocket implements Connection
         $errorNumber = null;
         $errorMessage = null;
 
-        $url = sprintf("tcp://%s", $host);
+        $url = 'tcp://' . $host;
 
         if ($persistent) {
             $socket = @pfsockopen($url, $port, $errorNumber, $errorMessage, $timeout);

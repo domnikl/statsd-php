@@ -105,7 +105,7 @@ abstract class InetSocket implements Connection
     public function send($message)
     {
         // prevent from sending empty or non-sense metrics
-        if (!is_string($message) || $message == '') {
+        if ($message === '' || !is_string($message)) {
             return;
         }
 
@@ -151,7 +151,7 @@ abstract class InetSocket implements Connection
             $messageLength = strlen($message);
 
             if ($messageLength + $packageLength > $this->mtu) {
-                $index++;
+                ++$index;
                 $packageLength = 0;
             }
 
