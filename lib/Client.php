@@ -72,33 +72,36 @@ class Client
      * increments the key by 1
      *
      * @param string $key
+     * @param array $tags
      * @param int $sampleRate
      */
-    public function increment($key, $sampleRate = 1)
+    public function increment($key, $tags = array(), $sampleRate = 1)
     {
-        $this->count($key, 1, $sampleRate);
+        $this->count($key, 1, $tags, $sampleRate);
     }
 
     /**
      * decrements the key by 1
      *
      * @param string $key
+     * @param array $tags
      * @param int $sampleRate
      */
-    public function decrement($key, $sampleRate = 1)
+    public function decrement($key, $tags = array(), $sampleRate = 1)
     {
-        $this->count($key, -1, $sampleRate);
+        $this->count($key, -1, $tags, $sampleRate);
     }
     /**
      * sends a count to statsd
      *
      * @param string $key
      * @param int $value
+     * @param array $tags
      * @param int $sampleRate (optional) the default is 1
      */
-    public function count($key, $value, $sampleRate = 1)
+    public function count($key, $value, $tags = array(), $sampleRate = 1)
     {
-        $this->send($key, (int) $value, 'c', $sampleRate);
+        $this->send($key, (int) $value, 'c', $sampleRate, $tags);
     }
 
     /**
@@ -106,6 +109,7 @@ class Client
      *
      * @param string $key
      * @param int $value the timing in ms
+     * @param array $tags
      * @param int $sampleRate the sample rate, if < 1, statsd will send an average timing
      */
     public function timing($key, $value, $sampleRate = 1)
@@ -200,7 +204,7 @@ class Client
      *
      * @return mixed
      */
-    public function time($key, \Closure $_block, $sampleRate = 1)
+    public function time($key, \Closure $_block, $tags, $sampleRate = 1)
     {
         $this->startTiming($key);
         $return = $_block();
@@ -214,10 +218,11 @@ class Client
      *
      * @param string $key
      * @param string|int $value
+     * @param array $tags
      */
-    public function gauge($key, $value)
+    public function gauge($key, $value, $tags = array())
     {
-        $this->send($key, $value, 'g', 1);
+        $this->send($key, $value, 'g', 1, $tags);
     }
 
     /**
@@ -225,10 +230,11 @@ class Client
      *
      * @param string $key
      * @param int $value
+     * @param array $tags
      */
-    public function set($key, $value)
+    public function set($key, $value, $tags = array())
     {
-        $this->send($key, $value, 's', 1);
+        $this->send($key, $value, 's', 1, $tags);
     }
 
     /**
@@ -238,8 +244,9 @@ class Client
      * @param int $value
      * @param string $type
      * @param int $sampleRate
+     * @param array $tags
      */
-    private function send($key, $value, $type, $sampleRate)
+    private function send($key, $value, $type, $sampleRate, $tags = array())
     {
         if (mt_rand() / mt_getrandmax() > $sampleRate) {
             return;
@@ -260,6 +267,21 @@ class Client
             $sampledData = $message . '|@' . $sampleRate;
         } else {
             $sampledData = $message;
+        }
+
+        if (!empty($tags)) {
+            $sampledData .= '|';
+            $cpt          = 0;
+
+            foreach ($tags as $key => $value) {
+                if ($cpt === 0) {
+                    $sampledData .= '#';
+                }
+                $sampledData .= $key . ':' . $value . ', ';
+                $cpt++;
+            }
+
+            $sampledData = substr($sampledData, 0, -2);
         }
 
         if (!$this->isBatch) {
