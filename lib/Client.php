@@ -191,7 +191,7 @@ class Client
             $memory = memory_get_peak_usage();
         }
 
-        $this->count($key, $memory, $sampleRate);
+        $this->count($key, $memory, array(), $sampleRate);
     }
 
     /**

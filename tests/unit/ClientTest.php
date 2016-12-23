@@ -15,8 +15,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      * @var ConnectionMock
      */
     private $connection;
-
-
+    
     protected function setUp()
     {
         $this->connection = new ConnectionMock();
@@ -53,9 +52,22 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testCountWithSamplingRate()
     {
         $client = new Client($this->connection, 'test', 1 / 5);
-        $client->count('foo.baz', 100, 1);
+        $client->count('foo.baz', 100, array(), 1);
         $this->assertEquals(
             'test.foo.baz:100|c|@0.2',
+            $this->connection->getLastMessage()
+        );
+    }
+
+    /**
+     * @group sampling
+     */
+    public function testCountWithSamplingRateAndTags()
+    {
+        $client = new Client($this->connection, 'test', 1 / 5);
+        $client->count('foo.baz', 100, array('tag' => 'value'), 1);
+        $this->assertEquals(
+            'test.foo.baz:100|c|@0.2|#tag:value',
             $this->connection->getLastMessage()
         );
     }
@@ -75,9 +87,22 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testIncrementWithSamplingRate()
     {
         $client = new Client($this->connection, 'test', 0.3);
-        $client->increment('foo.baz', 1);
+        $client->increment('foo.baz', array(), 1);
         $this->assertEquals(
             'test.foo.baz:1|c|@0.3',
+            $this->connection->getLastMessage()
+        );
+    }
+
+    /**
+     * @group sampling
+     */
+    public function testIncrementWithSamplingRateAndTags()
+    {
+        $client = new Client($this->connection, 'test', 0.3);
+        $client->increment('foo.baz', array('tag' => 'value'), 1);
+        $this->assertEquals(
+            'test.foo.baz:1|c|@0.3|#tag:value',
             $this->connection->getLastMessage()
         );
     }
@@ -97,9 +122,22 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testDecrementWithSamplingRate()
     {
         $client = new Client($this->connection, 'test', 0.2);
-        $client->decrement('foo.baz', 1);
+        $client->decrement('foo.baz', array(), 1);
         $this->assertEquals(
             'test.foo.baz:-1|c|@0.2',
+            $this->connection->getLastMessage()
+        );
+    }
+
+    /**
+     * @group sampling
+     */
+    public function testDecrementWithSamplingRateAndTags()
+    {
+        $client = new Client($this->connection, 'test', 0.2);
+        $client->decrement('foo.baz', array('tag' => 'value'), 1);
+        $this->assertEquals(
+            'test.foo.baz:-1|c|@0.2|#tag:value',
             $this->connection->getLastMessage()
         );
     }
@@ -112,7 +150,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $this->connection->getLastMessage()
         );
     }
-
 
     /**
      * @group sampling
@@ -167,8 +204,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testTimeClosure()
     {
         $evald = $this->client->time('foo', function() {
-            return "foobar";
-        });
+                return "foobar";
+            },
+            array()
+        );
 
         $this->assertEquals('foobar', $evald);
         $this->assertRegExp('/test\.foo\.baz:100[0|1]{1}|ms|@0.1/', $this->connection->getLastMessage());
@@ -210,6 +249,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('test.foobar:333|g', $message);
     }
 
+    public function testGaugeWithTags()
+    {
+        $this->client->gauge("foobar", 333, array('tag' => 'value'));
+
+        $message = $this->connection->getLastMessage();
+        $this->assertEquals('test.foobar:333|g|#tag:value', $message);
+    }
+
     public function testGaugeCanReceiveFormattedNumber()
     {
         $this->client->gauge('foobar', '+11');
@@ -224,5 +271,13 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $message = $this->connection->getLastMessage();
         $this->assertEquals('test.barfoo:666|s', $message);
+    }
+
+    public function testSetWithTags()
+    {
+        $this->client->set("barfoo", 666, array('tag' => 'value', 'tag2' => 'value2'));
+
+        $message = $this->connection->getLastMessage();
+        $this->assertEquals('test.barfoo:666|s|#tag:value, tag2:value2', $message);
     }
 }
