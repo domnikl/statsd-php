@@ -108,7 +108,7 @@ Several other [contributors](https://github.com/domnikl/statsd-php/graphs/contri
 
 (The MIT License)
 
-Copyright (c) 2016 Dominik Liebler
+Copyright (c) 2017 Dominik Liebler
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
