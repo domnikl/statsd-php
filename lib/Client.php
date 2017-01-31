@@ -7,6 +7,8 @@ namespace Domnikl\Statsd;
  */
 class Client
 {
+    const DEFAULT_MAX_BATCH_SIZE = 1000000;
+
     /**
      * Connection object that messages get send to
      *
@@ -53,6 +55,16 @@ class Client
      * @var bool
      */
     private $sampleRateAllMetrics = 1;
+
+    /**
+     * @var int
+     */
+    private $batchSize;
+
+    /**
+     * @var int
+     */
+    private $maxBatchSize;
 
     /**
      * initializes the client object
@@ -266,6 +278,10 @@ class Client
             $this->connection->send($sampledData);
         } else {
             $this->batch[] = $sampledData;
+            $this->batchSize += strlen($sampledData);
+            if ($this->batchSize > $this->getMaxBatchSize()) {
+                $this->sendBatch();
+            }
         }
     }
 
@@ -313,8 +329,16 @@ class Client
     public function endBatch()
     {
         $this->isBatch = false;
+        $this->sendBatch();
+    }
+
+    /**
+     * sends the recorded messages to the connection
+     */
+    public function sendBatch()
+    {
         $this->connection->sendMessages($this->batch);
-        $this->batch = array();
+        $this->resetBatch();
     }
 
     /**
@@ -323,6 +347,30 @@ class Client
     public function cancelBatch()
     {
         $this->isBatch = false;
-        $this->batch = array();
+        $this->resetBatch();
     }
+
+    /**
+     * @return int
+     */
+    public function getMaxBatchSize() {
+        return isset($this->maxBatchSize) ? $this->maxBatchSize : self::DEFAULT_MAX_BATCH_SIZE;
+    }
+
+    /**
+     * @param int $maxBatchSize
+     */
+    public function setMaxBatchSize($maxBatchSize) {
+        $this->maxBatchSize = $maxBatchSize;
+    }
+
+    /**
+     * reset batch
+     */
+    private function resetBatch()
+    {
+        $this->batch = array();
+        $this->batchSize = 0;
+    }
+
 }
