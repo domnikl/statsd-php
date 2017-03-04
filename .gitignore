@@ -4,6 +4,9 @@
 # test coverage report
 tests/coverage
 
+# integration test
+stats.log
+
 # composer
 /vendor
 /composer.lock
