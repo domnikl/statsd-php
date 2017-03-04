@@ -8,7 +8,7 @@ COVERAGE_DIR=tests/coverage
 default: test
 
 cleanup:
-	rm -rf $(COVERAGE_DIR)
+	rm -rf $(COVERAGE_DIR) && rm stats.log
 
 test: install cleanup
 	$(PHPUNIT_BIN) --coverage-html tests/coverage
@@ -27,3 +27,6 @@ tcp-integration:
 
 udp-integration:
 	$(PHP_BIN) tests/integration/udp-test.php
+
+file-integration:
+	$(PHP_BIN) tests/integration/file-test.php
