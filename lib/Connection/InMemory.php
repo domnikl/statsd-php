@@ -13,7 +13,7 @@ class InMemory implements Connection
     /**
      * @var array
      */
-    private $messages = array();
+    private $messages = [];
 
     /**
      * {@inheritdoc}
@@ -38,7 +38,7 @@ class InMemory implements Connection
      */
     public function clear()
     {
-        $this->messages = array();
+        $this->messages = [];
     }
 
     /**

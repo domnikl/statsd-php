@@ -19,14 +19,14 @@ class Client
      *
      * @var array
      */
-    private $timings = array();
+    private $timings = [];
 
     /**
      * holds all memory profiles like timings
      *
      * @var array
      */
-    private $memoryProfiles = array();
+    private $memoryProfiles = [];
 
     /**
      * global key namespace
@@ -40,7 +40,7 @@ class Client
      *
      * @var array
      */
-    private $batch = array();
+    private $batch = [];
 
     /**
      * batch mode?
@@ -183,7 +183,7 @@ class Client
      */
     public function memory($key, $memory = null, $sampleRate = 1)
     {
-        if (null === $memory) {
+        if ($memory === null) {
             $memory = memory_get_peak_usage();
         }
 
@@ -323,6 +323,6 @@ class Client
     public function cancelBatch()
     {
         $this->isBatch = false;
-        $this->batch = array();
+        $this->batch = [];
     }
 }
