@@ -203,9 +203,18 @@ class Client
     public function time($key, \Closure $_block, $sampleRate = 1)
     {
         $this->startTiming($key);
-        $return = $_block();
-        $this->endTiming($key, $sampleRate);
+        try
+        {
+            $return = $_block();
+        }
+        
+        catch(\Exception $e)
+        {
+            $this->endTiming($key, $sampleRate);
+            throw $e;
+        }
 
+        $this->endTiming($key, $sampleRate);
         return $return;
     }
 
