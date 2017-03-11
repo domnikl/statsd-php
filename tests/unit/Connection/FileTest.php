@@ -3,8 +3,9 @@
 namespace Domnikl\Test\Statsd\Connection;
 
 use Domnikl\Statsd\Connection\File;
+use PHPUnit\Framework\TestCase;
 
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends TestCase
 {
     /**
      * @covers \Domnikl\Statsd\Connection\File::send()

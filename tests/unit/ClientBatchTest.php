@@ -5,8 +5,9 @@ namespace Domnikl\Test\Statsd;
 require_once __DIR__ . '/ConnectionMock.php';
 
 use Domnikl\Statsd\Client as Client;
+use PHPUnit\Framework\TestCase;
 
-class ClientBatchTest extends \PHPUnit_Framework_TestCase
+class ClientBatchTest extends TestCase
 {
     /**
      * @var \Domnikl\Statsd\Client
