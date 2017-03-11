@@ -3,8 +3,9 @@
 namespace Domnikl\Test\Statsd\Connection;
 
 use Domnikl\Statsd\Connection\InMemory;
+use PHPUnit\Framework\TestCase;
 
-class InMemoryTest extends \PHPUnit_Framework_TestCase
+class InMemoryTest extends TestCase
 {
     public function testCollectSingleMessage()
     {

@@ -3,8 +3,9 @@
 namespace Domnikl\Test\Statsd\Connection;
 
 use Domnikl\Statsd\Connection\TcpSocketException;
+use PHPUnit\Framework\TestCase;
 
-class TcpSocketExceptionTest extends \PHPUnit_Framework_TestCase
+class TcpSocketExceptionTest extends TestCase
 {
     public function testCanGetMessage()
     {

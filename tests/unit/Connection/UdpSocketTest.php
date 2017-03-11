@@ -3,8 +3,9 @@
 namespace Domnikl\Test\Statsd\Connection;
 
 use Domnikl\Statsd\Connection\UdpSocket;
+use PHPUnit\Framework\TestCase;
 
-class UdpSocketTest extends \PHPUnit_Framework_TestCase
+class UdpSocketTest extends TestCase
 {
     public function testInit()
     {

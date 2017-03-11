@@ -3,8 +3,9 @@
 namespace Domnikl\Test\Statsd\Connection;
 
 use Domnikl\Statsd\Connection\TcpSocket;
+use PHPUnit\Framework\TestCase;
 
-class TcpSocketTest extends \PHPUnit_Framework_TestCase
+class TcpSocketTest extends TestCase
 {
     public function testInit()
     {
