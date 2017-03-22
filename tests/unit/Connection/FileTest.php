@@ -7,10 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class FileTest extends TestCase
 {
-    /**
-     * @covers \Domnikl\Statsd\Connection\File::send()
-     * @covers \Domnikl\Statsd\Connection\File::open()
-     */
     public function testSend()
     {
         $metric = 'file.test.namespace.customer.signed_up:1|c';
@@ -24,7 +20,6 @@ class FileTest extends TestCase
 
     /**
      * @param mixed $metric
-     * @covers \Domnikl\Statsd\Connection\File::send()
      * @dataProvider dataForSendWrongData
      */
     public function testSendWrongData($metric)
@@ -48,9 +43,6 @@ class FileTest extends TestCase
         ];
     }
 
-    /**
-     * @covers \Domnikl\Statsd\Connection\File::sendMessages()
-     */
     public function testSendMessages()
     {
         $metrics = [
