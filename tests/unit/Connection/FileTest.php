@@ -63,7 +63,7 @@ class FileTest extends TestCase
      * @param File $file
      * @return resource|null
      */
-    private function getFileHandle(File $file)
+    private function getFileHandle($file)
     {
         $reflector = new \ReflectionClass($file);
         $reflectorProperty = $reflector->getProperty('handle');
