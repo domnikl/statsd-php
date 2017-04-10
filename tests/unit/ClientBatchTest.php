@@ -39,7 +39,7 @@ class ClientBatchTest extends TestCase
 	public function testSendIsRecordingInBatch()
 	{
 		$this->client->startBatch();
-		$this->client->increment("foobar", 1);
+		$this->client->increment("foobar", array(), 1);
 
 		$message = $this->connection->getLastMessage();
 		$this->assertNull($message);
