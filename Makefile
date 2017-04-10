@@ -8,7 +8,7 @@ COVERAGE_DIR=tests/coverage
 default: test
 
 cleanup:
-	rm -rf $(COVERAGE_DIR) && rm stats.log
+	rm -rf $(COVERAGE_DIR) && rm -f stats.log
 
 test: install cleanup
 	$(PHPUNIT_BIN) --coverage-html tests/coverage
