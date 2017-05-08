@@ -270,10 +270,6 @@ class Client
             $sampledData = $message;
         }
 
-        $format = function($key, $value) {
-            return $key . ':' . $value;
-        }
-
         if (!empty($tags)) {
             $sampledData .= '|#';
             $keyValue = foreach($tags as $key => $value) {
