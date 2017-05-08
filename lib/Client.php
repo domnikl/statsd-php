@@ -270,17 +270,16 @@ class Client
             $sampledData = $message;
         }
 
+        $format = function($key, $value) {
+            return $key . ':' . $value;
+        }
+
         if (!empty($tags)) {
-            $sampledData .= '|';
-            $cpt          = 0;
-            foreach ($tags as $key => $value) {
-                if ($cpt === 0) {
-                    $sampledData .= '#';
-                }
-                $sampledData .= $key . ':' . $value . ', ';
-                $cpt++;
+            $sampledData .= '|#';
+            $keyValue = foreach($tags as $key => $value) {
+              return $key . ':' . $value;
             }
-            $sampledData = substr($sampledData, 0, -2);
+            $sampledData .= join(',', $keyValue);
         }
 
         if (!$this->isBatch) {

@@ -17,7 +17,6 @@ class ClientTest extends TestCase
      */
     private $connection;
 
-
     protected function setUp()
     {
         $this->connection = new ConnectionMock();
@@ -277,6 +276,6 @@ class ClientTest extends TestCase
     {
         $this->client->set("barfoo", 666, array('tag' => 'value', 'tag2' => 'value2'));
         $message = $this->connection->getLastMessage();
-        $this->assertEquals('test.barfoo:666|s|#tag:value, tag2:value2', $message);
+        $this->assertEquals('test.barfoo:666|s|#tag:value,tag2:value2', $message);
     }
 }
