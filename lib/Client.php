@@ -272,10 +272,11 @@ class Client
 
         if (!empty($tags)) {
             $sampledData .= '|#';
-            $keyValue = foreach($tags as $key => $value) {
-              return $key . ':' . $value;
+            $tagArray = []
+            foreach($tags as $key => $value) {
+              $tagArray[] = ($key . ':' . $value);
             }
-            $sampledData .= join(',', $keyValue);
+            $sampledData .= join(',', $tagArray);
         }
 
         if (!$this->isBatch) {
