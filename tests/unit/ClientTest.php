@@ -66,7 +66,7 @@ class ClientTest extends TestCase
     public function testCountWithSamplingRateAndTags()
     {
         $client = new Client($this->connection, 'test', 1 / 5);
-        $client->count('foo.baz', 100, array('tag' => 'value'), 1);
+        $client->count('foo.baz', 100, 1, array('tag' => 'value'));
         $this->assertEquals(
             'test.foo.baz:100|c|@0.2|#tag:value',
             $this->connection->getLastMessage()
@@ -101,7 +101,7 @@ class ClientTest extends TestCase
     public function testIncrementWithSamplingRateAndTags()
     {
         $client = new Client($this->connection, 'test', 0.3);
-        $client->increment('foo.baz', array('tag' => 'value'), 1);
+        $client->increment('foo.baz', 1, array('tag' => 'value'));
         $this->assertEquals(
             'test.foo.baz:1|c|@0.3|#tag:value',
             $this->connection->getLastMessage()
@@ -136,7 +136,7 @@ class ClientTest extends TestCase
     public function testDecrementWithSamplingRateAndTags()
     {
         $client = new Client($this->connection, 'test', 0.2);
-        $client->decrement('foo.baz', array('tag' => 'value'), 1);
+        $client->decrement('foo.baz', 1, array('tag' => 'value'));
         $this->assertEquals(
             'test.foo.baz:-1|c|@0.2|#tag:value',
             $this->connection->getLastMessage()
