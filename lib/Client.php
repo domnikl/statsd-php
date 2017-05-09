@@ -272,7 +272,7 @@ class Client
 
         if (!empty($tags)) {
             $sampledData .= '|#';
-            $tagArray = []
+            $tagArray = [];
             foreach($tags as $key => $value) {
               $tagArray[] = ($key . ':' . $value);
             }
