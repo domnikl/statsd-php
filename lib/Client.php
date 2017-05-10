@@ -75,7 +75,7 @@ class Client
      * @param int $sampleRate
      * @param array $tags
      */
-    public function increment($key, $sampleRate = 1, $tags = array())
+    public function increment($key, $sampleRate = 1, $tags = [])
     {
         $this->count($key, 1, $sampleRate, $tags);
     }
@@ -87,7 +87,7 @@ class Client
      * @param int $sampleRate
      * @param array $tags
      */
-    public function decrement($key, $sampleRate = 1, $tags = array())
+    public function decrement($key, $sampleRate = 1, $tags = []
     {
         $this->count($key, -1, $sampleRate, $tags);
     }
@@ -99,7 +99,7 @@ class Client
      * @param int $sampleRate (optional) the default is 1
      * @param array $tags
      */
-    public function count($key, $value, $sampleRate = 1, $tags = array())
+    public function count($key, $value, $sampleRate = 1, $tags = []
     {
         $this->send($key, (int) $value, 'c', $sampleRate, $tags);
     }
@@ -112,7 +112,7 @@ class Client
      * @param int $sampleRate the sample rate, if < 1, statsd will send an average timing
      * @param array $tags
      */
-    public function timing($key, $value, $sampleRate = 1, $tags = array())
+    public function timing($key, $value, $sampleRate = 1, $tags = []
     {
         $this->send($key, $value, 'ms', $sampleRate, $tags);
     }
@@ -221,7 +221,7 @@ class Client
      * @param string|int $value
      * @param array $tags
      */
-    public function gauge($key, $value, $tags = array())
+    public function gauge($key, $value, $tags = []
     {
         $this->send($key, $value, 'g', 1, $tags);
     }
@@ -233,7 +233,7 @@ class Client
      * @param int $value
      * @param array $tags
      */
-    public function set($key, $value, $tags = array())
+    public function set($key, $value, $tags = []
     {
         $this->send($key, $value, 's', 1, $tags);
     }
@@ -247,7 +247,7 @@ class Client
      * @param int $sampleRate
      * @param array $tags
      */
-    private function send($key, $value, $type, $sampleRate, $tags = array())
+    private function send($key, $value, $type, $sampleRate, $tags = []
     {
         if (mt_rand() / mt_getrandmax() > $sampleRate) {
             return;
@@ -331,7 +331,7 @@ class Client
     {
         $this->isBatch = false;
         $this->connection->sendMessages($this->batch);
-        $this->batch = array();
+        $this->batch = [];
     }
 
     /**

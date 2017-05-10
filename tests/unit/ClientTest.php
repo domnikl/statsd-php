@@ -66,7 +66,7 @@ class ClientTest extends TestCase
     public function testCountWithSamplingRateAndTags()
     {
         $client = new Client($this->connection, 'test', 1 / 5);
-        $client->count('foo.baz', 100, 1, array('tag' => 'value'));
+        $client->count('foo.baz', 100, 1, ['tag' => 'value']);
         $this->assertEquals(
             'test.foo.baz:100|c|@0.2|#tag:value',
             $this->connection->getLastMessage()
@@ -101,7 +101,7 @@ class ClientTest extends TestCase
     public function testIncrementWithSamplingRateAndTags()
     {
         $client = new Client($this->connection, 'test', 0.3);
-        $client->increment('foo.baz', 1, array('tag' => 'value'));
+        $client->increment('foo.baz', 1, ['tag' => 'value']);
         $this->assertEquals(
             'test.foo.baz:1|c|@0.3|#tag:value',
             $this->connection->getLastMessage()
@@ -136,7 +136,7 @@ class ClientTest extends TestCase
     public function testDecrementWithSamplingRateAndTags()
     {
         $client = new Client($this->connection, 'test', 0.2);
-        $client->decrement('foo.baz', 1, array('tag' => 'value'));
+        $client->decrement('foo.baz', 1, ['tag' => 'value']);
         $this->assertEquals(
             'test.foo.baz:-1|c|@0.2|#tag:value',
             $this->connection->getLastMessage()
@@ -251,7 +251,7 @@ class ClientTest extends TestCase
 
     public function testGaugeWithTags()
     {
-        $this->client->gauge("foobar", 333, array('tag' => 'value'));
+        $this->client->gauge("foobar", 333, ['tag' => 'value']);
         $message = $this->connection->getLastMessage();
         $this->assertEquals('test.foobar:333|g|#tag:value', $message);
     }
@@ -274,7 +274,7 @@ class ClientTest extends TestCase
 
     public function testSetWithTags()
     {
-        $this->client->set("barfoo", 666, array('tag' => 'value', 'tag2' => 'value2'));
+        $this->client->set("barfoo", 666, ['tag' => 'value', 'tag2' => 'value2']);
         $message = $this->connection->getLastMessage();
         $this->assertEquals('test.barfoo:666|s|#tag:value,tag2:value2', $message);
     }
