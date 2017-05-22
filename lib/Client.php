@@ -73,10 +73,11 @@ class Client
      *
      * @param string $key
      * @param int $sampleRate
+     * @param array $tags
      */
-    public function increment($key, $sampleRate = 1)
+    public function increment($key, $sampleRate = 1, $tags = [])
     {
-        $this->count($key, 1, $sampleRate);
+        $this->count($key, 1, $sampleRate, $tags);
     }
 
     /**
@@ -84,10 +85,11 @@ class Client
      *
      * @param string $key
      * @param int $sampleRate
+     * @param array $tags
      */
-    public function decrement($key, $sampleRate = 1)
+    public function decrement($key, $sampleRate = 1, $tags = [])
     {
-        $this->count($key, -1, $sampleRate);
+        $this->count($key, -1, $sampleRate, $tags);
     }
     /**
      * sends a count to statsd
@@ -95,10 +97,11 @@ class Client
      * @param string $key
      * @param int $value
      * @param int $sampleRate (optional) the default is 1
+     * @param array $tags
      */
-    public function count($key, $value, $sampleRate = 1)
+    public function count($key, $value, $sampleRate = 1, $tags = [])
     {
-        $this->send($key, (int) $value, 'c', $sampleRate);
+        $this->send($key, (int) $value, 'c', $sampleRate, $tags);
     }
 
     /**
@@ -107,10 +110,11 @@ class Client
      * @param string $key
      * @param int $value the timing in ms
      * @param int $sampleRate the sample rate, if < 1, statsd will send an average timing
+     * @param array $tags
      */
-    public function timing($key, $value, $sampleRate = 1)
+    public function timing($key, $value, $sampleRate = 1, $tags = [])
     {
-        $this->send($key, $value, 'ms', $sampleRate);
+        $this->send($key, $value, 'ms', $sampleRate, $tags);
     }
 
     /**
@@ -215,10 +219,11 @@ class Client
      *
      * @param string $key
      * @param string|int $value
+     * @param array $tags
      */
-    public function gauge($key, $value)
+    public function gauge($key, $value, $tags = [])
     {
-        $this->send($key, $value, 'g', 1);
+        $this->send($key, $value, 'g', 1, $tags);
     }
 
     /**
@@ -226,10 +231,11 @@ class Client
      *
      * @param string $key
      * @param int $value
+     * @param array $tags
      */
-    public function set($key, $value)
+    public function set($key, $value, $tags = [])
     {
-        $this->send($key, $value, 's', 1);
+        $this->send($key, $value, 's', 1, $tags);
     }
 
     /**
@@ -239,8 +245,9 @@ class Client
      * @param int $value
      * @param string $type
      * @param int $sampleRate
+     * @param array $tags
      */
-    private function send($key, $value, $type, $sampleRate)
+    private function send($key, $value, $type, $sampleRate, $tags = [])
     {
         if (mt_rand() / mt_getrandmax() > $sampleRate) {
             return;
@@ -261,6 +268,15 @@ class Client
             $sampledData = $message . '|@' . $sampleRate;
         } else {
             $sampledData = $message;
+        }
+
+        if (!empty($tags)) {
+            $sampledData .= '|#';
+            $tagArray = [];
+            foreach($tags as $key => $value) {
+              $tagArray[] = ($key . ':' . $value);
+            }
+            $sampledData .= join(',', $tagArray);
         }
 
         if (!$this->isBatch) {
@@ -315,7 +331,7 @@ class Client
     {
         $this->isBatch = false;
         $this->connection->sendMessages($this->batch);
-        $this->batch = array();
+        $this->batch = [];
     }
 
     /**
