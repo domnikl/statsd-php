@@ -226,4 +226,39 @@ class ClientTest extends TestCase
         $message = $this->connection->getLastMessage();
         $this->assertEquals('test.barfoo:666|s', $message);
     }
+
+    /**
+     * @dataProvider tagsProvider
+     */
+    public function testTags($tags, $expectedTagMessage)
+    {
+        $this->client->set("foobaz", 999, $tags);
+
+        $message = $this->connection->getLastMessage();
+        $this->assertEquals('test.foobaz:999|s|#' . $expectedTagMessage, $message);
+    }
+
+    /**
+     * Data provider for testTags
+     * @return array
+     */
+    public function tagsProvider()
+    {
+        return [
+          // single string tag
+          ['one', 'one'],
+
+          // basic arrays
+          [['one'], 'one'],
+          [['one', 'two'], 'one,two'],
+
+          // associative arrays
+          [['foo' => 'one', 'two'], 'foo:one,two'],
+          [['one', 'bar' => 'two'], 'one,bar:two'],
+          [['foo' => 'one', 'bar' => 'two'], 'foo:one,bar:two'],
+
+          // tag key/values with invalid characters
+          [['f,o#o' => 'o|n:e '], 'f-o-o:o-n-e-']
+        ];
+    }
 }
