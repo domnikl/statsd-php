@@ -245,20 +245,26 @@ class ClientTest extends TestCase
     public function tagsProvider()
     {
         return [
-          // single string tag
-          ['one', 'one'],
+            // single string tag
+            ['one', 'one'],
 
-          // basic arrays
-          [['one'], 'one'],
-          [['one', 'two'], 'one,two'],
+            // basic arrays
+            [['one'], 'one'],
+            [['one', 'two'], 'one,two'],
 
-          // associative arrays
-          [['foo' => 'one', 'two'], 'foo:one,two'],
-          [['one', 'bar' => 'two'], 'one,bar:two'],
-          [['foo' => 'one', 'bar' => 'two'], 'foo:one,bar:two'],
+            // associative arrays
+            [['foo' => 'one', 'two'], 'foo:one,two'],
+            [['one', 'bar' => 'two'], 'one,bar:two'],
+            [['foo' => 'one', 'bar' => 'two'], 'foo:one,bar:two'],
 
-          // tag key/values with invalid characters
-          [['f,o#o' => 'o|n:e '], 'f-o-o:o-n-e-']
+            // tag key/values with invalid characters
+            [['f,o#o' => 'o|n:e '], 'f-o-o:o-n-e-'],
+
+            // Nothing stopping duplicate tags other than PHP associative arrays
+            [['one', 'one'], 'one,one'],
+            [['foo' => 'one', 'foo', 'foo'], 'foo:one,foo,foo'],
+            [['foo' => 'one', 'foo' => 'two', 'foo', 'foo'], 'foo:two,foo,foo'],
+
         ];
     }
 }

@@ -284,13 +284,13 @@ class Client
     }
 
     /**
-     * @param $tags
+     * @param array|string $tags
      * @return string
      */
     private function generateTagsMessage($tags)
     {
       // Nothing to return if no tags
-      if (empty($tags)) {
+      if (!$tags) {
         return '';
       }
 
@@ -301,13 +301,13 @@ class Client
 
       $tagsMessages = [];
       foreach ($tags as $tagKey => $tagVal) {
-        $tagVal = $this->escapeTag($tagVal);
+        $tagVal = $this->cleanTag($tagVal);
 
         if (is_numeric($tagKey)) {
           $tagsMessages[] = $tagVal;
         }
         else {
-          $tagKey = $this->escapeTag($tagKey);
+          $tagKey = $this->cleanTag($tagKey);
           $tagsMessages[] = $tagKey . ':' . $tagVal;
         }
       }
@@ -317,8 +317,11 @@ class Client
 
     /**
      * Clean up a tag value
+     *
+     * @param string $tag
+     * @return string
      */
-    private function escapeTag($tag)
+    private function cleanTag($tag)
     {
       return str_replace(array(' ', ':', '|', ',', '#'), '-', $tag);
     }
