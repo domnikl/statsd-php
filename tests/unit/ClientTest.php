@@ -17,7 +17,6 @@ class ClientTest extends TestCase
      */
     private $connection;
 
-
     protected function setUp()
     {
         $this->connection = new ConnectionMock();
@@ -61,6 +60,19 @@ class ClientTest extends TestCase
         );
     }
 
+    /**
+     * @group sampling
+     */
+    public function testCountWithSamplingRateAndTags()
+    {
+        $client = new Client($this->connection, 'test', 1 / 5);
+        $client->count('foo.baz', 100, 1, ['tag' => 'value']);
+        $this->assertEquals(
+            'test.foo.baz:100|c|@0.2|#tag:value',
+            $this->connection->getLastMessage()
+        );
+    }
+
     public function testIncrement()
     {
         $this->client->increment('foo.baz');
@@ -83,6 +95,19 @@ class ClientTest extends TestCase
         );
     }
 
+    /**
+     * @group sampling
+     */
+    public function testIncrementWithSamplingRateAndTags()
+    {
+        $client = new Client($this->connection, 'test', 0.3);
+        $client->increment('foo.baz', 1, ['tag' => 'value']);
+        $this->assertEquals(
+            'test.foo.baz:1|c|@0.3|#tag:value',
+            $this->connection->getLastMessage()
+        );
+    }
+
     public function testDecrement()
     {
         $this->client->decrement('foo.baz');
@@ -101,6 +126,19 @@ class ClientTest extends TestCase
         $client->decrement('foo.baz', 1);
         $this->assertEquals(
             'test.foo.baz:-1|c|@0.2',
+            $this->connection->getLastMessage()
+        );
+    }
+
+    /**
+     * @group sampling
+     */
+    public function testDecrementWithSamplingRateAndTags()
+    {
+        $client = new Client($this->connection, 'test', 0.2);
+        $client->decrement('foo.baz', 1, ['tag' => 'value']);
+        $this->assertEquals(
+            'test.foo.baz:-1|c|@0.2|#tag:value',
             $this->connection->getLastMessage()
         );
     }
@@ -211,6 +249,13 @@ class ClientTest extends TestCase
         $this->assertEquals('test.foobar:333|g', $message);
     }
 
+    public function testGaugeWithTags()
+    {
+        $this->client->gauge("foobar", 333, ['tag' => 'value']);
+        $message = $this->connection->getLastMessage();
+        $this->assertEquals('test.foobar:333|g|#tag:value', $message);
+    }
+
     public function testGaugeCanReceiveFormattedNumber()
     {
         $this->client->gauge('foobar', '+11');
@@ -225,5 +270,12 @@ class ClientTest extends TestCase
 
         $message = $this->connection->getLastMessage();
         $this->assertEquals('test.barfoo:666|s', $message);
+    }
+
+    public function testSetWithTags()
+    {
+        $this->client->set("barfoo", 666, ['tag' => 'value', 'tag2' => 'value2']);
+        $message = $this->connection->getLastMessage();
+        $this->assertEquals('test.barfoo:666|s|#tag:value,tag2:value2', $message);
     }
 }
