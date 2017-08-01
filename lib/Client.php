@@ -371,7 +371,7 @@ class Client
     {
         $this->isBatch = false;
         $this->connection->sendMessages($this->batch);
-        $this->batch = array();
+        $this->batch = [];
     }
 
     /**
