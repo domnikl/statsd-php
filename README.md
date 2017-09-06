@@ -3,6 +3,7 @@
 A PHP client library for the statistics daemon ([statsd](https://github.com/etsy/statsd)) intended to send metrics from PHP applications.
 
 [![Build Status](https://secure.travis-ci.org/domnikl/statsd-php.png?branch=master)](http://travis-ci.org/domnikl/statsd-php)
+[![Donate](https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square)](https://paypal.me/DominikLiebler)
 
 ## Installation
 
