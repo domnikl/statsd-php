@@ -78,6 +78,6 @@ class TcpSocket extends InetSocket implements Connection
      */
     protected function isConnected()
     {
-        return is_resource($this->socket);
+        return is_resource($this->socket) && !feof($this->socket);
     }
 }
