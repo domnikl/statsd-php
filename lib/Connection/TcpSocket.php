@@ -48,7 +48,7 @@ class TcpSocket extends InetSocket implements Connection
     /**
      * @param string $host
      * @param int $port
-     * @param int|null $timeout
+     * @param float|null $timeout
      * @param bool $persistent
      */
     protected function connect($host, $port, $timeout, $persistent)
