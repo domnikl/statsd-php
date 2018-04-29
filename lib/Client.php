@@ -95,13 +95,13 @@ class Client
      * sends a count to statsd
      *
      * @param string $key
-     * @param int $value
+     * @param int|float $value
      * @param int $sampleRate (optional) the default is 1
      * @param array $tags
      */
     public function count($key, $value, $sampleRate = 1, $tags = [])
     {
-        $this->send($key, (int) $value, 'c', $sampleRate, $tags);
+        $this->send($key, $value, 'c', $sampleRate, $tags);
     }
 
     /**

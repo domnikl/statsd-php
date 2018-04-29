@@ -47,6 +47,15 @@ class ClientTest extends TestCase
         );
     }
 
+    public function testCountWithFloatValue()
+    {
+        $this->client->count('foo.bar', 100.45);
+        $this->assertEquals(
+            'test.foo.bar:100.45|c',
+            $this->connection->getLastMessage()
+        );
+    }
+
     /**
      * @group sampling
      */
