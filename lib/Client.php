@@ -132,16 +132,17 @@ class Client
      *
      * @param string $key
      * @param int $sampleRate (optional)
+     * @param array $tags
      *
      * @return float|null
      */
-    public function endTiming($key, $sampleRate = 1)
+    public function endTiming($key, $sampleRate = 1, $tags = [])
     {
         $end = gettimeofday(true);
 
         if (isset($this->timings[$key])) {
             $timing = ($end - $this->timings[$key]) * 1000;
-            $this->timing($key, $timing, $sampleRate);
+            $this->timing($key, $timing, $sampleRate, $tags);
             unset($this->timings[$key]);
 
             return $timing;
@@ -165,14 +166,15 @@ class Client
      *
      * @param string $key
      * @param int $sampleRate
+     * @param array $tags
      */
-    public function endMemoryProfile($key, $sampleRate = 1)
+    public function endMemoryProfile($key, $sampleRate = 1, $tags = [])
     {
         $end = memory_get_usage();
 
         if (array_key_exists($key, $this->memoryProfiles)) {
             $memory = ($end - $this->memoryProfiles[$key]);
-            $this->memory($key, $memory, $sampleRate);
+            $this->memory($key, $memory, $sampleRate, $tags);
 
             unset($this->memoryProfiles[$key]);
         }
@@ -184,14 +186,15 @@ class Client
      * @param string $key
      * @param int $memory
      * @param int $sampleRate
+     * @param array $tags
      */
-    public function memory($key, $memory = null, $sampleRate = 1)
+    public function memory($key, $memory = null, $sampleRate = 1, $tags = [])
     {
         if ($memory === null) {
             $memory = memory_get_peak_usage();
         }
 
-        $this->count($key, $memory, $sampleRate);
+        $this->count($key, $memory, $sampleRate, $tags);
     }
 
     /**
@@ -199,18 +202,19 @@ class Client
      * returns the value the Closure returned
      *
      * @param string $key
-     * @param \Closure $_block
-     * @param int $sampleRate (optional) default = 1
+     * @param \Closure $block
+     * @param int $sampleRate (optional)
+     * @param array $tags
      *
      * @return mixed
      */
-    public function time($key, \Closure $_block, $sampleRate = 1)
+    public function time($key, \Closure $block, $sampleRate = 1, $tags = [])
     {
         $this->startTiming($key);
         try {
-            return $_block();
+            return $block();
         } finally {
-            $this->endTiming($key, $sampleRate);
+            $this->endTiming($key, $sampleRate, $tags);
         }
     }
 
