@@ -57,9 +57,13 @@ abstract class InetSocket implements Connection
         $this->host = (string) $host;
         $this->port = (int) $port;
         $this->mtu = (int) $mtu;
-
         $this->persistent = (bool) $persistent;
-        $this->timeout = ($timeout === null) ? null : (float) $timeout;
+
+        if ($timeout === null) {
+            $this->timeout = (float) ini_get('default_socket_timeout');
+        } else {
+            $this->timeout = (float) $timeout;
+        }
     }
 
     /**
