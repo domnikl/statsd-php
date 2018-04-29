@@ -281,10 +281,44 @@ class ClientTest extends TestCase
         $this->assertEquals('test.barfoo:666|s', $message);
     }
 
-    public function testSetWithTags()
+    /**
+     * @dataProvider tagsProvider
+     */
+    public function testTags($tags, $expectedTagMessage)
     {
-        $this->client->set("barfoo", 666, ['tag' => 'value', 'tag2' => 'value2']);
+        $this->client->set("foobaz", 999, $tags);
+
         $message = $this->connection->getLastMessage();
-        $this->assertEquals('test.barfoo:666|s|#tag:value,tag2:value2', $message);
+        $this->assertEquals('test.foobaz:999|s|#' . $expectedTagMessage, $message);
+    }
+
+    /**
+     * Data provider for testTags
+     * @return array
+     */
+    public function tagsProvider()
+    {
+        return [
+            // single string tag
+            ['one', 'one'],
+
+            // basic arrays
+            [['one'], 'one'],
+            [['one', 'two'], 'one,two'],
+
+            // associative arrays
+            [['foo' => 'one', 'two'], 'foo:one,two'],
+            [['one', 'bar' => 'two'], 'one,bar:two'],
+            [['foo' => 'one', 'bar' => 'two'], 'foo:one,bar:two'],
+
+            // tag key/values with invalid characters
+            [['f,o#o' => 'o|n:e '], 'f-o-o:o-n-e-'],
+
+            // Nothing stopping duplicate tags other than PHP associative arrays
+            [['one', 'one'], 'one,one'],
+            [['foo' => 'one', 'foo', 'foo'], 'foo:one,foo,foo'],
+            [['foo' => 'one', 'foo' => 'two', 'foo', 'foo'], 'foo:two,foo,foo'],
+
+        ];
     }
 }

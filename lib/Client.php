@@ -73,7 +73,7 @@ class Client
      *
      * @param string $key
      * @param int $sampleRate
-     * @param array $tags
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      */
     public function increment($key, $sampleRate = 1, $tags = [])
     {
@@ -85,7 +85,7 @@ class Client
      *
      * @param string $key
      * @param int $sampleRate
-     * @param array $tags
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      */
     public function decrement($key, $sampleRate = 1, $tags = [])
     {
@@ -97,7 +97,7 @@ class Client
      * @param string $key
      * @param int|float $value
      * @param int $sampleRate (optional) the default is 1
-     * @param array $tags
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      */
     public function count($key, $value, $sampleRate = 1, $tags = [])
     {
@@ -110,7 +110,7 @@ class Client
      * @param string $key
      * @param int $value the timing in ms
      * @param int $sampleRate the sample rate, if < 1, statsd will send an average timing
-     * @param array $tags
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      */
     public function timing($key, $value, $sampleRate = 1, $tags = [])
     {
@@ -132,16 +132,17 @@ class Client
      *
      * @param string $key
      * @param int $sampleRate (optional)
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      *
      * @return float|null
      */
-    public function endTiming($key, $sampleRate = 1)
+    public function endTiming($key, $sampleRate = 1, $tags = [])
     {
         $end = gettimeofday(true);
 
         if (isset($this->timings[$key])) {
             $timing = ($end - $this->timings[$key]) * 1000;
-            $this->timing($key, $timing, $sampleRate);
+            $this->timing($key, $timing, $sampleRate, $tags);
             unset($this->timings[$key]);
 
             return $timing;
@@ -165,14 +166,15 @@ class Client
      *
      * @param string $key
      * @param int $sampleRate
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      */
-    public function endMemoryProfile($key, $sampleRate = 1)
+    public function endMemoryProfile($key, $sampleRate = 1, $tags = [])
     {
         $end = memory_get_usage();
 
         if (array_key_exists($key, $this->memoryProfiles)) {
             $memory = ($end - $this->memoryProfiles[$key]);
-            $this->memory($key, $memory, $sampleRate);
+            $this->memory($key, $memory, $sampleRate, $tags);
 
             unset($this->memoryProfiles[$key]);
         }
@@ -184,14 +186,15 @@ class Client
      * @param string $key
      * @param int $memory
      * @param int $sampleRate
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      */
-    public function memory($key, $memory = null, $sampleRate = 1)
+    public function memory($key, $memory = null, $sampleRate = 1, $tags = [])
     {
         if ($memory === null) {
             $memory = memory_get_peak_usage();
         }
 
-        $this->count($key, $memory, $sampleRate);
+        $this->count($key, $memory, $sampleRate, $tags);
     }
 
     /**
@@ -201,16 +204,17 @@ class Client
      * @param string $key
      * @param \Closure $_block
      * @param int $sampleRate (optional) default = 1
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      *
      * @return mixed
      */
-    public function time($key, \Closure $_block, $sampleRate = 1)
+    public function time($key, \Closure $_block, $sampleRate = 1, $tags = [])
     {
         $this->startTiming($key);
         try {
             return $_block();
         } finally {
-            $this->endTiming($key, $sampleRate);
+            $this->endTiming($key, $sampleRate, $tags);
         }
     }
 
@@ -219,7 +223,7 @@ class Client
      *
      * @param string $key
      * @param string|int $value
-     * @param array $tags
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      */
     public function gauge($key, $value, $tags = [])
     {
@@ -231,7 +235,7 @@ class Client
      *
      * @param string $key
      * @param int $value
-     * @param array $tags
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      */
     public function set($key, $value, $tags = [])
     {
@@ -245,7 +249,7 @@ class Client
      * @param int $value
      * @param string $type
      * @param int $sampleRate
-     * @param array $tags
+     * @param array|string $tags Key Value array of Tag => Value, or single tag as string
      */
     private function send($key, $value, $type, $sampleRate, $tags = [])
     {
@@ -270,20 +274,56 @@ class Client
             $sampledData = $message;
         }
 
-        if (!empty($tags)) {
-            $sampledData .= '|#';
-            $tagArray = [];
-            foreach($tags as $key => $value) {
-              $tagArray[] = ($key . ':' . $value);
-            }
-            $sampledData .= join(',', $tagArray);
-        }
+        $sampledData .= $this->generateTagsMessage($tags);
 
         if (!$this->isBatch) {
             $this->connection->send($sampledData);
         } else {
             $this->batch[] = $sampledData;
         }
+    }
+
+    /**
+     * @param array|string $tags
+     * @return string
+     */
+    private function generateTagsMessage($tags)
+    {
+      // Nothing to return if no tags
+      if (!$tags) {
+        return '';
+      }
+
+      // Normalize string inputs into an array
+      if (!is_array($tags)) {
+        $tags = [$tags];
+      }
+
+      $tagsMessages = [];
+      foreach ($tags as $tagKey => $tagVal) {
+        $tagVal = $this->cleanTag($tagVal);
+
+        if (is_numeric($tagKey)) {
+          $tagsMessages[] = $tagVal;
+        }
+        else {
+          $tagKey = $this->cleanTag($tagKey);
+          $tagsMessages[] = $tagKey . ':' . $tagVal;
+        }
+      }
+
+      return '|#' . implode(',', $tagsMessages);
+    }
+
+    /**
+     * Clean up a tag value
+     *
+     * @param string $tag
+     * @return string
+     */
+    private function cleanTag($tag)
+    {
+      return str_replace(array(' ', ':', '|', ',', '#'), '-', $tag);
     }
 
     /**
