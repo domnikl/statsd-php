@@ -23,7 +23,7 @@ class TcpSocketTest extends TestCase
 
         $this->assertEquals('localhost', $connection->getHost());
         $this->assertEquals(8125, $connection->getPort());
-        $this->assertNull($connection->getTimeout());
+        $this->assertEquals(ini_get('default_socket_timeout'), $connection->getTimeout());
         $this->assertFalse($connection->isPersistent());
     }
 
