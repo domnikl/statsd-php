@@ -23,7 +23,7 @@ abstract class InetSocket implements Connection
     /**
      * Socket timeout
      *
-     * @var int|null
+     * @var float|null
      */
     private $timeout;
 
@@ -48,7 +48,7 @@ abstract class InetSocket implements Connection
      *
      * @param string $host Statsd hostname
      * @param int $port Statsd port
-     * @param int $timeout Connection timeout
+     * @param float $timeout Connection timeout
      * @param bool $persistent (default FALSE) Use persistent connection or not
      * @param int $mtu Maximum Transmission Unit (default: 1500)
      */
@@ -59,7 +59,7 @@ abstract class InetSocket implements Connection
         $this->mtu = (int) $mtu;
 
         $this->persistent = (bool) $persistent;
-        $this->timeout = ($timeout === null) ? null : (int) $timeout;
+        $this->timeout = ($timeout === null) ? null : (float) $timeout;
     }
 
     /**
@@ -167,7 +167,7 @@ abstract class InetSocket implements Connection
      *
      * @param string $host
      * @param int $port
-     * @param int|null $timeout
+     * @param float|null $timeout
      * @param bool $persistent
      */
     abstract protected function connect($host, $port, $timeout, $persistent);
