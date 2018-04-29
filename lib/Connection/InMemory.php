@@ -50,4 +50,9 @@ class InMemory implements Connection
     {
         return $this->messages;
     }
+
+    public function close()
+    {
+        $this->clear();
+    }
 }

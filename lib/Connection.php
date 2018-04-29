@@ -20,4 +20,6 @@ interface Connection
      * @param array $messages
      */
     public function sendMessages(array $messages);
+
+    public function close();
 }

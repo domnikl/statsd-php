@@ -29,4 +29,9 @@ class Blackhole implements Connection
     {
         // do nothing
     }
+
+    public function close()
+    {
+        // do nothing
+    }
 }

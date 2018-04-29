@@ -31,4 +31,9 @@ class ErrorLog implements Connection
             $this->send($message);
         }
     }
+
+    public function close()
+    {
+        // do nothing
+    }
 }

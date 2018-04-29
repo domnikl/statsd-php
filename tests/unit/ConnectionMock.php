@@ -59,4 +59,9 @@ class ConnectionMock implements Connection
     {
         $this->messages[] = join("\n", $messages);
     }
+
+    public function close()
+    {
+        // do nothing
+    }
 }

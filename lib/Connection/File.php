@@ -64,4 +64,11 @@ class File implements Connection
             $this->send($message);
         }
     }
+
+    public function close()
+    {
+        @fclose($this->handle);
+
+        $this->handle = null;
+    }
 }

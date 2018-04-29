@@ -80,4 +80,11 @@ class TcpSocket extends InetSocket implements Connection
     {
         return is_resource($this->socket) && !feof($this->socket);
     }
+
+    public function close()
+    {
+        fclose($this->socket);
+
+        $this->socket = null;
+    }
 }

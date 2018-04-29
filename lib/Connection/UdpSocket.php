@@ -85,4 +85,12 @@ class UdpSocket extends InetSocket implements Connection
     {
         return $this->isConnected;
     }
+
+    public function close()
+    {
+        fclose($this->socket);
+
+        $this->socket = null;
+        $this->isConnected = false;
+    }
 }
