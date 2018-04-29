@@ -11,6 +11,8 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class UdpSocket extends InetSocket implements Connection
 {
+    const HEADER_SIZE = 8;
+
     /**
      * the used UDP socket resource
      *
@@ -92,5 +94,13 @@ class UdpSocket extends InetSocket implements Connection
 
         $this->socket = null;
         $this->isConnected = false;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getProtocolHeaderSize()
+    {
+        return self::HEADER_SIZE;
     }
 }

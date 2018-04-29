@@ -11,6 +11,8 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class TcpSocket extends InetSocket implements Connection
 {
+    const HEADER_SIZE = 20;
+
     /**
      * the used TCP socket resource
      *
@@ -42,7 +44,7 @@ class TcpSocket extends InetSocket implements Connection
      */
     protected function writeToSocket($message)
     {
-        fwrite($this->socket, $message . "\n");
+        fwrite($this->socket, $message);
     }
 
     /**
@@ -86,5 +88,13 @@ class TcpSocket extends InetSocket implements Connection
         fclose($this->socket);
 
         $this->socket = null;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getProtocolHeaderSize()
+    {
+        return self::HEADER_SIZE;
     }
 }

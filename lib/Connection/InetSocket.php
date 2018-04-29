@@ -6,6 +6,10 @@ use Domnikl\Statsd\Connection;
 
 abstract class InetSocket implements Connection
 {
+    const LINE_DELIMITER = "\n";
+
+    const IP_HEADER_SIZE = 60;
+
     /**
      * host name
      *
@@ -35,13 +39,9 @@ abstract class InetSocket implements Connection
     private $persistent = false;
 
     /**
-     * Maximum Transmission Unit
-     *
-     * http://en.wikipedia.org/wiki/Maximum_transmission_unit
-     *
      * @var int
      */
-    private $mtu;
+    private $maxPayloadSize;
 
     /**
      * instantiates the Connection object and a real connection to statsd
@@ -56,8 +56,11 @@ abstract class InetSocket implements Connection
     {
         $this->host = (string) $host;
         $this->port = (int) $port;
-        $this->mtu = (int) $mtu;
         $this->persistent = (bool) $persistent;
+        $this->maxPayloadSize = (int) $mtu -
+            self::IP_HEADER_SIZE -
+            $this->getProtocolHeaderSize() -
+            strlen(self::LINE_DELIMITER);
 
         if ($timeout === null) {
             $this->timeout = (float) ini_get('default_socket_timeout');
@@ -113,11 +116,7 @@ abstract class InetSocket implements Connection
             return;
         }
 
-        if (!$this->isConnected()) {
-            $this->connect($this->host, $this->port, $this->timeout, $this->persistent);
-        }
-
-        $this->writeToSocket($message);
+        $this->sendMessages([$message]);
     }
 
     /**
@@ -127,16 +126,12 @@ abstract class InetSocket implements Connection
      */
     public function sendMessages(array $messages)
     {
-        $message = join("\n", $messages);
+        if (!$this->isConnected()) {
+            $this->connect($this->host, $this->port, $this->timeout, $this->persistent);
+        }
 
-        if (strlen($message) > $this->mtu) {
-            $messageBatches = $this->cutIntoMtuSizedMessages($messages);
-
-            foreach ($messageBatches as $messageBatch) {
-                $this->send(join("\n", $messageBatch));
-            }
-        } else {
-            $this->send($message);
+        foreach ($this->cutIntoMtuSizedPackets($messages) as $packet) {
+            $this->writeToSocket($packet);
         }
     }
 
@@ -145,25 +140,12 @@ abstract class InetSocket implements Connection
      *
      * @return array
      */
-    private function cutIntoMtuSizedMessages(array $messages)
+    private function cutIntoMtuSizedPackets(array $messages)
     {
-        $index = 0;
-        $sizedMessages = [];
-        $packageLength = 0;
+        $message = join(self::LINE_DELIMITER, $messages) . self::LINE_DELIMITER;
+        $packets = str_split($message, $this->maxPayloadSize);
 
-        foreach ($messages as $message) {
-            $messageLength = strlen($message);
-
-            if ($messageLength + $packageLength > $this->mtu) {
-                ++$index;
-                $packageLength = 0;
-            }
-
-            $sizedMessages[$index][] = $message;
-            $packageLength += $messageLength;
-        }
-
-        return $sizedMessages;
+        return $packets;
     }
 
     /**
@@ -189,4 +171,9 @@ abstract class InetSocket implements Connection
      * @param string $message
      */
     abstract protected function writeToSocket($message);
+
+    /**
+     * @return int
+     */
+    abstract protected function getProtocolHeaderSize();
 }
