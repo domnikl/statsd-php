@@ -253,7 +253,7 @@ class Client
      */
     private function send($key, $value, $type, $sampleRate, $tags = [])
     {
-        if (mt_rand() / mt_getrandmax() > $sampleRate) {
+        if ($sampleRate < 1 && mt_rand() / mt_getrandmax() > $sampleRate) {
             return;
         }
 
