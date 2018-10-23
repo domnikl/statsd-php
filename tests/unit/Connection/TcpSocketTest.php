@@ -29,7 +29,7 @@ class TcpSocketTest extends TestCase
 
     /**
      * @expectedException \Domnikl\Statsd\Connection\TcpSocketException
-     * @expectedExceptionMessage Couldn't connect to host "localhost:66000": Connection refused
+     * @expectedExceptionMessage Couldn't connect to host "localhost:66000": 
      */
     public function testThrowsExceptionWhenTryingToConnectToNotExistingServer()
     {
