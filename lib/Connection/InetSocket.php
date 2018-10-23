@@ -126,6 +126,10 @@ abstract class InetSocket implements Connection
      */
     public function sendMessages(array $messages)
     {
+        if (count($messages) === 0) {
+            return;
+        }
+
         if (!$this->isConnected()) {
             $this->connect($this->host, $this->port, $this->timeout, $this->persistent);
         }
