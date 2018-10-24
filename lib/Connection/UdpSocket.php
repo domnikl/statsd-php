@@ -49,6 +49,9 @@ class UdpSocket extends InetSocket implements Connection
     {
         // suppress all errors
         @fwrite($this->socket, $message);
+
+        // sleeping for 10 millionths of a second dramatically improves UDP reliability
+        usleep(10);
     }
 
     /**
@@ -102,5 +105,17 @@ class UdpSocket extends InetSocket implements Connection
     protected function getProtocolHeaderSize()
     {
         return self::HEADER_SIZE;
+    }
+
+    /**
+     * message fragmention should not be allowed on UDP because packets
+     * regularly arrive out-of-order, and if they are not split evenly on a
+     * line delimiter, they will be combined in strange ways.
+     *
+     * @return bool
+     */
+    protected function allowFragmentation()
+    {
+        return false;
     }
 }

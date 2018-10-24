@@ -97,4 +97,14 @@ class TcpSocket extends InetSocket implements Connection
     {
         return self::HEADER_SIZE;
     }
+
+    /**
+     * message fragmention should be allowed on TCP to maximize throughput
+     *
+     * @return bool
+     */
+    protected function allowFragmentation()
+    {
+        return true;
+    }
 }
