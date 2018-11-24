@@ -253,6 +253,11 @@ class Client
      */
     private function send($key, $value, $type, $sampleRate, $tags = [])
     {
+        // override sampleRate if all metrics should be sampled
+        if ($this->sampleRateAllMetrics < 1) {
+            $sampleRate = $this->sampleRateAllMetrics;
+        }
+
         if ($sampleRate < 1 && mt_rand() / mt_getrandmax() > $sampleRate) {
             return;
         }
@@ -262,11 +267,6 @@ class Client
         }
 
         $message = $key . ':' . $value . '|' . $type;
-
-        // overwrite sampleRate if all metrics should be sampled
-        if ($this->sampleRateAllMetrics < 1) {
-            $sampleRate = $this->sampleRateAllMetrics;
-        }
 
         if ($sampleRate < 1) {
             $sampledData = $message . '|@' . $sampleRate;
