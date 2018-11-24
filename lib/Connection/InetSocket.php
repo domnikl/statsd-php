@@ -146,8 +146,26 @@ abstract class InetSocket implements Connection
      */
     private function cutIntoMtuSizedPackets(array $messages)
     {
-        $message = join(self::LINE_DELIMITER, $messages) . self::LINE_DELIMITER;
-        $packets = str_split($message, $this->maxPayloadSize);
+
+        if ($this->allowFragmentation()) {
+            $message = join(self::LINE_DELIMITER, $messages) . self::LINE_DELIMITER;
+            return str_split($message, $this->maxPayloadSize);
+        }
+
+        $delimiterLen = strlen(self::LINE_DELIMITER);
+        $packets = [];
+        $packet = '';
+        foreach ($messages as $message) {
+            if (strlen($packet) + strlen($message) + $delimiterLen > $this->maxPayloadSize) {
+                $packets[] = $packet;
+                $packet = '';
+            }
+            $packet .= $message . self::LINE_DELIMITER;
+        }
+
+        if (strlen($packet) > 0) {
+            $packets[] = $packet;
+        }
 
         return $packets;
     }
@@ -180,4 +198,11 @@ abstract class InetSocket implements Connection
      * @return int
      */
     abstract protected function getProtocolHeaderSize();
+
+    /**
+     * whether or not message fragmention should be allowed
+     *
+     * @return bool
+     */
+    abstract protected function allowFragmentation();
 }
