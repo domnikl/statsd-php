@@ -146,20 +146,22 @@ abstract class InetSocket implements Connection
      */
     private function cutIntoMtuSizedPackets(array $messages)
     {
-
         if ($this->allowFragmentation()) {
             $message = join(self::LINE_DELIMITER, $messages) . self::LINE_DELIMITER;
+
             return str_split($message, $this->maxPayloadSize);
         }
 
         $delimiterLen = strlen(self::LINE_DELIMITER);
         $packets = [];
         $packet = '';
+
         foreach ($messages as $message) {
             if (strlen($packet) + strlen($message) + $delimiterLen > $this->maxPayloadSize) {
                 $packets[] = $packet;
                 $packet = '';
             }
+
             $packet .= $message . self::LINE_DELIMITER;
         }
 
