@@ -72,10 +72,10 @@ class Client
      * increments the key by 1
      *
      * @param string $key
-     * @param int $sampleRate
+     * @param float $sampleRate
      * @param array $tags
      */
-    public function increment($key, $sampleRate = 1, $tags = [])
+    public function increment($key, $sampleRate = 1.0, $tags = [])
     {
         $this->count($key, 1, $sampleRate, $tags);
     }
@@ -84,10 +84,10 @@ class Client
      * decrements the key by 1
      *
      * @param string $key
-     * @param int $sampleRate
+     * @param float $sampleRate
      * @param array $tags
      */
-    public function decrement($key, $sampleRate = 1, $tags = [])
+    public function decrement($key, $sampleRate = 1.0, $tags = [])
     {
         $this->count($key, -1, $sampleRate, $tags);
     }
@@ -96,10 +96,10 @@ class Client
      *
      * @param string $key
      * @param int|float $value
-     * @param int $sampleRate (optional) the default is 1
+     * @param float $sampleRate
      * @param array $tags
      */
-    public function count($key, $value, $sampleRate = 1, $tags = [])
+    public function count($key, $value, $sampleRate = 1.0, $tags = [])
     {
         $this->send($key, $value, 'c', $sampleRate, $tags);
     }
@@ -109,10 +109,10 @@ class Client
      *
      * @param string $key
      * @param int $value the timing in ms
-     * @param int $sampleRate the sample rate, if < 1, statsd will send an average timing
+     * @param float $sampleRate
      * @param array $tags
      */
-    public function timing($key, $value, $sampleRate = 1, $tags = [])
+    public function timing($key, $value, $sampleRate = 1.0, $tags = [])
     {
         $this->send($key, $value, 'ms', $sampleRate, $tags);
     }
@@ -131,12 +131,12 @@ class Client
      * ends the timing for a key and sends it to statsd
      *
      * @param string $key
-     * @param int $sampleRate (optional)
+     * @param float $sampleRate
      * @param array $tags
      *
      * @return float|null
      */
-    public function endTiming($key, $sampleRate = 1, $tags = [])
+    public function endTiming($key, $sampleRate = 1.0, $tags = [])
     {
         $end = gettimeofday(true);
 
@@ -165,10 +165,10 @@ class Client
      * ends the memory profiling and sends the value to the server
      *
      * @param string $key
-     * @param int $sampleRate
+     * @param float $sampleRate
      * @param array $tags
      */
-    public function endMemoryProfile($key, $sampleRate = 1, $tags = [])
+    public function endMemoryProfile($key, $sampleRate = 1.0, $tags = [])
     {
         $end = memory_get_usage();
 
@@ -185,10 +185,10 @@ class Client
      *
      * @param string $key
      * @param int $memory
-     * @param int $sampleRate
+     * @param float $sampleRate
      * @param array $tags
      */
-    public function memory($key, $memory = null, $sampleRate = 1, $tags = [])
+    public function memory($key, $memory = null, $sampleRate = 1.0, $tags = [])
     {
         if ($memory === null) {
             $memory = memory_get_peak_usage();
@@ -203,12 +203,12 @@ class Client
      *
      * @param string $key
      * @param \Closure $block
-     * @param int $sampleRate (optional)
+     * @param float $sampleRate
      * @param array $tags
      *
      * @return mixed
      */
-    public function time($key, \Closure $block, $sampleRate = 1, $tags = [])
+    public function time($key, \Closure $block, $sampleRate = 1.0, $tags = [])
     {
         $this->startTiming($key);
         try {
@@ -248,7 +248,7 @@ class Client
      * @param string $key
      * @param int $value
      * @param string $type
-     * @param int $sampleRate
+     * @param float $sampleRate
      * @param array $tags
      */
     private function send($key, $value, $type, $sampleRate, $tags = [])
