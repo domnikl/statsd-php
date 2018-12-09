@@ -5,7 +5,7 @@ namespace Domnikl\Statsd;
 /**
  * the statsd client
  */
-class Client
+class Client implements ClientInterface
 {
     /**
      * Connection object that messages get send to
