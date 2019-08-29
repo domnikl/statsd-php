@@ -17,7 +17,7 @@ class ClientTest extends TestCase
      */
     private $connection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->connection = new ConnectionMock();
         $this->client = new Client($this->connection, 'test');

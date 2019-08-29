@@ -3,6 +3,7 @@
 
 # test coverage report
 tests/coverage
+.phpunit.result.cache
 
 # integration test
 stats.log

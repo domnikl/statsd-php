@@ -27,12 +27,11 @@ class TcpSocketTest extends TestCase
         $this->assertFalse($connection->isPersistent());
     }
 
-    /**
-     * @expectedException \Domnikl\Statsd\Connection\TcpSocketException
-     * @expectedExceptionMessage Couldn't connect to host "localhost:66000": 
-     */
     public function testThrowsExceptionWhenTryingToConnectToNotExistingServer()
     {
+        $this->expectException(\Domnikl\Statsd\Connection\TcpSocketException::class);
+        $this->expectExceptionMessage('Couldn\'t connect to host "localhost:66000":');
+
         $connection = new TcpSocket('localhost', 66000, 1);
         $connection->send('foobar');
     }
