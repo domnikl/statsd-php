@@ -1,1 +1,7 @@
+title: statsd-php
+description: A PHP client library for the statistics daemon statsd intended to send metrics from PHP applications.
+show_downloads: true
 theme: jekyll-theme-architect
+
+plugins:
+  - jekyll-mentions
