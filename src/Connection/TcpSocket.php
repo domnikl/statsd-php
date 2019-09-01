@@ -50,10 +50,10 @@ class TcpSocket extends InetSocket implements Connection
     /**
      * @param string $host
      * @param int $port
-     * @param float|null $timeout
+     * @param int|null $timeout
      * @param bool $persistent
      */
-    protected function connect($host, $port, $timeout, $persistent)
+    protected function connect(string $host, int $port, $timeout, bool $persistent)
     {
         $errorNumber = null;
         $errorMessage = null;
@@ -73,12 +73,7 @@ class TcpSocket extends InetSocket implements Connection
         $this->socket = $socket;
     }
 
-    /**
-     * checks whether the socket connection is alive
-     *
-     * @return bool
-     */
-    protected function isConnected()
+    protected function isConnected(): bool
     {
         return is_resource($this->socket) && !feof($this->socket);
     }
@@ -90,20 +85,12 @@ class TcpSocket extends InetSocket implements Connection
         $this->socket = null;
     }
 
-    /**
-     * @return int
-     */
-    protected function getProtocolHeaderSize()
+    protected function getProtocolHeaderSize(): int
     {
         return self::HEADER_SIZE;
     }
 
-    /**
-     * message fragmention should be allowed on TCP to maximize throughput
-     *
-     * @return bool
-     */
-    protected function allowFragmentation()
+    protected function allowFragmentation(): bool
     {
         return true;
     }

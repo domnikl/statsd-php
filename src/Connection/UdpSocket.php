@@ -60,7 +60,7 @@ class UdpSocket extends InetSocket implements Connection
      * @param float|null $timeout
      * @param bool $persistent
      */
-    protected function connect($host, $port, $timeout, $persistent = false)
+    protected function connect(string $host, int $port, $timeout, bool $persistent = false)
     {
         $errorNumber = null;
         $errorMessage = null;
@@ -86,7 +86,7 @@ class UdpSocket extends InetSocket implements Connection
      *
      * @return bool
      */
-    protected function isConnected()
+    protected function isConnected(): bool
     {
         return $this->isConnected;
     }
@@ -99,10 +99,7 @@ class UdpSocket extends InetSocket implements Connection
         $this->isConnected = false;
     }
 
-    /**
-     * @return int
-     */
-    protected function getProtocolHeaderSize()
+    protected function getProtocolHeaderSize(): int
     {
         return self::HEADER_SIZE;
     }
@@ -114,7 +111,7 @@ class UdpSocket extends InetSocket implements Connection
      *
      * @return bool
      */
-    protected function allowFragmentation()
+    protected function allowFragmentation(): bool
     {
         return false;
     }

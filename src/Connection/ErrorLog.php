@@ -10,21 +10,11 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class ErrorLog implements Connection
 {
-    /**
-     * Log the message
-     *
-     * @param string $message
-     */
     public function send(string $message)
     {
         error_log($message);
     }
 
-    /**
-     * sends multiple messages to statsd
-     *
-     * @param array $messages
-     */
     public function sendMessages(array $messages)
     {
         foreach ($messages as $message) {

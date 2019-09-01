@@ -21,11 +21,7 @@ class File implements Connection
      */
     private $mode;
 
-    /**
-     * @param string $filePath
-     * @param string $mode
-     */
-    public function __construct($filePath, $mode = "a+")
+    public function __construct(string $filePath, string $mode = "a+")
     {
         $this->filePath = $filePath;
         $this->mode = $mode;
@@ -36,9 +32,6 @@ class File implements Connection
         $this->handle = @fopen($this->filePath, $this->mode);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function send(string $message)
     {
         // prevent from sending empty or non-sense metrics
@@ -55,9 +48,6 @@ class File implements Connection
         }
     }
 
-    /**
-     * @inheritdoc
-     */
     public function sendMessages(array $messages)
     {
         foreach ($messages as $message) {

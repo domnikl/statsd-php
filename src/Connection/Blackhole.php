@@ -10,21 +10,11 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class Blackhole implements Connection
 {
-    /**
-     * Drops any incoming messages
-     *
-     * @param string $message
-     */
     public function send(string $message)
     {
         // do nothing
     }
 
-    /**
-     * sends multiple messages to statsd
-     *
-     * @param array $messages
-     */
     public function sendMessages(array $messages)
     {
         // do nothing

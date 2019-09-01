@@ -15,17 +15,11 @@ class InMemory implements Connection
      */
     private $messages = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function send(string $message)
     {
         $this->messages[] = $message;
     }
 
-    /** 
-     * {@inheritdoc}
-     */
     public function sendMessages(array $messages)
     {
         foreach ($messages as $message) {
@@ -33,7 +27,7 @@ class InMemory implements Connection
         }
     }
 
-    /** 
+    /**
      * Drops all messages that were collected.
      */
     public function clear()
