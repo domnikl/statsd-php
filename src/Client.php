@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Domnikl\Statsd;
 
@@ -108,11 +108,11 @@ class Client
      * sends a timing to statsd (in ms)
      *
      * @param string $key
-     * @param int $value the timing in ms
+     * @param float $value the timing in ms
      * @param float $sampleRate
      * @param array $tags
      */
-    public function timing(string $key, int $value, float $sampleRate = 1.0, array $tags = [])
+    public function timing(string $key, float $value, float $sampleRate = 1.0, array $tags = [])
     {
         $this->send($key, $value, 'ms', $sampleRate, $tags);
     }
