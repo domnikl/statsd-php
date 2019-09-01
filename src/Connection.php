@@ -12,7 +12,7 @@ interface Connection
      *
      * @param string $message
      */
-    public function send($message);
+    public function send(string $message);
 
     /**
      * sends multiple messages to statsd

@@ -39,7 +39,7 @@ class File implements Connection
     /**
      * @inheritdoc
      */
-    public function send($message)
+    public function send(string $message)
     {
         // prevent from sending empty or non-sense metrics
         if ($message === '' || !is_string($message)) {

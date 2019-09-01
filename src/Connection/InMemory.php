@@ -11,14 +11,14 @@ use Domnikl\Statsd\Connection as Connection;
 class InMemory implements Connection
 {
     /**
-     * @var array
+     * @var string[]
      */
     private $messages = [];
 
     /**
      * {@inheritdoc}
      */
-    public function send($message)
+    public function send(string $message)
     {
         $this->messages[] = $message;
     }

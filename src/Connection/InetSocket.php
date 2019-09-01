@@ -109,7 +109,7 @@ abstract class InetSocket implements Connection
      * @codeCoverageIgnore
      * this is ignored because it writes to an actual socket and is not testable
      */
-    public function send($message)
+    public function send(string $message)
     {
         // prevent from sending empty or non-sense metrics
         if ($message === '' || !is_string($message)) {

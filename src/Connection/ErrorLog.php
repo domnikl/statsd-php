@@ -15,7 +15,7 @@ class ErrorLog implements Connection
      *
      * @param string $message
      */
-    public function send($message)
+    public function send(string $message)
     {
         error_log($message);
     }

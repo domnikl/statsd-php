@@ -15,7 +15,7 @@ class Blackhole implements Connection
      *
      * @param string $message
      */
-    public function send($message)
+    public function send(string $message)
     {
         // do nothing
     }

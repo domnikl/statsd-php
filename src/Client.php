@@ -61,11 +61,11 @@ class Client
      * @param string $namespace global key namespace
      * @param float $sampleRateAllMetrics if set to a value <1, all metrics will be sampled using this rate
      */
-    public function __construct(Connection $connection, $namespace = '', $sampleRateAllMetrics = 1.0)
+    public function __construct(Connection $connection, string $namespace = '', float $sampleRateAllMetrics = 1.0)
     {
         $this->connection = $connection;
-        $this->namespace = (string) $namespace;
-        $this->sampleRateAllMetrics = (float) $sampleRateAllMetrics;
+        $this->namespace = $namespace;
+        $this->sampleRateAllMetrics = $sampleRateAllMetrics;
     }
 
     /**
@@ -75,7 +75,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function increment($key, $sampleRate = 1.0, $tags = [])
+    public function increment(string $key, float $sampleRate = 1.0, array $tags = [])
     {
         $this->count($key, 1, $sampleRate, $tags);
     }
@@ -87,7 +87,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function decrement($key, $sampleRate = 1.0, $tags = [])
+    public function decrement(string $key, float $sampleRate = 1.0, array $tags = [])
     {
         $this->count($key, -1, $sampleRate, $tags);
     }
@@ -99,7 +99,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function count($key, $value, $sampleRate = 1.0, $tags = [])
+    public function count(string $key, $value, float $sampleRate = 1.0, array $tags = [])
     {
         $this->send($key, $value, 'c', $sampleRate, $tags);
     }
@@ -112,7 +112,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function timing($key, $value, $sampleRate = 1.0, $tags = [])
+    public function timing(string $key, int $value, float $sampleRate = 1.0, array $tags = [])
     {
         $this->send($key, $value, 'ms', $sampleRate, $tags);
     }
@@ -122,7 +122,7 @@ class Client
      *
      * @param string $key
      */
-    public function startTiming($key)
+    public function startTiming(string $key)
     {
         $this->timings[$key] = gettimeofday(true);
     }
@@ -136,7 +136,7 @@ class Client
      *
      * @return float|null
      */
-    public function endTiming($key, $sampleRate = 1.0, $tags = [])
+    public function endTiming(string $key, float $sampleRate = 1.0, array $tags = [])
     {
         $end = gettimeofday(true);
 
@@ -156,7 +156,7 @@ class Client
      *
      * @param string $key
      */
-    public function startMemoryProfile($key)
+    public function startMemoryProfile(string $key)
     {
         $this->memoryProfiles[$key] = memory_get_usage();
     }
@@ -168,7 +168,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function endMemoryProfile($key, $sampleRate = 1.0, $tags = [])
+    public function endMemoryProfile(string $key, float $sampleRate = 1.0, array $tags = [])
     {
         $end = memory_get_usage();
 
@@ -188,7 +188,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function memory($key, $memory = null, $sampleRate = 1.0, $tags = [])
+    public function memory(string $key, int $memory = null, float $sampleRate = 1.0, array $tags = [])
     {
         if ($memory === null) {
             $memory = memory_get_peak_usage();
@@ -208,7 +208,7 @@ class Client
      *
      * @return mixed
      */
-    public function time($key, \Closure $block, $sampleRate = 1.0, $tags = [])
+    public function time(string $key, \Closure $block, float $sampleRate = 1.0, array $tags = [])
     {
         $this->startTiming($key);
         try {
@@ -225,7 +225,7 @@ class Client
      * @param string|int $value
      * @param array $tags
      */
-    public function gauge($key, $value, $tags = [])
+    public function gauge(string $key, $value, array $tags = [])
     {
         $this->send($key, $value, 'g', 1, $tags);
     }
@@ -237,7 +237,7 @@ class Client
      * @param int $value
      * @param array $tags
      */
-    public function set($key, $value, $tags = [])
+    public function set(string $key, int $value, array $tags = [])
     {
         $this->send($key, $value, 's', 1, $tags);
     }
@@ -246,12 +246,12 @@ class Client
      * actually sends a message to to the daemon and returns the sent message
      *
      * @param string $key
-     * @param int $value
+     * @param int|float|string $value
      * @param string $type
      * @param float $sampleRate
      * @param array $tags
      */
-    private function send($key, $value, $type, $sampleRate, $tags = [])
+    private function send(string $key, $value, string $type, float $sampleRate, array $tags = [])
     {
         // override sampleRate if all metrics should be sampled
         if ($this->sampleRateAllMetrics < 1) {
@@ -297,7 +297,7 @@ class Client
      *
      * @param string $namespace
      */
-    public function setNamespace($namespace)
+    public function setNamespace(string $namespace)
     {
         $this->namespace = (string) $namespace;
     }
@@ -307,7 +307,7 @@ class Client
      *
      * @return string
      */
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return $this->namespace;
     }
@@ -317,7 +317,7 @@ class Client
      *
      * @return bool
      */
-    public function isBatch()
+    public function isBatch(): bool
     {
         return $this->isBatch;
     }

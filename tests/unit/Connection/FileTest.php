@@ -19,10 +19,10 @@ class FileTest extends TestCase
     }
 
     /**
-     * @param mixed $metric
+     * @param string $metric
      * @dataProvider dataForSendWrongData
      */
-    public function testSendWrongData($metric)
+    public function testSendWrongData(string $metric)
     {
         $connection = new File('php://memory');
         $connection->send($metric);
@@ -30,16 +30,12 @@ class FileTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function dataForSendWrongData()
     {
         return [
-            [null],
             [''],
-            [123],
-            [124.5],
-            [new \stdClass()],
         ];
     }
 
