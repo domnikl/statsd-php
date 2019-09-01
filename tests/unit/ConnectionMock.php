@@ -13,7 +13,7 @@ class ConnectionMock implements Connection
     /**
      * @var array
      */
-    public $messages = array();
+    public $messages = [];
 
     /**
      * @var bool
@@ -41,13 +41,13 @@ class ConnectionMock implements Connection
      */
     public function getLastMessage()
     {
-		$i = count($this->messages) - 1;
+        $i = count($this->messages) - 1;
 
-		if (isset($this->messages[$i])) {
-			return $this->messages[$i];
-		} else {
-			return null;
-		}
+        if (isset($this->messages[$i])) {
+            return $this->messages[$i];
+        } else {
+            return null;
+        }
     }
 
     /**

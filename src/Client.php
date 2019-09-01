@@ -5,7 +5,7 @@ namespace Domnikl\Statsd;
 /**
  * the statsd client
  */
-class Client implements ClientInterface
+class Client
 {
     /**
      * Connection object that messages get send to
@@ -277,9 +277,11 @@ class Client implements ClientInterface
         if (!empty($tags)) {
             $sampledData .= '|#';
             $tagArray = [];
-            foreach($tags as $key => $value) {
-              $tagArray[] = ($key . ':' . $value);
+
+            foreach ($tags as $key => $value) {
+                $tagArray[] = ($key . ':' . $value);
             }
+
             $sampledData .= join(',', $tagArray);
         }
 
@@ -313,7 +315,7 @@ class Client implements ClientInterface
     /**
      * is batch processing running?
      *
-     * @return boolean
+     * @return bool
      */
     public function isBatch()
     {

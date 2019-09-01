@@ -21,11 +21,13 @@
         "php": ">= 7.1"
     },
     "require-dev": {
-        "phpunit/phpunit": ">= 4.4.0"
+        "phpunit/phpunit": "~8.0",
+        "flyeralarm/php-code-validator": "^2.2"
     },
     "autoload": {
         "psr-4": {
-            "Domnikl\\Statsd\\": "lib/"
+            "Domnikl\\Statsd\\": "src/",
+            "Domnikl\\Test\\Statsd\\": "tests/unit"
         }
     }
 }
