@@ -15,14 +15,14 @@ abstract class InetSocket implements Connection
      *
      * @var string
      */
-    private $host;
+    protected $host;
 
     /**
      * port number
      *
      * @var int
      */
-    private $port;
+    protected $port;
 
     /**
      * Socket timeout
@@ -102,10 +102,10 @@ abstract class InetSocket implements Connection
      * @codeCoverageIgnore
      * this is ignored because it writes to an actual socket and is not testable
      */
-    public function send(string $message)
+    public function send(string $message): void
     {
         // prevent from sending empty or non-sense metrics
-        if ($message === '' || !is_string($message)) {
+        if ($message === '') {
             return;
         }
 
@@ -117,7 +117,7 @@ abstract class InetSocket implements Connection
      *
      * @param array $messages
      */
-    public function sendMessages(array $messages)
+    public function sendMessages(array $messages): void
     {
         if (count($messages) === 0) {
             return;
@@ -137,7 +137,7 @@ abstract class InetSocket implements Connection
      *
      * @return array
      */
-    private function cutIntoMtuSizedPackets(array $messages)
+    private function cutIntoMtuSizedPackets(array $messages): array
     {
         if ($this->allowFragmentation()) {
             $message = join(self::LINE_DELIMITER, $messages) . self::LINE_DELIMITER;
@@ -170,10 +170,10 @@ abstract class InetSocket implements Connection
      *
      * @param string $host
      * @param int $port
-     * @param int|null $timeout
+     * @param int $timeout
      * @param bool $persistent
      */
-    abstract protected function connect(string $host, int $port, $timeout, bool $persistent);
+    abstract protected function connect(string $host, int $port, int $timeout, bool $persistent): void;
 
     /*
      * checks whether the socket connection is alive
@@ -185,7 +185,7 @@ abstract class InetSocket implements Connection
      *
      * @param string $message
      */
-    abstract protected function writeToSocket(string $message);
+    abstract protected function writeToSocket(string $message): void;
 
     abstract protected function getProtocolHeaderSize(): int;
 

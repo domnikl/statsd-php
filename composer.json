@@ -22,7 +22,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~8.0",
-        "flyeralarm/php-code-validator": "^2.2"
+        "flyeralarm/php-code-validator": "^2.2",
+        "vimeo/psalm": "^3.4"
     },
     "autoload": {
         "psr-4": {

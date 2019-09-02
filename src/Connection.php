@@ -12,14 +12,14 @@ interface Connection
      *
      * @param string $message
      */
-    public function send(string $message);
+    public function send(string $message): void;
 
     /**
      * sends multiple messages to statsd
      *
      * @param array $messages
      */
-    public function sendMessages(array $messages);
+    public function sendMessages(array $messages): void;
 
-    public function close();
+    public function close(): void;
 }

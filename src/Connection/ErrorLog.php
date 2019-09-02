@@ -10,19 +10,19 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class ErrorLog implements Connection
 {
-    public function send(string $message)
+    public function send(string $message): void
     {
         error_log($message);
     }
 
-    public function sendMessages(array $messages)
+    public function sendMessages(array $messages): void
     {
         foreach ($messages as $message) {
             $this->send($message);
         }
     }
 
-    public function close()
+    public function close(): void
     {
         // do nothing
     }

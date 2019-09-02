@@ -50,9 +50,9 @@ class Client
     private $isBatch = false;
 
     /**
-     * @var bool
+     * @var float
      */
-    private $sampleRateAllMetrics = 1;
+    private $sampleRateAllMetrics = 1.0;
 
     /**
      * initializes the client object
@@ -75,7 +75,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function increment(string $key, float $sampleRate = 1.0, array $tags = [])
+    public function increment(string $key, float $sampleRate = 1.0, array $tags = []): void
     {
         $this->count($key, 1, $sampleRate, $tags);
     }
@@ -87,7 +87,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function decrement(string $key, float $sampleRate = 1.0, array $tags = [])
+    public function decrement(string $key, float $sampleRate = 1.0, array $tags = []): void
     {
         $this->count($key, -1, $sampleRate, $tags);
     }
@@ -99,7 +99,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function count(string $key, $value, float $sampleRate = 1.0, array $tags = [])
+    public function count(string $key, $value, float $sampleRate = 1.0, array $tags = []): void
     {
         $this->send($key, $value, 'c', $sampleRate, $tags);
     }
@@ -112,7 +112,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function timing(string $key, float $value, float $sampleRate = 1.0, array $tags = [])
+    public function timing(string $key, float $value, float $sampleRate = 1.0, array $tags = []): void
     {
         $this->send($key, $value, 'ms', $sampleRate, $tags);
     }
@@ -122,7 +122,7 @@ class Client
      *
      * @param string $key
      */
-    public function startTiming(string $key)
+    public function startTiming(string $key): void
     {
         $this->timings[$key] = gettimeofday(true);
     }
@@ -156,7 +156,7 @@ class Client
      *
      * @param string $key
      */
-    public function startMemoryProfile(string $key)
+    public function startMemoryProfile(string $key): void
     {
         $this->memoryProfiles[$key] = memory_get_usage();
     }
@@ -168,7 +168,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function endMemoryProfile(string $key, float $sampleRate = 1.0, array $tags = [])
+    public function endMemoryProfile(string $key, float $sampleRate = 1.0, array $tags = []): void
     {
         $end = memory_get_usage();
 
@@ -188,7 +188,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    public function memory(string $key, int $memory = null, float $sampleRate = 1.0, array $tags = [])
+    public function memory(string $key, int $memory = null, float $sampleRate = 1.0, array $tags = []): void
     {
         if ($memory === null) {
             $memory = memory_get_peak_usage();
@@ -225,7 +225,7 @@ class Client
      * @param string|int $value
      * @param array $tags
      */
-    public function gauge(string $key, $value, array $tags = [])
+    public function gauge(string $key, $value, array $tags = []): void
     {
         $this->send($key, $value, 'g', 1, $tags);
     }
@@ -237,7 +237,7 @@ class Client
      * @param int $value
      * @param array $tags
      */
-    public function set(string $key, int $value, array $tags = [])
+    public function set(string $key, int $value, array $tags = []): void
     {
         $this->send($key, $value, 's', 1, $tags);
     }
@@ -251,7 +251,7 @@ class Client
      * @param float $sampleRate
      * @param array $tags
      */
-    private function send(string $key, $value, string $type, float $sampleRate, array $tags = [])
+    private function send(string $key, $value, string $type, float $sampleRate, array $tags = []): void
     {
         // override sampleRate if all metrics should be sampled
         if ($this->sampleRateAllMetrics < 1) {
@@ -297,7 +297,7 @@ class Client
      *
      * @param string $namespace
      */
-    public function setNamespace(string $namespace)
+    public function setNamespace(string $namespace): void
     {
         $this->namespace = (string) $namespace;
     }
@@ -325,7 +325,7 @@ class Client
     /**
      * start batch-send-recording
      */
-    public function startBatch()
+    public function startBatch(): void
     {
         $this->isBatch = true;
     }
@@ -333,7 +333,7 @@ class Client
     /**
      * ends batch-send-recording and sends the recorded messages to the connection
      */
-    public function endBatch()
+    public function endBatch(): void
     {
         $this->isBatch = false;
         $this->connection->sendMessages($this->batch);
@@ -343,7 +343,7 @@ class Client
     /**
      * stops batch-recording and resets the batch
      */
-    public function cancelBatch()
+    public function cancelBatch(): void
     {
         $this->isBatch = false;
         $this->batch = [];

@@ -16,7 +16,7 @@ class TcpSocket extends InetSocket implements Connection
     /**
      * the used TCP socket resource
      *
-     * @var resource|null|false
+     * @var resource|null
      */
     private $socket;
 
@@ -28,7 +28,7 @@ class TcpSocket extends InetSocket implements Connection
      * @codeCoverageIgnore
      * this is ignored because it writes to an actual socket and is not testable
      */
-    public function send(string $message)
+    public function send(string $message): void
     {
         try {
             parent::send($message);
@@ -42,21 +42,25 @@ class TcpSocket extends InetSocket implements Connection
     /**
      * @param string $message
      */
-    protected function writeToSocket($message)
+    protected function writeToSocket(string $message): void
     {
+        if ($this->socket === null) {
+            throw new TcpSocketException($this->host, $this->port, 'Couldn\'t write to socket, socket is closed');
+        }
+
         fwrite($this->socket, $message);
     }
 
     /**
      * @param string $host
      * @param int $port
-     * @param int|null $timeout
+     * @param int $timeout
      * @param bool $persistent
      */
-    protected function connect(string $host, int $port, $timeout, bool $persistent)
+    protected function connect(string $host, int $port, int $timeout, bool $persistent): void
     {
-        $errorNumber = null;
-        $errorMessage = null;
+        $errorNumber = 0;
+        $errorMessage = '';
 
         $url = 'tcp://' . $host;
 
@@ -78,8 +82,12 @@ class TcpSocket extends InetSocket implements Connection
         return is_resource($this->socket) && !feof($this->socket);
     }
 
-    public function close()
+    public function close(): void
     {
+        if ($this->socket === null) {
+            return;
+        }
+
         fclose($this->socket);
 
         $this->socket = null;

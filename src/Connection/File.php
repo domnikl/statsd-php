@@ -27,15 +27,15 @@ class File implements Connection
         $this->mode = $mode;
     }
 
-    private function open()
+    private function open(): void
     {
         $this->handle = @fopen($this->filePath, $this->mode);
     }
 
-    public function send(string $message)
+    public function send(string $message): void
     {
         // prevent from sending empty or non-sense metrics
-        if ($message === '' || !is_string($message)) {
+        if ($message === '') {
             return;
         }
 
@@ -48,15 +48,19 @@ class File implements Connection
         }
     }
 
-    public function sendMessages(array $messages)
+    public function sendMessages(array $messages): void
     {
         foreach ($messages as $message) {
             $this->send($message);
         }
     }
 
-    public function close()
+    public function close(): void
     {
+        if ($this->handle === null) {
+            return;
+        }
+
         @fclose($this->handle);
 
         $this->handle = null;
