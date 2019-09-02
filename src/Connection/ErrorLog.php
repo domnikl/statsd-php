@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -10,29 +10,19 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class ErrorLog implements Connection
 {
-    /**
-     * Log the message
-     *
-     * @param string $message
-     */
-    public function send($message)
+    public function send(string $message): void
     {
         error_log($message);
     }
 
-    /**
-     * sends multiple messages to statsd
-     *
-     * @param array $messages
-     */
-    public function sendMessages(array $messages)
+    public function sendMessages(array $messages): void
     {
         foreach ($messages as $message) {
             $this->send($message);
         }
     }
 
-    public function close()
+    public function close(): void
     {
         // do nothing
     }

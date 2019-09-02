@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -21,28 +21,21 @@ class File implements Connection
      */
     private $mode;
 
-    /**
-     * @param string $filePath
-     * @param string $mode
-     */
-    public function __construct($filePath, $mode = "a+")
+    public function __construct(string $filePath, string $mode = "a+")
     {
         $this->filePath = $filePath;
         $this->mode = $mode;
     }
 
-    private function open()
+    private function open(): void
     {
         $this->handle = @fopen($this->filePath, $this->mode);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function send($message)
+    public function send(string $message): void
     {
         // prevent from sending empty or non-sense metrics
-        if ($message === '' || !is_string($message)) {
+        if ($message === '') {
             return;
         }
 
@@ -55,18 +48,19 @@ class File implements Connection
         }
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function sendMessages(array $messages)
+    public function sendMessages(array $messages): void
     {
         foreach ($messages as $message) {
             $this->send($message);
         }
     }
 
-    public function close()
+    public function close(): void
     {
+        if ($this->handle === null) {
+            return;
+        }
+
         @fclose($this->handle);
 
         $this->handle = null;

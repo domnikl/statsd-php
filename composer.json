@@ -2,21 +2,33 @@
     "name": "domnikl/statsd",
     "type": "library",
     "description": "a PHP client for statsd",
-    "keywords": ["monitoring", "statsd", "statistics", "metrics", "udp"],
+    "keywords": [
+        "monitoring",
+        "statsd",
+        "statistics",
+        "metrics",
+        "udp"
+    ],
     "homepage": "https://domnikl.github.com/statsd-php",
     "license": "MIT",
     "authors": [
-        {"name": "Dominik Liebler", "email": "liebler.dominik@gmail.com"}
+        {
+            "name": "Dominik Liebler",
+            "email": "liebler.dominik@gmail.com"
+        }
     ],
     "require": {
-        "php": ">= 5.6.0"
+        "php": ">= 7.2"
     },
     "require-dev": {
-        "phpunit/phpunit": ">= 4.4.0"
+        "phpunit/phpunit": "~8.0",
+        "flyeralarm/php-code-validator": "^2.2",
+        "vimeo/psalm": "^3.4"
     },
     "autoload": {
         "psr-4": {
-            "Domnikl\\Statsd\\": "lib/"
+            "Domnikl\\Statsd\\": "src/",
+            "Domnikl\\Test\\Statsd\\": "tests/unit"
         }
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -16,14 +16,14 @@ class UdpSocket extends InetSocket implements Connection
     /**
      * the used UDP socket resource
      *
-     * @var resource|null|false
+     * @var resource|null
      */
     private $socket;
 
     /**
      * @var bool
      */
-    private $isConnected;
+    private $isConnected = false;
 
     /**
      * sends a message to the socket
@@ -33,7 +33,7 @@ class UdpSocket extends InetSocket implements Connection
      * @codeCoverageIgnore
      * this is ignored because it writes to an actual socket and is not testable
      */
-    public function send($message)
+    public function send(string $message): void
     {
         try {
             parent::send($message);
@@ -45,8 +45,12 @@ class UdpSocket extends InetSocket implements Connection
     /**
      * @param string $message
      */
-    protected function writeToSocket($message)
+    protected function writeToSocket(string $message): void
     {
+        if ($this->socket === null) {
+            return;
+        }
+
         // suppress all errors
         @fwrite($this->socket, $message);
 
@@ -57,13 +61,13 @@ class UdpSocket extends InetSocket implements Connection
     /**
      * @param string $host
      * @param int $port
-     * @param float|null $timeout
+     * @param int $timeout
      * @param bool $persistent
      */
-    protected function connect($host, $port, $timeout, $persistent = false)
+    protected function connect(string $host, int $port, int $timeout, bool $persistent = false): void
     {
-        $errorNumber = null;
-        $errorMessage = null;
+        $errorNumber = 0;
+        $errorMessage = '';
 
         $url = 'udp://' . $host;
 
@@ -86,23 +90,22 @@ class UdpSocket extends InetSocket implements Connection
      *
      * @return bool
      */
-    protected function isConnected()
+    protected function isConnected(): bool
     {
         return $this->isConnected;
     }
 
-    public function close()
+    public function close(): void
     {
-        fclose($this->socket);
+        if ($this->socket !== null) {
+            fclose($this->socket);
+        }
 
         $this->socket = null;
         $this->isConnected = false;
     }
 
-    /**
-     * @return int
-     */
-    protected function getProtocolHeaderSize()
+    protected function getProtocolHeaderSize(): int
     {
         return self::HEADER_SIZE;
     }
@@ -114,7 +117,7 @@ class UdpSocket extends InetSocket implements Connection
      *
      * @return bool
      */
-    protected function allowFragmentation()
+    protected function allowFragmentation(): bool
     {
         return false;
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -10,27 +10,17 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class Blackhole implements Connection
 {
-    /**
-     * Drops any incoming messages
-     *
-     * @param string $message
-     */
-    public function send($message)
+    public function send(string $message): void
     {
         // do nothing
     }
 
-    /**
-     * sends multiple messages to statsd
-     *
-     * @param array $messages
-     */
-    public function sendMessages(array $messages)
+    public function sendMessages(array $messages): void
     {
         // do nothing
     }
 
-    public function close()
+    public function close(): void
     {
         // do nothing
     }

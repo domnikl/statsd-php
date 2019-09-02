@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Domnikl\Statsd;
 
 /**
  * the statsd client
  */
-class Client implements ClientInterface
+class Client
 {
     /**
      * Connection object that messages get send to
@@ -50,9 +50,9 @@ class Client implements ClientInterface
     private $isBatch = false;
 
     /**
-     * @var bool
+     * @var float
      */
-    private $sampleRateAllMetrics = 1;
+    private $sampleRateAllMetrics = 1.0;
 
     /**
      * initializes the client object
@@ -61,11 +61,11 @@ class Client implements ClientInterface
      * @param string $namespace global key namespace
      * @param float $sampleRateAllMetrics if set to a value <1, all metrics will be sampled using this rate
      */
-    public function __construct(Connection $connection, $namespace = '', $sampleRateAllMetrics = 1.0)
+    public function __construct(Connection $connection, string $namespace = '', float $sampleRateAllMetrics = 1.0)
     {
         $this->connection = $connection;
-        $this->namespace = (string) $namespace;
-        $this->sampleRateAllMetrics = (float) $sampleRateAllMetrics;
+        $this->namespace = $namespace;
+        $this->sampleRateAllMetrics = $sampleRateAllMetrics;
     }
 
     /**
@@ -75,7 +75,7 @@ class Client implements ClientInterface
      * @param float $sampleRate
      * @param array $tags
      */
-    public function increment($key, $sampleRate = 1.0, $tags = [])
+    public function increment(string $key, float $sampleRate = 1.0, array $tags = []): void
     {
         $this->count($key, 1, $sampleRate, $tags);
     }
@@ -87,7 +87,7 @@ class Client implements ClientInterface
      * @param float $sampleRate
      * @param array $tags
      */
-    public function decrement($key, $sampleRate = 1.0, $tags = [])
+    public function decrement(string $key, float $sampleRate = 1.0, array $tags = []): void
     {
         $this->count($key, -1, $sampleRate, $tags);
     }
@@ -99,7 +99,7 @@ class Client implements ClientInterface
      * @param float $sampleRate
      * @param array $tags
      */
-    public function count($key, $value, $sampleRate = 1.0, $tags = [])
+    public function count(string $key, $value, float $sampleRate = 1.0, array $tags = []): void
     {
         $this->send($key, $value, 'c', $sampleRate, $tags);
     }
@@ -108,11 +108,11 @@ class Client implements ClientInterface
      * sends a timing to statsd (in ms)
      *
      * @param string $key
-     * @param int $value the timing in ms
+     * @param float $value the timing in ms
      * @param float $sampleRate
      * @param array $tags
      */
-    public function timing($key, $value, $sampleRate = 1.0, $tags = [])
+    public function timing(string $key, float $value, float $sampleRate = 1.0, array $tags = []): void
     {
         $this->send($key, $value, 'ms', $sampleRate, $tags);
     }
@@ -122,7 +122,7 @@ class Client implements ClientInterface
      *
      * @param string $key
      */
-    public function startTiming($key)
+    public function startTiming(string $key): void
     {
         $this->timings[$key] = gettimeofday(true);
     }
@@ -136,7 +136,7 @@ class Client implements ClientInterface
      *
      * @return float|null
      */
-    public function endTiming($key, $sampleRate = 1.0, $tags = [])
+    public function endTiming(string $key, float $sampleRate = 1.0, array $tags = [])
     {
         $end = gettimeofday(true);
 
@@ -156,7 +156,7 @@ class Client implements ClientInterface
      *
      * @param string $key
      */
-    public function startMemoryProfile($key)
+    public function startMemoryProfile(string $key): void
     {
         $this->memoryProfiles[$key] = memory_get_usage();
     }
@@ -168,7 +168,7 @@ class Client implements ClientInterface
      * @param float $sampleRate
      * @param array $tags
      */
-    public function endMemoryProfile($key, $sampleRate = 1.0, $tags = [])
+    public function endMemoryProfile(string $key, float $sampleRate = 1.0, array $tags = []): void
     {
         $end = memory_get_usage();
 
@@ -188,7 +188,7 @@ class Client implements ClientInterface
      * @param float $sampleRate
      * @param array $tags
      */
-    public function memory($key, $memory = null, $sampleRate = 1.0, $tags = [])
+    public function memory(string $key, int $memory = null, float $sampleRate = 1.0, array $tags = []): void
     {
         if ($memory === null) {
             $memory = memory_get_peak_usage();
@@ -208,7 +208,7 @@ class Client implements ClientInterface
      *
      * @return mixed
      */
-    public function time($key, \Closure $block, $sampleRate = 1.0, $tags = [])
+    public function time(string $key, \Closure $block, float $sampleRate = 1.0, array $tags = [])
     {
         $this->startTiming($key);
         try {
@@ -225,7 +225,7 @@ class Client implements ClientInterface
      * @param string|int $value
      * @param array $tags
      */
-    public function gauge($key, $value, $tags = [])
+    public function gauge(string $key, $value, array $tags = []): void
     {
         $this->send($key, $value, 'g', 1, $tags);
     }
@@ -237,7 +237,7 @@ class Client implements ClientInterface
      * @param int $value
      * @param array $tags
      */
-    public function set($key, $value, $tags = [])
+    public function set(string $key, int $value, array $tags = []): void
     {
         $this->send($key, $value, 's', 1, $tags);
     }
@@ -246,12 +246,12 @@ class Client implements ClientInterface
      * actually sends a message to to the daemon and returns the sent message
      *
      * @param string $key
-     * @param int $value
+     * @param int|float|string $value
      * @param string $type
      * @param float $sampleRate
      * @param array $tags
      */
-    private function send($key, $value, $type, $sampleRate, $tags = [])
+    private function send(string $key, $value, string $type, float $sampleRate, array $tags = []): void
     {
         // override sampleRate if all metrics should be sampled
         if ($this->sampleRateAllMetrics < 1) {
@@ -277,9 +277,11 @@ class Client implements ClientInterface
         if (!empty($tags)) {
             $sampledData .= '|#';
             $tagArray = [];
-            foreach($tags as $key => $value) {
-              $tagArray[] = ($key . ':' . $value);
+
+            foreach ($tags as $key => $value) {
+                $tagArray[] = ($key . ':' . $value);
             }
+
             $sampledData .= join(',', $tagArray);
         }
 
@@ -295,7 +297,7 @@ class Client implements ClientInterface
      *
      * @param string $namespace
      */
-    public function setNamespace($namespace)
+    public function setNamespace(string $namespace): void
     {
         $this->namespace = (string) $namespace;
     }
@@ -305,7 +307,7 @@ class Client implements ClientInterface
      *
      * @return string
      */
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return $this->namespace;
     }
@@ -313,9 +315,9 @@ class Client implements ClientInterface
     /**
      * is batch processing running?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isBatch()
+    public function isBatch(): bool
     {
         return $this->isBatch;
     }
@@ -323,7 +325,7 @@ class Client implements ClientInterface
     /**
      * start batch-send-recording
      */
-    public function startBatch()
+    public function startBatch(): void
     {
         $this->isBatch = true;
     }
@@ -331,7 +333,7 @@ class Client implements ClientInterface
     /**
      * ends batch-send-recording and sends the recorded messages to the connection
      */
-    public function endBatch()
+    public function endBatch(): void
     {
         $this->isBatch = false;
         $this->connection->sendMessages($this->batch);
@@ -341,7 +343,7 @@ class Client implements ClientInterface
     /**
      * stops batch-recording and resets the batch
      */
-    public function cancelBatch()
+    public function cancelBatch(): void
     {
         $this->isBatch = false;
         $this->batch = [];

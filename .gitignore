@@ -1,5 +1,6 @@
 # general
 .idea
+.DS_Store
 
 # test coverage report
 tests/coverage
@@ -13,3 +14,6 @@ stats.log
 /composer.lock
 /composer.phar
 
+# docs
+/docs/_site
+/docs/.sass-cache

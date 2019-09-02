@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Domnikl\Test\Statsd;
 
@@ -13,7 +13,7 @@ class ConnectionMock implements Connection
     /**
      * @var array
      */
-    public $messages = array();
+    public $messages = [];
 
     /**
      * @var bool
@@ -28,39 +28,31 @@ class ConnectionMock implements Connection
         $this->sampleAllMetrics = (bool) $sampleAllMetrics;
     }
 
-    /**
-     * @param string $message
-     */
-    public function send($message)
+    public function send(string $message): void
     {
         $this->messages[] = $message;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getLastMessage()
     {
-		$i = count($this->messages) - 1;
+        $i = count($this->messages) - 1;
 
-		if (isset($this->messages[$i])) {
-			return $this->messages[$i];
-		} else {
-			return null;
-		}
+        if (isset($this->messages[$i])) {
+            return $this->messages[$i];
+        } else {
+            return null;
+        }
     }
 
-    /**
-     * sends multiple messages to statsd
-     *
-     * @param array $messages
-     */
-    public function sendMessages(array $messages)
+    public function sendMessages(array $messages): void
     {
         $this->messages[] = join("\n", $messages);
     }
 
-    public function close()
+    public function close(): void
     {
         // do nothing
     }

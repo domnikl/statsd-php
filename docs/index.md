@@ -12,7 +12,7 @@ The best way to install statsd-php is to use Composer and add the following to y
 ```javascript
 {
     "require": {
-        "domnikl/statsd": "~2.0"
+        "domnikl/statsd": "~3.0"
     }
 }
 ```
@@ -109,7 +109,11 @@ Several other [contributors](https://github.com/domnikl/statsd-php/graphs/contri
 
 (The MIT License)
 
+<<<<<<< HEAD
 Copyright (c) 2017 Dominik Liebler
+=======
+Copyright (c) 2019 Dominik Liebler
+>>>>>>> php7-only
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

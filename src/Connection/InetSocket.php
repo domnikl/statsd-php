@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -15,19 +15,19 @@ abstract class InetSocket implements Connection
      *
      * @var string
      */
-    private $host;
+    protected $host;
 
     /**
      * port number
      *
      * @var int
      */
-    private $port;
+    protected $port;
 
     /**
      * Socket timeout
      *
-     * @var float|null
+     * @var int
      */
     private $timeout;
 
@@ -48,55 +48,48 @@ abstract class InetSocket implements Connection
      *
      * @param string $host Statsd hostname
      * @param int $port Statsd port
-     * @param float $timeout Connection timeout
+     * @param int $timeout Connection timeout
      * @param bool $persistent (default FALSE) Use persistent connection or not
      * @param int $mtu Maximum Transmission Unit (default: 1500)
      */
-    public function __construct($host = 'localhost', $port = 8125, $timeout = null, $persistent = false, $mtu = 1500)
-    {
-        $this->host = (string) $host;
-        $this->port = (int) $port;
-        $this->persistent = (bool) $persistent;
+    public function __construct(
+        string $host = 'localhost',
+        int $port = 8125,
+        int $timeout = null,
+        bool $persistent = false,
+        int $mtu = 1500
+    ) {
+        $this->host = $host;
+        $this->port = $port;
+        $this->persistent = $persistent;
         $this->maxPayloadSize = (int) $mtu -
             self::IP_HEADER_SIZE -
             $this->getProtocolHeaderSize() -
             strlen(self::LINE_DELIMITER);
 
         if ($timeout === null) {
-            $this->timeout = (float) ini_get('default_socket_timeout');
+            $this->timeout = (int) ini_get('default_socket_timeout');
         } else {
-            $this->timeout = (float) $timeout;
+            $this->timeout = $timeout;
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getHost()
+    public function getHost(): string
     {
         return $this->host;
     }
 
-    /**
-     * @return int
-     */
-    public function getPort()
+    public function getPort(): int
     {
         return $this->port;
     }
 
-    /**
-     * @return int
-     */
-    public function getTimeout()
+    public function getTimeout(): int
     {
         return $this->timeout;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPersistent()
+    public function isPersistent(): bool
     {
         return $this->persistent;
     }
@@ -109,10 +102,10 @@ abstract class InetSocket implements Connection
      * @codeCoverageIgnore
      * this is ignored because it writes to an actual socket and is not testable
      */
-    public function send($message)
+    public function send(string $message): void
     {
         // prevent from sending empty or non-sense metrics
-        if ($message === '' || !is_string($message)) {
+        if ($message === '') {
             return;
         }
 
@@ -124,7 +117,7 @@ abstract class InetSocket implements Connection
      *
      * @param array $messages
      */
-    public function sendMessages(array $messages)
+    public function sendMessages(array $messages): void
     {
         if (count($messages) === 0) {
             return;
@@ -144,7 +137,7 @@ abstract class InetSocket implements Connection
      *
      * @return array
      */
-    private function cutIntoMtuSizedPackets(array $messages)
+    private function cutIntoMtuSizedPackets(array $messages): array
     {
         if ($this->allowFragmentation()) {
             $message = join(self::LINE_DELIMITER, $messages) . self::LINE_DELIMITER;
@@ -177,34 +170,24 @@ abstract class InetSocket implements Connection
      *
      * @param string $host
      * @param int $port
-     * @param float|null $timeout
+     * @param int $timeout
      * @param bool $persistent
      */
-    abstract protected function connect($host, $port, $timeout, $persistent);
+    abstract protected function connect(string $host, int $port, int $timeout, bool $persistent): void;
 
-    /**
+    /*
      * checks whether the socket connection is alive
-     *
-     * @return bool
      */
-    abstract protected function isConnected();
+    abstract protected function isConnected(): bool;
 
     /**
      * writes a message to the socket
      *
      * @param string $message
      */
-    abstract protected function writeToSocket($message);
+    abstract protected function writeToSocket(string $message): void;
 
-    /**
-     * @return int
-     */
-    abstract protected function getProtocolHeaderSize();
+    abstract protected function getProtocolHeaderSize(): int;
 
-    /**
-     * whether or not message fragmention should be allowed
-     *
-     * @return bool
-     */
-    abstract protected function allowFragmentation();
+    abstract protected function allowFragmentation(): bool;
 }

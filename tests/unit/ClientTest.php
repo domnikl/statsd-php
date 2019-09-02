@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Domnikl\Test\Statsd;
 
@@ -230,7 +230,7 @@ class ClientTest extends TestCase
 
     public function testTimeClosure()
     {
-        $evald = $this->client->time('foo', function() {
+        $evald = $this->client->time('foo', function () {
             return "foobar";
         });
 
