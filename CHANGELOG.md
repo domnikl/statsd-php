@@ -1,5 +1,10 @@
 # Changelog domnikl/statsd-php
 
+## 3.0.0
+
+* PHP 7.2 is the new minimum PHP version
+* added type hints and return type declarations
+
 ## 2.2.0
 
 * TcpSocket now throws a TCPSocketException if no connection could be established
