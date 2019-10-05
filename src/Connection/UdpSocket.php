@@ -21,11 +21,6 @@ class UdpSocket extends InetSocket implements Connection
     private $socket;
 
     /**
-     * @var bool
-     */
-    private $isConnected = false;
-
-    /**
      * sends a message to the socket
      *
      * @param string $message
@@ -76,8 +71,6 @@ class UdpSocket extends InetSocket implements Connection
         } else {
             $this->socket = @fsockopen($url, $port, $errorNumber, $errorMessage, $timeout);
         }
-
-        $this->isConnected = true;
     }
 
     /**
@@ -92,7 +85,7 @@ class UdpSocket extends InetSocket implements Connection
      */
     protected function isConnected(): bool
     {
-        return $this->isConnected;
+        return $this->socket !== null && feof($this->socket) === false;
     }
 
     public function close(): void
@@ -102,7 +95,6 @@ class UdpSocket extends InetSocket implements Connection
         }
 
         $this->socket = null;
-        $this->isConnected = false;
     }
 
     protected function getProtocolHeaderSize(): int
