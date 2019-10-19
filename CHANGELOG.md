@@ -1,5 +1,9 @@
 # Changelog domnikl/statsd-php
 
+## 3.0.1
+
+* fixed #67 UDPSocket handle DNS change
+
 ## 3.0.0
 
 * PHP 7.2 is the new minimum PHP version
