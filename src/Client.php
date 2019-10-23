@@ -136,7 +136,7 @@ class Client
      *
      * @return float|null
      */
-    public function endTiming(string $key, float $sampleRate = 1.0, array $tags = [])
+    public function endTiming(string $key, float $sampleRate = 1.0, array $tags = []): ?float
     {
         $end = gettimeofday(true);
 
