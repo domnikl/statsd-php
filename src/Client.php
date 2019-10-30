@@ -262,6 +262,30 @@ class Client
             return;
         }
 
+        $sampledData = $this->buildSampledData($key, $value, $type, $sampleRate, $tags);
+
+        if (!$this->isBatch) {
+            $this->connection->send($sampledData);
+        } else {
+            $this->batch[] = $sampledData;
+        }
+    }
+
+    /**
+     * Prepares a statsd compatible string from given data and parameters
+     *
+     * @param string $key
+     * @param int|float|string $value
+     * @param string $type
+     * @param float $sampleRate
+     * @param array $tags
+     * 
+     * @return string $sampledData
+     */
+    public function buildSampledData(string $key, $value, string $type, float $sampleRate, array $tags = [])
+    {
+        $sampledData = null;
+
         if (strlen($this->namespace) !== 0) {
             $key = $this->namespace . '.' . $key;
         }
@@ -285,11 +309,7 @@ class Client
             $sampledData .= join(',', $tagArray);
         }
 
-        if (!$this->isBatch) {
-            $this->connection->send($sampledData);
-        } else {
-            $this->batch[] = $sampledData;
-        }
+        return $sampledData;
     }
 
     /**
