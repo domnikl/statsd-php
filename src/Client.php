@@ -279,7 +279,6 @@ class Client
      * @param string $type
      * @param float $sampleRate
      * @param array $tags
-     * 
      * @return string $sampledData
      */
     public function buildSampledData(string $key, $value, string $type, float $sampleRate, array $tags = [])

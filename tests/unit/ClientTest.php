@@ -306,10 +306,10 @@ class ClientTest extends TestCase
 
     public function testBuildSampledData()
     {
-        $sampledData = $this->client->buildSampledData("a.b", 15, 'c', 1.1 , ['a', 'b'=>'c']);
+        $sampledData = $this->client->buildSampledData("a.b", 15, 'c', 1.1, ['a', 'b'=>'c']);
         $this->assertEquals('test.a.b:15|c|#0:a,b:c', $sampledData);
         $this->client->setNamespace('foobar');
-        $sampledData = $this->client->buildSampledData("c.d", 2, 'ms', 1.1 , []);
-        $this->assertEquals('foobar.c.d:2|ms', $sampledData);
+        $sampledData = $this->client->buildSampledData("c.d", 2, 'ms', 0.1);
+        $this->assertEquals('foobar.c.d:2|ms|@0.1', $sampledData);
     }
 }
