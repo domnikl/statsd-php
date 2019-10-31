@@ -281,7 +281,7 @@ class Client
      * @param array $tags
      * @return string $sampledData
      */
-    public function buildSampledData(string $key, $value, string $type, float $sampleRate, array $tags = [])
+    public function buildSampledData(string $key, $value, string $type, float $sampleRate, array $tags = []): string
     {
         $sampledData = null;
 
