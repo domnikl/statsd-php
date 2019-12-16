@@ -13,7 +13,3 @@ stats.log
 /vendor
 /composer.lock
 /composer.phar
-
-# docs
-/docs/_site
-/docs/.sass-cache
