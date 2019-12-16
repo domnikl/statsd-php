@@ -197,7 +197,7 @@ class ClientTest extends TestCase
         $this->client->endTiming($key);
 
         // ranges between 1000 and 1001ms
-        $this->assertRegExp('/^test\.foo\.bar:1[0-9](.[0-9]+)?\|ms$/', $this->connection->getLastMessage());
+        $this->assertRegExp('/^test\.foo\.bar:[0-9]+(.[0-9]+)?\|ms$/', $this->connection->getLastMessage());
     }
 
     public function testEndTimingReturnsTiming()

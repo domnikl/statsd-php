@@ -1,0 +1,34 @@
+name: Build statsd-php
+on: [push, pull_request]
+jobs:
+  build:
+    name: statsd-php (PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }})
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ['7.2', '7.3', '7.4']
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v1 #https://github.com/shivammathur/setup-php
+      with:
+        php-version: ${{ matrix.php-versions }}
+        extensions: mbstring
+        coverage: xdebug #optional
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+    - name: phpcs
+      run: vendor/bin/phpcs .
+
+    - name: psalm
+      run: vendor/bin/psalm --show-info=false
+
+    - name: phpunit
+      run: vendor/bin/phpunit
