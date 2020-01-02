@@ -34,7 +34,7 @@ class TcpSocket extends InetSocket implements Connection
             parent::send($message);
         } catch (TcpSocketException $e) {
             throw $e;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // ignore it: stats logging failure shouldn't stop the whole app
         }
     }
