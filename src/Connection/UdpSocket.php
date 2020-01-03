@@ -32,7 +32,7 @@ class UdpSocket extends InetSocket implements Connection
     {
         try {
             parent::send($message);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // ignore it: stats logging failure shouldn't stop the whole app
         }
     }
