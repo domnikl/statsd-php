@@ -64,18 +64,28 @@ class Client
     /**
      * Tags style format
      *
-     * style                position   beforeGlue  afterGlue  pairsGlue  keyValueGlue  example
-     * dogstatsd (datadog)  END        |#                     ,          :             metric.dogstatsd:123|c|@0.01|#tagName:val,tag2:val2
-     * graphite             AFTER_KEY  ;                      ;          =             metric.graphite;tag1=val;tag2=val2:123|c|@0.01
-     * influxdb (telegraf)  AFTER_KEY  ,                      ,          =             metric.influxdb,tag1=val,tag2=val2:123|c|@0.01
-     * signalfx             AFTER_KEY  [           ]          ,          =             metric.signalfx[tag1=val,tag2=val2]:123|c|@0.01
-     * librato              AFTER_KEY  #                      ,          =             metric.librato#tag1=val,tag2=val2:123|c|@0.01
-     *
+     * metric.dogstatsd:123|c|@0.01|#tagName:val,tag2:val2
      * https://docs.datadoghq.com/developers/dogstatsd/datagram_shell/?tab=metrics
+     *
+     * metric.graphite;tag1=val;tag2=val2:123|c|@0.01
      * https://graphite.readthedocs.io/en/latest/tags.html#carbon
-     * https://www.influxdata.com/blog/getting-started-with-sending-statsd-metrics-to-telegraf-influxdb/#introducing-influx-statsd
-     * https://docs.signalfx.com/en/latest/integrations/agent/monitors/collectd-statsd.html#adding-dimensions-to-statsd-metrics
+     *
+     * metric.influxdb,tag1=val,tag2=val2:123|c|@0.01
+     * https://www.influxdata.com/blog/getting-started-with-sending-statsd-metrics-to-telegraf-influxdb/
+     *
+     * metric.signalfx[tag1=val,tag2=val2]:123|c|@0.01
+     * https://docs.signalfx.com/en/latest/integrations/agent/monitors/collectd-statsd.html
+     *
+     * metric.librato#tag1=val,tag2=val2:123|c|@0.01
      * https://github.com/librato/statsd-librato-backend#tags
+     *
+     * style                position   beforeGlue  afterGlue  pairsGlue  keyValueGlue
+     * dogstatsd (datadog)  END        |#                     ,          :
+     * graphite             AFTER_KEY  ;                      ;          =
+     * influxdb (telegraf)  AFTER_KEY  ,                      ,          =
+     * signalfx             AFTER_KEY  [           ]          ,          =
+     * librato              AFTER_KEY  #                      ,          =
+     *
      */
     private const TAGS_STYLE_FORMAT = [
         'dogstatsd' => [
