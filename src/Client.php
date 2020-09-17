@@ -55,17 +55,103 @@ class Client
     private $sampleRateAllMetrics = 1.0;
 
     /**
+     * Tags style
+     *
+     * @var string
+     */
+    private $tagsStyle = 'dogstatsd';
+
+    /**
+     * Tags style format
+     *
+     * style                position   beforeGlue  afterGlue  pairsGlue  keyValueGlue  example
+     * dogstatsd (datadog)  END        |#                     ,          :             metric.dogstatsd:123|c|@0.01|#tagName:val,tag2:val2
+     * graphite             AFTER_KEY  ;                      ;          =             metric.graphite;tag1=val;tag2=val2:123|c|@0.01
+     * influxdb (telegraf)  AFTER_KEY  ,                      ,          =             metric.influxdb,tag1=val,tag2=val2:123|c|@0.01
+     * signalfx             AFTER_KEY  [           ]          ,          =             metric.signalfx[tag1=val,tag2=val2]:123|c|@0.01
+     * librato              AFTER_KEY  #                      ,          =             metric.librato#tag1=val,tag2=val2:123|c|@0.01
+     *
+     * https://docs.datadoghq.com/developers/dogstatsd/datagram_shell/?tab=metrics
+     * https://graphite.readthedocs.io/en/latest/tags.html#carbon
+     * https://www.influxdata.com/blog/getting-started-with-sending-statsd-metrics-to-telegraf-influxdb/#introducing-influx-statsd
+     * https://docs.signalfx.com/en/latest/integrations/agent/monitors/collectd-statsd.html#adding-dimensions-to-statsd-metrics
+     * https://github.com/librato/statsd-librato-backend#tags
+     */
+    private const TAGS_STYLE_FORMAT = [
+        'dogstatsd' => [
+            'position'     => 'END',
+            'beforeGlue'   => '|#',
+            'afterGlue'    => '',
+            'pairsGlue'    => ',',
+            'keyValueGlue' => ':',
+        ],
+        'graphite' => [
+            'position'     => 'AFTER_KEY',
+            'beforeGlue'   => ';',
+            'afterGlue'    => '',
+            'pairsGlue'    => ';',
+            'keyValueGlue' => '=',
+        ],
+        'influxdb' => [
+            'position'     => 'AFTER_KEY',
+            'beforeGlue'   => ',',
+            'afterGlue'    => '',
+            'pairsGlue'    => ',',
+            'keyValueGlue' => '=',
+        ],
+        'signalfx' => [
+            'position'     => 'AFTER_KEY',
+            'beforeGlue'   => '[',
+            'afterGlue'    => ']',
+            'pairsGlue'    => ',',
+            'keyValueGlue' => '=',
+        ],
+        'librato' => [
+            'position'     => 'AFTER_KEY',
+            'beforeGlue'   => '#',
+            'afterGlue'    => '',
+            'pairsGlue'    => ',',
+            'keyValueGlue' => '=',
+        ],
+    ];
+
+    /**
      * initializes the client object
      *
      * @param Connection $connection
      * @param string $namespace global key namespace
      * @param float $sampleRateAllMetrics if set to a value <1, all metrics will be sampled using this rate
+     * @param string $tagsStyle tags style (see all variants in TAGS_STYLE_FORMAT)
+     * @throws \Exception
      */
-    public function __construct(Connection $connection, string $namespace = '', float $sampleRateAllMetrics = 1.0)
-    {
+    public function __construct(
+        Connection $connection,
+        string $namespace = '',
+        float $sampleRateAllMetrics = 1.0,
+        string $tagsStyle = 'dogstatsd'
+    ) {
         $this->connection = $connection;
         $this->namespace = $namespace;
         $this->sampleRateAllMetrics = $sampleRateAllMetrics;
+        $this->checkTagsStyle($tagsStyle);
+        $this->tagsStyle = $tagsStyle;
+    }
+
+    /**
+     * check tags style support
+     * @param string $tagsStyle
+     * @throws \Exception
+     */
+    private function checkTagsStyle(string $tagsStyle): void
+    {
+        if (!isset(self::TAGS_STYLE_FORMAT[$tagsStyle])) {
+            $errorMessage = sprintf(
+                "Tags style '%s' is not supported. Available styles: %s",
+                $tagsStyle,
+                implode(', ', array_keys(self::TAGS_STYLE_FORMAT))
+            );
+            throw new \Exception($errorMessage);
+        }
     }
 
     /**
@@ -266,24 +352,30 @@ class Client
             $key = $this->namespace . '.' . $key;
         }
 
-        $message = $key . ':' . $value . '|' . $type;
+        $tagsFormat = self::TAGS_STYLE_FORMAT[$this->tagsStyle];
 
-        if ($sampleRate < 1) {
-            $sampledData = $message . '|@' . $sampleRate;
-        } else {
-            $sampledData = $message;
-        }
-
+        $tagsString = '';
         if (!empty($tags)) {
-            $sampledData .= '|#';
-            $tagArray = [];
-
-            foreach ($tags as $key => $value) {
-                $tagArray[] = ($key . ':' . $value);
-            }
-
-            $sampledData .= join(',', $tagArray);
+            $tagsString = $tagsFormat['beforeGlue'] . implode(
+                $tagsFormat['pairsGlue'],
+                array_map(
+                    function ($k, $v) use ($tagsFormat) {
+                        return $k . $tagsFormat['keyValueGlue'] . $v;
+                    },
+                    array_keys($tags),
+                    $tags
+                )
+            ) . $tagsFormat['afterGlue'];
         }
+
+        $sampledData =
+            $key .
+            ($tagsFormat['position'] == 'AFTER_KEY' ?  $tagsString : '') .
+            ':' . $value .
+            '|' . $type .
+            ($sampleRate < 1 ? '|@' . $sampleRate : '') .
+            ($tagsFormat['position'] == 'END'       ?  $tagsString : '')
+        ;
 
         if (!$this->isBatch) {
             $this->connection->send($sampledData);
@@ -310,6 +402,28 @@ class Client
     public function getNamespace(): string
     {
         return $this->namespace;
+    }
+
+    /**
+     * changes the statsd tags style implementation
+     *
+     * @param string $tagsStyle
+     * @throws \Exception
+     */
+    public function setTagsStyle(string $tagsStyle): void
+    {
+        $this->checkTagsStyle($tagsStyle);
+        $this->tagsStyle = $tagsStyle;
+    }
+
+    /**
+     * gets the statsd tags style implementation
+     *
+     * @return string
+     */
+    public function getTagsStyle(): string
+    {
+        return $this->tagsStyle;
     }
 
     /**

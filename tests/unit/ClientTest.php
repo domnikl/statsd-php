@@ -86,6 +86,56 @@ class ClientTest extends TestCase
         );
     }
 
+    public function testCountWithSamplingRateAndDogstatsdTags()
+    {
+        $client = new Client($this->connection, 'test', 0.999999, 'dogstatsd');
+        $client->count('foo.baz', 100, 1, ['tag1' => 'value1', 'tag2' => 'value2']);
+        $this->assertEquals(
+            'test.foo.baz:100|c|@0.999999|#tag1:value1,tag2:value2',
+            $this->connection->getLastMessage()
+        );
+    }
+
+    public function testCountWithSamplingRateAndGraphiteTags()
+    {
+        $client = new Client($this->connection, 'test', 0.999999, 'graphite');
+        $client->count('foo.baz', 100, 1, ['tag1' => 'value1', 'tag2' => 'value2']);
+        $this->assertEquals(
+            'test.foo.baz;tag1=value1;tag2=value2:100|c|@0.999999',
+            $this->connection->getLastMessage()
+        );
+    }
+
+    public function testCountWithSamplingRateAndInfluxdbTags()
+    {
+        $client = new Client($this->connection, 'test', 0.999999, 'influxdb');
+        $client->count('foo.baz', 100, 1, ['tag1' => 'value1', 'tag2' => 'value2']);
+        $this->assertEquals(
+            'test.foo.baz,tag1=value1,tag2=value2:100|c|@0.999999',
+            $this->connection->getLastMessage()
+        );
+    }
+
+    public function testCountWithSamplingRateAndSignalfxTags()
+    {
+        $client = new Client($this->connection, 'test', 0.999999, 'signalfx');
+        $client->count('foo.baz', 100, 1, ['tag1' => 'value1', 'tag2' => 'value2']);
+        $this->assertEquals(
+            'test.foo.baz[tag1=value1,tag2=value2]:100|c|@0.999999',
+            $this->connection->getLastMessage()
+        );
+    }
+
+    public function testCountWithSamplingRateAndLibratoTags()
+    {
+        $client = new Client($this->connection, 'test', 0.999999, 'librato');
+        $client->count('foo.baz', 100, 1, ['tag1' => 'value1', 'tag2' => 'value2']);
+        $this->assertEquals(
+            'test.foo.baz#tag1=value1,tag2=value2:100|c|@0.999999',
+            $this->connection->getLastMessage()
+        );
+    }
+
     public function testIncrement()
     {
         $this->client->increment('foo.baz');
