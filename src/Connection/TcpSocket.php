@@ -16,7 +16,7 @@ class TcpSocket extends InetSocket implements Connection
     /**
      * the used TCP socket resource
      *
-     * @var resource|null
+     * @var null|resource|closed-resource
      */
     private $socket;
 
@@ -44,7 +44,7 @@ class TcpSocket extends InetSocket implements Connection
      */
     protected function writeToSocket(string $message): void
     {
-        if ($this->socket === null) {
+        if ($this->socket === null || !is_resource($this->socket)) {
             throw new TcpSocketException($this->host, $this->port, 'Couldn\'t write to socket, socket is closed');
         }
 
@@ -84,11 +84,9 @@ class TcpSocket extends InetSocket implements Connection
 
     public function close(): void
     {
-        if ($this->socket === null) {
-            return;
+        if (is_resource($this->socket)) {
+            fclose($this->socket);
         }
-
-        fclose($this->socket);
 
         $this->socket = null;
     }

@@ -7,7 +7,7 @@ use Domnikl\Statsd\Connection;
 class File implements Connection
 {
     /**
-     * @var resource|null
+     * @var null|resource|closed-resource
      */
     private $handle;
 
@@ -57,11 +57,9 @@ class File implements Connection
 
     public function close(): void
     {
-        if ($this->handle === null) {
-            return;
+        if (is_resource($this->handle)) {
+            fclose($this->handle);
         }
-
-        @fclose($this->handle);
 
         $this->handle = null;
     }
