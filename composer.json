@@ -27,7 +27,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Domnikl\\Statsd\\": "src/",
+            "Domnikl\\Statsd\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Domnikl\\Test\\Statsd\\": "tests/unit"
         }
     }
