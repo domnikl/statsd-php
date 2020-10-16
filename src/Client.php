@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Domnikl\Statsd;
 
+use Closure;
+
 /**
  * the statsd client
  */
@@ -202,15 +204,8 @@ class Client
     /**
      * executes a Closure and records it's execution time and sends it to statsd
      * returns the value the Closure returned
-     *
-     * @param string $key
-     * @param \Closure $block
-     * @param float $sampleRate
-     * @param array $tags
-     *
-     * @return mixed
      */
-    public function time(string $key, \Closure $block, float $sampleRate = 1.0, array $tags = [])
+    public function time(string $key, Closure $block, float $sampleRate = 1.0, array $tags = [])
     {
         $this->startTiming($key);
         try {

@@ -50,14 +50,14 @@ abstract class InetSocket implements Connection
      *
      * @param string $host Statsd hostname
      * @param int $port Statsd port
-     * @param int $timeout Connection timeout
+     * @param ?int $timeout Connection timeout
      * @param bool $persistent (default FALSE) Use persistent connection or not
      * @param int $mtu Maximum Transmission Unit (default: 1500)
      */
     public function __construct(
         string $host = 'localhost',
         int $port = 8125,
-        int $timeout = null,
+        ?int $timeout = null,
         bool $persistent = false,
         int $mtu = 1500
     ) {
