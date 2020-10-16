@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -6,9 +8,9 @@ use Domnikl\Statsd\Connection;
 
 abstract class InetSocket implements Connection
 {
-    const LINE_DELIMITER = "\n";
+    private const LINE_DELIMITER = "\n";
 
-    const IP_HEADER_SIZE = 60;
+    private const IP_HEADER_SIZE = 60;
 
     /**
      * host name
@@ -48,14 +50,14 @@ abstract class InetSocket implements Connection
      *
      * @param string $host Statsd hostname
      * @param int $port Statsd port
-     * @param int $timeout Connection timeout
+     * @param ?int $timeout Connection timeout
      * @param bool $persistent (default FALSE) Use persistent connection or not
      * @param int $mtu Maximum Transmission Unit (default: 1500)
      */
     public function __construct(
         string $host = 'localhost',
         int $port = 8125,
-        int $timeout = null,
+        ?int $timeout = null,
         bool $persistent = false,
         int $mtu = 1500
     ) {
