@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -11,7 +13,7 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class TcpSocket extends InetSocket implements Connection
 {
-    const HEADER_SIZE = 20;
+    private const HEADER_SIZE = 20;
 
     /**
      * the used TCP socket resource

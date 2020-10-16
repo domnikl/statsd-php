@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -6,9 +8,9 @@ use Domnikl\Statsd\Connection;
 
 abstract class InetSocket implements Connection
 {
-    const LINE_DELIMITER = "\n";
+    private const LINE_DELIMITER = "\n";
 
-    const IP_HEADER_SIZE = 60;
+    private const IP_HEADER_SIZE = 60;
 
     /**
      * host name

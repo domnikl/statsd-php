@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -11,7 +13,7 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class UdpSocket extends InetSocket implements Connection
 {
-    const HEADER_SIZE = 8;
+    private const HEADER_SIZE = 8;
 
     /**
      * the used UDP socket resource

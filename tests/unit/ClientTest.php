@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Domnikl\Test\Statsd;
 
@@ -197,7 +199,10 @@ class ClientTest extends TestCase
         $this->client->endTiming($key);
 
         // ranges between 1000 and 1001ms
-        $this->assertMatchesRegularExpression('/^test\.foo\.bar:[0-9]+(.[0-9]+)?\|ms$/', $this->connection->getLastMessage());
+        $this->assertMatchesRegularExpression(
+            '/^test\.foo\.bar:[0-9]+(.[0-9]+)?\|ms$/',
+            $this->connection->getLastMessage()
+        );
     }
 
     public function testEndTimingReturnsTiming()
@@ -225,7 +230,10 @@ class ClientTest extends TestCase
         }
 
         // ranges between 1000 and 1001ms
-        $this->assertMatchesRegularExpression('/^test\.foo\.baz:1[0-9](.[0-9]+)?\|ms\|@0.9$/', $this->connection->getLastMessage());
+        $this->assertMatchesRegularExpression(
+            '/^test\.foo\.baz:1[0-9](.[0-9]+)?\|ms\|@0.9$/',
+            $this->connection->getLastMessage()
+        );
     }
 
     public function testTimeClosure()
@@ -235,7 +243,10 @@ class ClientTest extends TestCase
         });
 
         $this->assertEquals('foobar', $evald);
-        $this->assertMatchesRegularExpression('/test\.foo\.baz:100[0|1]{1}|ms|@0.1/', $this->connection->getLastMessage());
+        $this->assertMatchesRegularExpression(
+            '/test\.foo\.baz:100[0|1]{1}|ms|@0.1/',
+            $this->connection->getLastMessage()
+        );
     }
 
     /**
@@ -244,7 +255,10 @@ class ClientTest extends TestCase
     public function testMemory()
     {
         $this->client->memory('foo.bar');
-        $this->assertMatchesRegularExpression('/test\.foo\.bar:[0-9]{4,}|c/', $this->connection->getLastMessage());
+        $this->assertMatchesRegularExpression(
+            '/test\.foo\.bar:[0-9]{4,}|c/',
+            $this->connection->getLastMessage()
+        );
     }
 
     /**
