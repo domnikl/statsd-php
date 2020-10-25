@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -11,12 +13,12 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class TcpSocket extends InetSocket implements Connection
 {
-    const HEADER_SIZE = 20;
+    private const HEADER_SIZE = 20;
 
     /**
      * the used TCP socket resource
      *
-     * @var resource|null
+     * @var null|resource|closed-resource
      */
     private $socket;
 
@@ -44,7 +46,7 @@ class TcpSocket extends InetSocket implements Connection
      */
     protected function writeToSocket(string $message): void
     {
-        if ($this->socket === null) {
+        if ($this->socket === null || !is_resource($this->socket)) {
             throw new TcpSocketException($this->host, $this->port, 'Couldn\'t write to socket, socket is closed');
         }
 
@@ -84,11 +86,9 @@ class TcpSocket extends InetSocket implements Connection
 
     public function close(): void
     {
-        if ($this->socket === null) {
-            return;
+        if (is_resource($this->socket)) {
+            fclose($this->socket);
         }
-
-        fclose($this->socket);
 
         $this->socket = null;
     }

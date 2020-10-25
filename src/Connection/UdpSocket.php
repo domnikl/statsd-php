@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Domnikl\Statsd\Connection;
 
@@ -11,12 +13,12 @@ use Domnikl\Statsd\Connection as Connection;
  */
 class UdpSocket extends InetSocket implements Connection
 {
-    const HEADER_SIZE = 8;
+    private const HEADER_SIZE = 8;
 
     /**
      * the used UDP socket resource
      *
-     * @var resource|null
+     * @var null|resource|closed-resource
      */
     private $socket;
 
@@ -42,7 +44,7 @@ class UdpSocket extends InetSocket implements Connection
      */
     protected function writeToSocket(string $message): void
     {
-        if ($this->socket === null) {
+        if ($this->socket === null || !is_resource($this->socket)) {
             return;
         }
 
@@ -85,12 +87,12 @@ class UdpSocket extends InetSocket implements Connection
      */
     protected function isConnected(): bool
     {
-        return $this->socket !== null && feof($this->socket) === false;
+        return is_resource($this->socket) && feof($this->socket) === false;
     }
 
     public function close(): void
     {
-        if ($this->socket !== null) {
+        if (is_resource($this->socket)) {
             fclose($this->socket);
         }
 
