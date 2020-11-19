@@ -22,7 +22,7 @@ jobs:
         coverage: xdebug #optional
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      run: composer update --prefer-dist --no-progress --no-interaction
 
     - name: phpcs
       run: vendor/bin/phpcs -s --standard=vendor/flyeralarm/php-code-validator/ruleset.xml src/ tests/
