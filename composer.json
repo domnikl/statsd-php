@@ -34,5 +34,6 @@
         "psr-4": {
             "Domnikl\\Test\\Statsd\\": "tests/unit"
         }
-    }
+    },
+    "abandoned": "slickdeals/statsd"
 }
